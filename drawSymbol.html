@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>Canvas 画符</title>
+<style>
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+body {
+	margin: 0;
+}
+.body, 
+.main_load, .alert, 
+.page, 
+.bg, .bg>img {
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+}
+.bg>img {
+	width: 100%;
+	height: 100%;
+}
+.body {
+	max-width: 768px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+}
+.main {
+	flex-grow: 1;
+}
+.master {
+	margin: auto;
+	display: block;
+}
+.clip {
+	-webkit-clip-path: inset(20% 10% 20% 10%);
+	        clip-path: inset(20% 10% 20% 10%);
+	-webkit-transform: scale(0.8);
+			transform: scale(0.8);
+}
+.bg-black {
+	background: #555;
+}
+</style>
+</head>
+
+<body>
+<div class="body" id="main">
+	<main class="main">
+		<div class="main_load" id="main_load"></div>
+		<div class="page welcome" id="welcome">
+			<div class="bg bg-black"></div>
+			<canvas id="master" class="master bg"></canvas>
+		</div>
+	</main>
+</div>
+<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var canvas = document.getElementById('master');
+var ctx = canvas.getContext('2d');
+var width = canvas.width = $(canvas).parent().width();
+var height = canvas.height = $(canvas).parent().height();
+ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+ctx.lineWidth = 10
+ctx.strokeStyle = 'red';
+
+var params = {}
+$(canvas).on('touchstart mousedown', function(e){
+    e.preventDefault(); e.stopPropagation();
+    if (e.type === 'touchstart') e = e.originalEvent.touches[0] || e;
+    console.log($(canvas).offset().left)
+    var params = {
+    	offsetTop: $(this).offset().top,
+    	offsetLeft: $(this).offset().left,
+    }
+    var x = e.clientX - params.offsetLeft;
+    var y = e.clientY - params.offsetTop;
+    ctx.moveTo(x, y);
+    $(window).on('touchmove.canvas mousemove.canvas', function(evt){
+    	if (evt.type === 'touchmove') evt = evt.originalEvent.touches[0] || evt;
+    	var xx = evt.clientX - params.offsetLeft, yy = evt.clientY - params.offsetTop;
+    	ctx.lineTo(xx, yy);
+    	ctx.stroke();
+    }).one('touchend.canvas mouseup.canvas', function(evt){
+		$(this).off('.canvas');
+		callback && callback();
+    });
+}).on('selectstart', function(e){
+    e.preventDefault();
+});
+
+function callback() {
+	$(canvas).off();
+	// var compressBase64 = canvas.toDataURL("image/png", .1);
+	var compressBase64 = canvas.toDataURL("image/png", 1);
+	var img = new Image();
+	img.onload = function() {
+		ctx.clearRect(0, 0, width, height);
+		ctx.drawImage(img, 0, 0, width, height, 50, 50, width-100, height-100);
+		// $('<div class="bg"></div>').append(img).appendTo('body');
+	}
+	img.src = compressBase64;
+}
+</script>
+</body>
+</html>
