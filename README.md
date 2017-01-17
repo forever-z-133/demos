@@ -12,5 +12,6 @@
 * 2017.01.16 [合并 $.post 的报错](https://foreverz133.github.io/demos/post.html)
 * 2017.01.16 [描边效果，SVG 的 strokeDashoffset 属性](https://foreverz133.github.io/demos/svgLine.html)
 * 2017.01.17 [酷炫的鼠标跟随(转)](https://foreverz133.github.io/demos/coolHover.html)
+* 2017.01.17 [旗帜飘荡(转)](https://foreverz133.github.io/demos/flagWave.html)
 
 -------------
