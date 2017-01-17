@@ -74,7 +74,6 @@ function Drag(options) {
 
     // 开始拖拽
     $bar.addEventListener(touchstart, _start, false);
-    window.addEventListener(touchend, _end, false);
 
     // 返回回调中可能需要用到的东西
     return {
@@ -98,6 +97,7 @@ function Drag(options) {
         }
         document.body.className += ' dragging';
         window.addEventListener(touchmove, _move, false);
+        window.addEventListener(touchend, _end, false);
     }
     // 拖拽
     function _move(e) {
@@ -121,6 +121,7 @@ function Drag(options) {
         var _class = document.body.className.replace(' dragging','');
         document.body.className = _class;
         window.removeEventListener(touchmove, _move);
+        window.removeEventListener(touchend, _end);
     }
 }
 
@@ -142,29 +143,34 @@ function Drag(options) {
         dragElem: '.drag',          // 拖谁
         targetElem: '',             // 谁动
         inBoxElem: '',              // 在什么范围内
-        offset: {'x': 0, 'y': 0},   // 由于如 margin 等属性，允许偏差
+        offset: {'x': 0, 'y': 0},   // 由于如 padding 等属性，允许偏差
         // 其他回调事件
         begin: null,
         drag: null,
         drop: null,
     }, options || {});
 
+    // 元素
     var $bar = document.querySelector(opt.dragElem);
     var $target = document.querySelector(opt.targetElem || opt.dragElem);
     var $box = opt.inBoxElem && document.querySelector(opt.inBoxElem);
+
+    // 事件选择
     var isMobile = /mobile/i.test(navigator.userAgent);
     var touchstart = isMobile ? 'touchstart' : 'mousedown';
     var touchmove = isMobile ? 'touchmove' : 'mousemove';
     var touchend = isMobile ? 'touchend' : 'mouseup';
+
+    // 存储数据，比每次 var 要快
     var params = {};
 
+    // 取消选择文本或图片事件
     $bar.addEventListener('selectstart', function(e){
         e.preventDefault();
     }, false);
 
     // 开始拖拽
     $bar.addEventListener(touchstart, _start, false);
-    window.addEventListener(touchend, _end, false);
 
     // 返回回调中可能需要用到的东西
     return {
@@ -188,6 +194,7 @@ function Drag(options) {
         }
         document.body.className += ' dragging';
         window.addEventListener(touchmove, _move, false);
+        window.addEventListener(touchend, _end, false);
     }
     // 拖拽
     function _move(e) {
@@ -195,7 +202,7 @@ function Drag(options) {
         var nowX = e.clientX, nowY = e.clientY;
         var disX = nowX - params.x, disY = nowY - params.y;
         var left = disX - params.x, top = disY - params.x;
-        if($box) {
+        if($box) {  // 限制超出
             if(top < opt.offset.y) top = opt.offset.y;
             if(top > params.maxTop) top = params.maxTop;
             if(left < opt.offset.x) left = opt.offset.x;
@@ -211,6 +218,7 @@ function Drag(options) {
         var _class = document.body.className.replace(' dragging','');
         document.body.className = _class;
         window.removeEventListener(touchmove, _move);
+        window.removeEventListener(touchend, _end);
     }
 }
 
