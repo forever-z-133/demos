@@ -35,7 +35,7 @@ function lineAnim(objId) {
 		line.style.strokeDashoffset = per;
 	});
 
-	// css 版动画
+	// css 版动画（性能更好但太麻烦了）
 	// var _lineStyle = '<style data-anim="objId">';
 	// _lineStyle += '#' + objId + '{';
 	// _lineStyle += 'stroke-dasharray: ' + lineLength + ' ' + lineLength + ';';
@@ -49,6 +49,8 @@ function lineAnim(objId) {
 	// }, 20)
 }
 
+
+// 从 start 到 end 于 duration 时间内平滑过渡
 function smooth(start, end, duration, fn) {
 	var start = start || 0,
 		end = end || 0,
