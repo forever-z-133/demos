@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />
+<title>(加注释)酷炫的鼠标跟随</title>
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 body {
@@ -47,6 +48,7 @@ body {
         target = {},    // 存储鼠标点位置
         tendrils = [],  // 线条
         settings = {};
+    settings.debug = false;
     settings.friction = .5;     // 摩擦【0.5最佳，0.6就发疯了】
     settings.trails = 20;       // 线条数量
     settings.size = 40;         // 节点数量，线条长短
@@ -55,6 +57,7 @@ body {
     Math.TWO_PI = Math.PI * 2;
 
     // Oscillator 对象
+    // 振荡器，计算偏移量
     function Oscillator(options) {
         this.init(options || {});
     }
@@ -323,6 +326,7 @@ body {
         window.addEventListener('focus', start);
         window.addEventListener('blur', stop);
 
+        // debug，监听渲染参数，之后再查
         if (window.DEBUG) {
             var gui = new dat.GUI();
             // gui.add(settings, 'debug');
