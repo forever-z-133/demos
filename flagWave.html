@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+ /* Positioning and Sizing the Canvas  */
+ #flag {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    left: 45%;
+    top: 40%;
+    z-index: 100;
+    opacity: 0.80;
+    margin-right: 50px;
+    margin-left: 50px;
+ }
+ /* Media Queries to make the canvas responsive  */
+ @media (max-width: 600px) {
+    #flag {
+        width: 400px;
+        height: 325px;
+    }
+ }
+ @media (max-width: 500px) {
+    #flag {
+        width: 350px;
+        height: 280px;
+    }
+ }
+ @media (max-width: 300) {
+    #flag {
+        width: 260px;
+        height: 180px;
+    }
+ }
+ body {
+     background-position: center center;   
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #00305b;
+ }
+    
+ html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+ }
+</style>
+</head>
+
+<body>
+<div class="body">
+
+ <canvas id="flag"></canvas>
+</div>
+<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+window.onload = function() {
+    var flag = document.getElementById('flag');
+    drawAmericanFlag(flag, 320, 0, 40);
+    flag.style.marginLeft = -(flag.width / 2) + 'px';
+    flag.style.marginTop = -(flag.height / 2) + 'px';
+    var timer = waveFlag(flag, 20, 10, 150, 200, -0.1);
+    clearTimeout(timer);
+    timer = waveFlag(flag, 20, 10, 50, 200, -0.1);
+};
+
+// 绘制旗帜
+function drawAmericanFlag(canvas, width, padX, padY) {
+    if (!padX) padX = 0;
+    if (!padY) padY = 0;
+
+    var a = width / 2;
+    var b = width;
+    var c = 7 * a / 13;
+    var d = 0.76 * a;
+    var e = 0.054 * a;
+    var g = 0.063 * a;
+    var k = 0.0616 * a;
+    var l = a / 13;
+    canvas.width = b + 2 * padX;
+    canvas.height = a + 2 * padY;
+    var ctx = canvas.getContext('2d');
+
+    // 白底背景
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(padX, padY, b, a);
+
+    // 红条
+    ctx.fillStyle = '#900';
+    for (var i = 0; i < 13; i += 2) ctx.fillRect(padX, i * l + padY, b, l);
+}
+
+// 旗帜飘荡动画
+function waveFlag(canvas, wavelength, amplitude, period, shading, squeeze) {
+    if (!wavelength) wavelength = canvas.width / 10; // 波长
+    if (!amplitude) amplitude = 10;     // 振幅
+    if (!period) period = 1000;         // 频率/周期
+    if (!shading) shading = 100;        // 阴影
+    if (!squeeze) squeeze = 0;          // 挤压
+    // 波长 = 周期x波速 = 波速/频率
+
+    var fps = 60;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width,
+        h = canvas.height;
+    var od = ctx.getImageData(0, 0, w, h).data; // 原始图片信息数据
+    return setInterval(function() {
+        var id = ctx.getImageData(0, 0, w, h);
+        var d = id.data;    // 图片信息流
+        var now = (new Date) / period;  // 当前波长
+        for (var y = 0; y < h; ++y) {   // 纵向每个像素
+            var lastO = 0,
+                shade = 0;
+            var sq = (y - h / 2) * squeeze; // 上下两边距中心的位置
+            for (var x = 0; x < w; ++x) {   // 横向每个像素
+                var px = (y * w + x) * 4;   // x 轴位置
+                var pct = x / w;            // x 轴百分比
+                var o = Math.sin(x / wavelength - now) * amplitude * pct;   // 震动偏移量
+                var y2 = y + (o + sq * pct) << 0;   // 震动后 y 轴位置，且防止溢出
+                var opx = (y2 * w + x) * 4;         // 震动后的 x 轴位置
+                shade = (o - lastO) * shading;      // 阴影
+                d[px] = od[opx] + shade;            // R
+                d[px + 1] = od[opx + 1] + shade;    // G
+                d[px + 2] = od[opx + 2] + shade;    // B
+                d[px + 3] = od[opx + 3];            // A
+                lastO = o;  // 递增震动偏移量
+            }
+        }
+        ctx.putImageData(id, 0, 0);
+    }, 1000 / fps);
+}
+</script>
+</body>
+</html>
