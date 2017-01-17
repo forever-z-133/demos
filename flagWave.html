@@ -9,11 +9,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />
-<title>首页</title>
+<title>(带注释)旗帜飘荡</title>
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
- /* Positioning and Sizing the Canvas  */
- #flag {
+#flag {
     position: absolute;
     width: 500px;
     height: 400px;
@@ -23,48 +22,45 @@
     opacity: 0.80;
     margin-right: 50px;
     margin-left: 50px;
- }
- /* Media Queries to make the canvas responsive  */
- @media (max-width: 600px) {
+}
+@media (max-width: 600px) {
     #flag {
         width: 400px;
         height: 325px;
     }
- }
- @media (max-width: 500px) {
+}
+@media (max-width: 500px) {
     #flag {
         width: 350px;
         height: 280px;
     }
- }
- @media (max-width: 300) {
+}
+@media (max-width: 300) {
     #flag {
         width: 260px;
         height: 180px;
     }
- }
- body {
-     background-position: center center;   
+}
+body {
+    background-position: center center;   
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
     background-color: #00305b;
- }
-    
- html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
- }
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 </style>
 </head>
 
 <body>
 <div class="body">
-
- <canvas id="flag"></canvas>
+    <canvas id="flag"></canvas>
 </div>
 <script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
