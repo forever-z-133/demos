@@ -1,0 +1,15 @@
+/* 
+  Name:			Fade In
+  Type:			Entrance
+  Description:	Fade In Effect
+  Version:		2.0	
+  locale:		{"zh-Hans":"渐变进入", "en-us":"Fade In"}
+ */
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
