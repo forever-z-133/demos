@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.guagua {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+}
+.guagua:before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    border: 1px solid #000;
+    border-radius: inherit;
+}
+.body, .bg {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+</style>
+</head>
+
+<body>
+<div class="guagua">
+    <span class="prize-result">你中了什么奖</span>
+    <canvas id="prize-cover" class="bg"></canvas>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+    GuaGuaLe('#prize-cover', {
+        width: $('.guagua').width(),
+        height: $('.guagua').height(),
+    }, function(){})
+});
+function GuaGuaLe(target, options, callback) {
+    // 默认值
+    var _default = {
+        width: null,
+        height: null,
+        front: '#eee',  // 遮挡物，颜色或图片路径
+        size: 50,       // 画笔粗细
+        start: null,    // 手指放上时
+        move: null,     // 移动中
+        end: null,      // 手指抬起时(不一定滑够了范围)
+    }
+
+    // 处理传参
+    var complete = null;    // 画够了范围，完成刮刮乐
+    if (typeof options === 'function') {
+        complete = options; options = {};
+    }
+    var opt = $.extend(_default, options || {});
+    complete = callback || complete || opt.complete;
+
+    // 设置标量
+    var cv = document.querySelector(target), ctx = cv.getContext("2d");
+    var w = cv.width = opt.width || cv.offsetWidth;
+    var h = cv.height = opt.height || cv.offsetHeight;
+
+    // 绘制这个 canvas
+    if (/#|rgb|rgba|hsl|hsla/.test(opt.front)) {
+        ctx.fillStyle = opt.front;
+        ctx.fillRect(0, 0, w, h);
+    } else if (/jpg|jpeg|png|gif/i.test(opt.front)) {
+        _drawImage(opt.front);
+    }
+
+    function _drawImage(imgURL) {
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, w, h);
+        }
+        img.onerror = function() {
+            alert(imgURL+' 图片加载失败了...');
+        }
+        img.src = imgURL;
+    }
+
+    $(cv).on("touchstart mousedown", function() {
+        isDown = true;
+    })
+    $(cv).on("touchend mouseup", function() {
+        isDown = false;
+        ctx.globalCompositeOperation = "source-out";
+        if (callback) callback(++area);
+    })
+    $(cv).on("touchmove mousemove", function(e) {
+        if (!isDown) return;
+        if (e.type == 'touchmove') {e = e.targetTouches[0]}
+        ctx.globalCompositeOperation = "destination-out";
+        var posObj = cv.getBoundingClientRect();
+        var left = posObj.left;
+        var top = posObj.top;
+        var x = e.clientX - left;
+        var y = e.clientY - top;
+        ctx.beginPath();
+        ctx.arc(x, y, thick, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+// 刮刮乐
+function Scrape(canvas, front, width, height, thick, callback) {
+    var cv = $(canvas)[0], ctx = cv.getContext("2d");
+    if (typeof width == 'function') callback = width, width = 500;
+    if (typeof thick == 'function') callback = thick, thick = 50;
+    var W = cv.width = width || 500, H = cv.height = height || 500, thick = thick || 50;
+    var isDown = false, area = 0;
+    if (front.match(/#|rgb|rgba|hsl|hsla/)) {
+        ctx.fillStyle = front || "#eee";
+        ctx.fillRect(0, 0, W, H);
+    } else if (front.match(/jpg|jpeg|png|gif/i)) {
+        DrawImage(front);
+    }
+    function DrawImage(imgURL) {
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, W, H);
+        }
+        img.onerror = function() {
+            alert(imgURL+' 图片加载失败了...');
+        }
+        img.src = imgURL;
+    }
+    $(cv).on("touchstart mousedown", function() {
+        isDown = true;
+    })
+    $(cv).on("touchend mouseup", function() {
+        isDown = false;
+        ctx.globalCompositeOperation = "source-out";
+        if (callback) callback(++area);
+    })
+    $(cv).on("touchmove mousemove", function(e) {
+        if (!isDown) return;
+        if (e.type == 'touchmove') {e = e.targetTouches[0]}
+        ctx.globalCompositeOperation = "destination-out";
+        var posObj = cv.getBoundingClientRect();
+        var left = posObj.left;
+        var top = posObj.top;
+        var x = e.clientX - left;
+        var y = e.clientY - top;
+        ctx.beginPath();
+        ctx.arc(x, y, thick, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+</script>
+</body>
+</html>

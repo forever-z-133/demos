@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html class="mobile h5">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>金鸡签到 喜获福袋</title>
+    <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+    <link rel="stylesheet" href="libs/style.css">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="rotate-info" id="info">请保持竖屏浏览</div>
+    <div class="notice hide" id="notice">我的天啦</div>
+    <div class="body" id="main">
+        <main class="main">
+            <div class="main-load" id="main-load">
+                <div class="loading-img"><img src="img/loading.gif"></div>
+                <div class="loading-text"><span id="load-text">0</span>% 加载中</div>
+            </div>
+            <div class="page main-bg" id="main-bg">
+                <div class="bg"><img src="img/main-bg.jpg"></div>
+                <div class="bag1"><img src="img/bag1.png"></div>
+                <div class="bag2"><img src="img/bag1.png"></div>
+                <div class="bag3"><img src="img/bag1.png"></div>
+                <div class="bag4"><img src="img/bag1.png"></div>
+                <div class="star"><img src="img/star.png"></div>
+            </div>
+            <div class="modal checkin" id="checkin">
+                <div class="bg modal-bg"></div>
+                <div class="modal-panel checkin-box">
+                    <div><img src="img/checkin-bg.png"></div>
+                    <a href="#" class="btn close btn-cancel"><img src="img/btn-close.png"></a>
+                    <a href="#" class="btn want btn-want"><img src="img/btn-want.png"></a>
+                </div>
+            </div>
+            <div class="page welcome" id="welcome">
+                <div class="finger hide" id="dot"><span></span></div>
+                <div class="bar">
+                    <div class="bar-bag"><img src="img/bag2.png"></div>
+                    <div class="bar-bg"><img src="img/bar.png"></div>
+                    <div class="bar-text">
+                        <span></span>
+                        <span class="lucky-count">
+                            <span id="lucky-count">1</span>
+                            <span class="add hide" id="add">+1</span>
+                        </span>
+                        <span>抽</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal draw" id="draw">
+                <div class="bg modal-bg"></div>
+                <div class="modal-panel full draw-box">
+                    <div class="flag"><img src="img/symbol-bg.png"></div>
+                    <!-- canvas 渲染卡死，废弃 -->
+                    <!-- <div class="flag"><canvas id="flag"></canvas></div> -->
+                    <canvas id="drawSymbol" class="bg"></canvas>
+                </div>
+            </div>
+            <div class="modal good" id="good">
+                <div class="bg modal-bg"></div>
+                <div class="modal-panel full good-box">
+                    <div class="light hide"><img src="img/light.png"></div>
+                    <div class="prize-bag hide">
+                        <img src="img/prize-good.png">
+                        <div class="qrcode imgRadio rect"><img src id="qrcode"></div>
+                        <div class="hasGot hide" id="hasGot"><img src="img/hasGot.png" /></div>
+                    </div>
+                    <div class="prize-name hide">
+                        <div class="congratulate">恭喜你!</div>
+                        <div>获得 <span id="prize-name">福袋购买券1张</span></div>
+                    </div>
+                    <div class="prize-info hide">凭中奖二维码，1月27日-1月28日<br>至百联青浦奥特莱斯广场1号门服务中心购买新春福袋，把“福”带回家吧！</div>
+                </div>
+            </div>
+            <div class="modal bad" id="bad">
+                <div class="bg modal-bg"></div>
+                <div class="modal-panel full bad-box">
+                    <div class="prize-sad hide"><img src="img/prize-bad.png"></div>
+                    <div class="prize-sad-text hide"><img src="img/bad-info.png"></div>
+                </div>
+            </div>
+            <div class="others">
+                <audio src="img/bgm.mp3" id="bgm" preload autoplay hidden></audio>
+            </div>
+            <div class="logo"><img src="img/logo.png" /></div>
+        </main>
+    </div>
+    <script src="libs/common.js"></script>
+    <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+    </script>
+</body>
+</html>

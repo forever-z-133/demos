@@ -13,15 +13,10 @@
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 #flag {
-    position: absolute;
     width: 500px;
     height: 400px;
-    left: 45%;
-    top: 40%;
     z-index: 100;
     opacity: 0.80;
-    margin-right: 50px;
-    margin-left: 50px;
 }
 @media (max-width: 600px) {
     #flag {
@@ -55,31 +50,130 @@ html, body {
     height: 100%;
     overflow: hidden;
 }
+canvas {
+    margin: auto;
+    display: block;
+}
 </style>
 </head>
 
 <body>
 <div class="body">
     <canvas id="flag"></canvas>
+    <canvas id="flag2"></canvas>
 </div>
-<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
 window.onload = function() {
     var flag = document.getElementById('flag');
     drawAmericanFlag(flag, 320, 0, 40);
-    flag.style.marginLeft = -(flag.width / 2) + 'px';
-    flag.style.marginTop = -(flag.height / 2) + 'px';
-    var timer = waveFlag(flag, 20, 10, 150, 200, -0.1);
-    clearTimeout(timer);
-    timer = waveFlag(flag, 20, 10, 50, 200, -0.1);
+    // var timer = waveFlag(flag, 20, 10, 150, 200, -0.1);
+    // clearTimeout(timer);
+    // timer = waveFlag(flag, 20, 10, 50, 200, -0.1);
+
+    var flag2 = document.querySelector('#flag2');
+    var ctx = flag2.getContext('2d');
+    flag2.width = 320;
+    flag2.height = 300;
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 40, 320, 190);
+    var timer = Wave(flag2, {
+        wavelength: 70,
+        direction: 'x',
+    });
+    // setTimeout(function(){
+    //     timer.stop();
+    //     // timer = Wave(flag2, {
+    //     //     wavelength: 20,
+    //     // });
+    //     timer.set({
+    //         wavelength: 20,
+    //     }).start();
+    // }, 500)
 };
+
+function Wave(canvas, options) {
+    // 默认值
+    var opt = $.extend({
+        wavelength: 20,
+        amplitude: 10,
+        period: 50,
+        shading: 200,
+        squeeze: -0.1,
+        direction: 'x',
+    }, options || {});
+
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width, h = canvas.height;
+    var od = ctx.getImageData(0, 0, w, h).data; // 原始图片信息数据
+    var timer; _draw();
+
+    function _draw() {
+        var id = ctx.getImageData(0, 0, w, h);
+        var d = id.data;    // 图片信息流
+        var now = (new Date) / opt.period;  // 当前波长
+        if (opt.direction === 'x') {
+            for (var y = 0; y < h; ++y) {   // 纵向每个像素
+                var lastO = 0,
+                    shade = 0;
+                var sq = (y - h / 2) * opt.squeeze; // 上下两边距中心的位置
+                for (var x = 0; x < w; ++x) {   // 横向每个像素
+                    var px = (y * w + x) * 4;   // x 轴位置
+                    var pct = x / w;            // x 轴百分比
+                    var o = Math.sin(x / opt.wavelength - now) * opt.amplitude * pct;   // 震动偏移量
+                    var y2 = y + (o + sq * pct) << 0;   // 震动后 y 轴位置，且防止溢出
+                    var opx = (y2 * w + x) * 4;         // 震动后的 x 轴位置
+                    shade = (o - lastO) * opt.shading;      // 阴影
+                    d[px] = od[opx] + shade;            // R
+                    d[px + 1] = od[opx + 1] + shade;    // G
+                    d[px + 2] = od[opx + 2] + shade;    // B
+                    d[px + 3] = od[opx + 3];            // A
+                    lastO = o;  // 递增震动偏移量
+                }
+            }
+        } else {
+            for (var x = 0; x < w; ++x) {
+                var lastO = 0, shade = 0;
+                var sq = (x - w / 2) * opt.squeeze;
+                for (var y = 0; y < h; ++y) {
+                    var py = (x * h + y) * 4;
+                    var pct = y / w;
+                    var o = Math.sin(y / opt.wavelength - now) * opt.amplitude * pct;
+                    var x2 = x + (o + sq * pct) << 0;
+                    var opy = (x2 * h + y) * 4;
+                    shade = (o - lastO) * opt.shading;
+                    d[py] = od[opy] + shade;
+                    d[py + 1] = od[opy + 1] + shade;
+                    d[py + 2] = od[opy + 2] + shade;
+                    d[py + 3] = od[opy + 3];
+                    lastO = o;
+                }
+            }
+        }
+        ctx.putImageData(id, 0, 0);
+        timer = requestAnimationFrame(_draw);
+    }
+
+    return {
+        stop: function(){
+            cancelAnimationFrame(timer);
+        },
+        start: function() {
+            _draw();
+        },
+        set: function(options) {
+            opt = $.extend(opt, options || {});
+            return this;
+        }
+    }
+}
 
 // 绘制旗帜
 function drawAmericanFlag(canvas, width, padX, padY) {
     if (!padX) padX = 0;
     if (!padY) padY = 0;
 
-    var a = width / 2;
+    var a = width / 1.9;
     var b = width;
     var c = 7 * a / 13;
     var d = 0.76 * a;
@@ -111,8 +205,7 @@ function waveFlag(canvas, wavelength, amplitude, period, shading, squeeze) {
 
     var fps = 60;
     var ctx = canvas.getContext('2d');
-    var w = canvas.width,
-        h = canvas.height;
+    var w = canvas.width, h = canvas.height;
     var od = ctx.getImageData(0, 0, w, h).data; // 原始图片信息数据
     return setInterval(function() {
         var id = ctx.getImageData(0, 0, w, h);
