@@ -1,0 +1,15 @@
+/* 
+  Name:			Fade Out
+  Type:			Exit
+  Description:	Fade Out Effect
+  Version:		2.0	
+  locale:		{"zh-Hans":"淡出", "en-us":"Fade Out"}
+ */
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+.fadeOut {
+  animation-name: fadeOut;
+}
