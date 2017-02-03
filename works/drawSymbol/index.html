@@ -150,7 +150,7 @@
                 Count: 2,
             }];
 
-            r = r[Math.round(Math.random()*r.length)];
+            r = r[Math.floor(Math.random()*r.length)];
             // 处理数据
             var $state = $('#state-notice');
             $('#lucky-count').text(r.Count > 0 ? r.Count : 0);
