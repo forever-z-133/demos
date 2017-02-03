@@ -23,7 +23,7 @@ function Post() {
     if (POSTING) { return; } else POSTING = true;
     // 正式请求
     var P = $.post.apply(this, arguments);
-    // 请求超时
+    // 请求超时(注:调试时间也算在其中，所以应在发布时才激活此代码)
     var Timer = setTimeout(function () {
         _callback();
         alert('请求超过 5 秒了，看来出了点问题');
