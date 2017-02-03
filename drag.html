@@ -85,6 +85,8 @@ function Drag(options) {
 
     // 开始拖拽
     function _start(e) {
+        e.preventDefault();
+        e.stopPropagation();
         var e = e.touches && e.touches[0] || e;
         opt.begin && opt.begin();
         params.left = $target.offsetLeft;
@@ -101,6 +103,7 @@ function Drag(options) {
     }
     // 拖拽
     function _move(e) {
+        e.stopPropagation();
         var e = e.touches && e.touches[0] || e;
         var nowX = e.clientX, nowY = e.clientY;
         var disX = nowX - params.x, disY = nowY - params.y;
@@ -182,6 +185,8 @@ function Drag(options) {
 
     // 开始拖拽
     function _start(e) {
+    	e.preventDefault();
+    	e.stopPropagation();
         var e = e.touches && e.touches[0] || e;
         opt.begin && opt.begin();
         params.left = $target.offsetLeft;
@@ -198,6 +203,7 @@ function Drag(options) {
     }
     // 拖拽
     function _move(e) {
+    	e.stopPropagation();
         var e = e.touches && e.touches[0] || e;
         var nowX = e.clientX, nowY = e.clientY;
         var disX = nowX - params.x, disY = nowY - params.y;
