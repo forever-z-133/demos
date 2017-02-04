@@ -125,6 +125,7 @@ $(function(){
     });
     // 重新开始
     $restart.on('tap', function(){
+    	if (!gameOver) return;
         _loop();
         gameOver = false;
     });
