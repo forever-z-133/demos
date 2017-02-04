@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<link rel="stylesheet" href="libs/style.css">
+<style>
+.main {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.what {
+    padding: 3rem 1rem;
+    font-size: 2rem;
+}
+.buttons {
+    display: flex;
+    justify-content: space-around;
+}
+button {
+    min-width: 8rem;
+    border: 1px solid #000;
+    background: none;
+    padding: .5rem 2rem;
+    margin: 0 1rem;
+}
+</style>
+</head>
+
+<body>
+<div class="body" id="main">
+    <main class="main">
+        <h1>今天吃什么</h1>
+        <div id="what" class="what font-kai"></div>
+        <div class="buttons">
+            <button id="stop">暂停</button>
+            <button id="restart">重新选</button>
+        </div>
+    </main>
+</div>
+<script src="libs/common.js"></script>
+<script>
+$(function(){
+    // 所有菜系
+    var xx = ['大牌饭','肯德基','清真','炒菜','回家吃饭','麦当劳','石锅饭','自由决定'];
+    // 今天吃什么
+    var what = '';
+    // 游戏进程
+    var Timer;
+    // 存储已经吃了什么
+    var data = window.localStorage.getItem('eatWhat');
+    // dom 元素
+    var $text = $('#what'); // 显示吃什么
+    var $result = $text;    // 结果吃什么
+    var $click = $('#stop'); // 点什么暂停
+    var $restart = $('#restart'); // 重新选择
+    // 如果数据不存在，则新建
+    if (!data) {
+        data = {
+            time: Date.now(),
+            what: [],
+        }
+    } else {
+        data = JSON.parse(data);
+    }
+    // 如果数据超过了七天，则清空数据，重新记录
+    var dayOffset = new Date().getDate() - new Date(data.time).getDate();
+    if (dayOffset > 7) {
+        window.localStorage.clear();
+    }
+
+    // 动画-快速切换吃什么
+    _loop();
+    function _loop() {
+        Timer = smooth(20, function(){
+            $text.text(_random());
+        }, true);
+    }
+
+    // 随机算法
+    function _random(isResult) {
+        var random = Math.floor(Math.random()*xx.length)
+        var _what = xx[random];
+        // 如果是计算结果了，就要开始排除一些东西
+        if (isResult) {
+            var _history = data.what, len = _history.length;
+            for(var i=0; i<3; i++) {
+                // 如果已选中的与历史记录的最后三个中有相同，则重新随机
+                if (_history[len-i] == _what) {
+                    return _random(true);
+                }
+            }
+        }
+        return _what;
+    }
+
+    // 点击屏幕显示结果保存数据
+    var gameOver = false;
+    $click.on('click.eatWhat', function(e){
+        e.preventDefault();
+        if (gameOver) return;
+        var result = _random(true);
+        $result.text(result);
+        data.what.push(result);
+        window.localStorage.setItem('eatWhat', JSON.stringify(data));
+    });
+    // 点击屏幕暂停游戏
+    $click.on('click.eatWhat', function(e){
+        e.preventDefault();
+        if (gameOver) return;
+        Timer.stop();
+        gameOver = true;
+    });
+    // 重新开始
+    $restart.on('tap', function(){
+        _loop();
+        gameOver = false;
+    });
+});
+</script>
+</body>
+</html>
