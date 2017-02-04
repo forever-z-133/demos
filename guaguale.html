@@ -107,6 +107,12 @@ function GuaGuaLe(target, options, callback) {
         params.offsetTop = posObj.top;
         params.startX = e.clientX - params.offsetLeft;
         params.startY = e.clientY - params.offsetTop;
+
+        // 画圆改为画线
+        ctx.lineWidth = opt.size;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.moveTo(params.startX, params.startY);
     });
     $(cv).on("touchmove mousemove", function(e) {
         e.preventDefault();
@@ -115,24 +121,32 @@ function GuaGuaLe(target, options, callback) {
         ctx.globalCompositeOperation = "destination-out";
         var nowX = e.clientX - params.offsetLeft;
         var nowY = e.clientY - params.offsetTop;
-        // 去除快速拖拽空隙，根据起始点与终点斜率，于中间增加刮刮范围
-        // 垂直方向上，x 轴位移太少依然会有断开的情况，待续
-        var startX = params.startX;
-        var startY = params.startY;
-        var k = (nowY - startY) / (nowX - startX); // 斜率
-        if (nowX > startX) {
-            for (var i=startX; i<nowX; i+=5) {
-                var yy = startY + (i - startX) * k;
-                drawOneCircle(i, yy);
-            }
-        } else {
-            for (var i=startX; i>nowX; i-=5) {
-                var yy = startY + (i - startX) * k;
-                drawOneCircle(i, yy);
-            }
-        }
-        params.startX = nowX;
-        params.startY = nowY;
+
+        // 画圆改为画线
+        ctx.lineTo(nowX, nowY);
+        ctx.moveTo(nowX, nowY);
+        ctx.fill();
+        ctx.stroke();
+
+        // 废弃
+        // // 去除快速拖拽空隙，根据起始点与终点斜率，于中间增加刮刮范围
+        // // 垂直方向上，x 轴位移太少依然会有断开的情况，待续
+        // var startX = params.startX;
+        // var startY = params.startY;
+        // var k = (nowY - startY) / (nowX - startX); // 斜率
+        // if (nowX > startX) {
+        //     for (var i=startX; i<nowX; i+=5) {
+        //         var yy = startY + (i - startX) * k;
+        //         drawOneCircle(i, yy);
+        //     }
+        // } else {
+        //     for (var i=startX; i>nowX; i-=5) {
+        //         var yy = startY + (i - startX) * k;
+        //         drawOneCircle(i, yy);
+        //     }
+        // }
+        // params.startX = nowX;
+        // params.startY = nowY;
     });
     $(cv).on("touchend mouseup", function() {
         isDown = false;
