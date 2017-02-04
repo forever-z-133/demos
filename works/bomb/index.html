@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>快速换图形成类似视频效果</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.body, .main-load, .bg, .bg > img {
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+}
+.bg > img {
+	width: 100%; height: 100%;
+}
+.main-load {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.load-img {
+	max-width: 30%;
+	margin-bottom: 1rem;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+	<div class="main-load" id="main-load">
+		<div class="load-img"><img src="loading.gif"></div>
+		<div class="load-text"><span id="load-text"></span> % 加载中...</div>
+	</div>
+	<div class="bg"><img src="img/! Main_1_00000.png" id="bg"></div>
+</div>
+<script src="/demos/libs/common.js"></script>
+<script>
+$(function(){
+	var $load = $('#load-text');
+	preloadImage(function(percent){
+		$load.text(parseInt(percent));
+	}, function(){
+		$('#main-load').fadeOut('fast');
+		anim();
+	});
+});
+
+var $bg = $('#bg');
+function anim() {
+	smooth(20, function(i){
+		var src = 'img/! Main_1_00'+addZero(i, 3)+'.png';
+		$bg.prop('src', src);
+	}, 109, function() {
+		$(window).on('tap', function(){
+			anim();
+		});
+	});
+}
+
+// 图片预加载
+function preloadImage(fn, callback) {
+    var count = 0, len = 109;
+    for(var i=0; i<len; i++) {
+        var img = new Image();
+        img.onload = function() {
+            count++;
+            if (fn) fn(count/len*100);
+            if (count === len) {
+                if (callback) callback();
+            }
+        };
+        img.src = 'img/! Main_1_00'+addZero(i, 3)+'.png';
+    }
+}
+</script>
+</body>
+</html>
