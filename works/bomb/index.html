@@ -39,7 +39,7 @@
 		<div class="load-img"><img src="loading.gif"></div>
 		<div class="load-text"><span id="load-text"></span> % 加载中...</div>
 	</div>
-	<div class="bg"><img src="img/! Main_1_00000.png" id="bg"></div>
+	<div class="bg"><img src="img/pic (1).png" id="bg"></div>
 </div>
 <script src="/demos/libs/common.js"></script>
 <script>
@@ -56,9 +56,9 @@ $(function(){
 var $bg = $('#bg');
 function anim() {
 	smooth(20, function(i){
-		var src = 'img/! Main_1_00'+addZero(i, 3)+'.png';
+		var src = 'img/pic ('+i+').png';
 		$bg.prop('src', src);
-	}, 109, function() {
+	}, 108, function() {
 		$(window).on('tap', function(){
 			anim();
 		});
@@ -67,7 +67,7 @@ function anim() {
 
 // 图片预加载
 function preloadImage(fn, callback) {
-    var count = 0, len = 109;
+    var count = 0, len = 108;
     for(var i=0; i<len; i++) {
         var img = new Image();
         img.onload = function() {
@@ -77,7 +77,7 @@ function preloadImage(fn, callback) {
                 if (callback) callback();
             }
         };
-        img.src = 'img/! Main_1_00'+addZero(i, 3)+'.png';
+        img.src = 'img/pic ('+i+').png';
     }
 }
 </script>
