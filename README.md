@@ -22,5 +22,6 @@
 * 2017.01.19 [除夕年报 H5(业务)](https://foreverz133.github.io/demos/works/yearReport/)
 * 2017.01.20 [用 focusky 做的年终述职](https://foreverz133.github.io/demos/works/2016KDC/)
 * 2017.01.20 [5 种蜂巢样式](https://foreverz133.github.io/demos/comb.html)
+* 2017.01.20 [关于 js 时间 Date 的一些方法](https://foreverz133.github.io/demos/Date.html)
 
 -------------
