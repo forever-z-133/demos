@@ -162,7 +162,7 @@ img.full,
             flex-direction: column;
 }
 .mobile .body {
-    max-width: 30rem;
+    max-width: 768px;
     margin: auto;
 }
 @media (max-width: 768px) and (orientation: landscape) {
