@@ -6,6 +6,9 @@
 * 2017.02.04 [无限滑稽脸(转)](https://foreverz133.github.io/demos/works/emoji/)
 * 2017.02.04 [随机，中饭吃什么](https://foreverz133.github.io/demos/eatWhat.html)
 * 2017.02.04 [快速换图形成类似视频效果](https://foreverz133.github.io/demos/works/bomb)
+* 2017.02.07 [5 种蜂巢样式](https://foreverz133.github.io/demos/comb.html)
+* 2017.02.09 [关于 js 时间 Date 的一些方法](https://foreverz133.github.io/demos/Date.html)
+* 2017.02.10 [对情诗 H5(业务)](https://foreverz133.github.io/demos/works/LovePoems)
 
 -------------
 
@@ -21,7 +24,5 @@
 * 2017.01.18 [福袋画符 H5(业务)](https://foreverz133.github.io/demos/works/drawSymbol/)
 * 2017.01.19 [除夕年报 H5(业务)](https://foreverz133.github.io/demos/works/yearReport/)
 * 2017.01.20 [用 focusky 做的年终述职](https://foreverz133.github.io/demos/works/2016KDC/)
-* 2017.01.20 [5 种蜂巢样式](https://foreverz133.github.io/demos/comb.html)
-* 2017.01.20 [关于 js 时间 Date 的一些方法](https://foreverz133.github.io/demos/Date.html)
 
 -------------

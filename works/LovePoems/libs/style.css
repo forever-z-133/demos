@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /**********************************
  * 公用类
  **********************************/
@@ -31,7 +31,7 @@ html {
 @media screen and (min-width: 750px) and (max-width: 799px) {
     html.mobile {font-size: 16px;}
 }
-@media screen and (min-width: 800px) and (max-width: 1280px) {
+@media screen and (min-width: 800px) and (max-width: 1200px) {
     html.mobile {font-size: 20px;}
 }
 body {
@@ -117,7 +117,7 @@ img.full,
     z-index: 10;
 }
 .alert-bg {
-    background: rgba(0,0,0,.8);
+    background: rgba(0,0,0,.9);
 }
 .alert-panel {
     -webkit-transition: .4s;
@@ -145,6 +145,9 @@ img.full,
 }
 .h5 .page {
     display: none;
+}
+.h5 .page > * {
+    position: absolute;
 }
 .panel {
     display: -webkit-box;
@@ -195,8 +198,6 @@ img.full,
 }
 .btn {
     color: inherit;
-    -webkit-transition: .15s;
-    transition: .15s;
 }
 .btn.nb, .btn.nb:focus:hover:active {
     outline: none;
@@ -401,8 +402,8 @@ table {
 .modal {
     opacity: 0;
     z-index: -1;
-    -webkit-transition: opacity .3s;
-    transition: opacity .3s;
+    -webkit-transition: opacity .4s;
+    transition: opacity .4s;
 }
 .modal.open {
     opacity: 1;
@@ -426,28 +427,399 @@ table {
 /**
  * 颜色
  *******************************/
-.bg-grey {background-color: #aaa;color: #fff}
-.bg-red {background-color: #dd514c;color: #fff}
-.bg-green {background-color: #5eb95e;color: #fff}
-.bg-blue {background-color: #0e90d2;color: #fff}
-.bg-lightblue {background-color: #d9edf7;color: #333}
-.bg-purple {background-color: #64448f;color: #333}
-.bg-orange {background-color: #f37b1d;color: #fff}
-.bg-black {background-color: #393939;color: #fff}
-.bg-white {background-color: #efefef;color: #333}
-.alert-bg, .modal-bg {background-color: rgba(0, 0, 0, .8)}
+.grey {
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+}
 
 /*******************************************
- * 组件
+ * 基本动画
  *****************************************/
-/**
- * 颜色
- *******************************/
-
+.anim-title {
+    animation: title .3s linear;
+}
+@keyframes title {
+    0% {opacity: 0; transform: scale(0);}
+    80% {opacity: 1; transform: scale(1.2);}
+    100% {transform: scale(1);}
+}
+.anim-title2 {
+    animation: title2 2s infinite;
+}
+@keyframes title2 {
+    from, 10%, 27%, 40%, 50% {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
+    }
+    20%, 21% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -30px, 0);
+    }
+    35% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -15px, 0);
+    }
+    45% {
+        transform: translate3d(0,-4px,0);
+    }
+}
 
 /*******************************************
  * 页面
  *****************************************/
 /**
- * 首页
+ * 基础
  *******************************/
+
+@font-face {
+  font-family: 'xxxx';
+  src: url('../img/汉仪秀英体简.TTF');
+}
+.font {
+    font-family: 'xxxx', Arial, sans-serif;
+}
+
+.btn:active, .btn.click {
+    transform: scale(0.95);
+}
+
+.notice {
+    position: absolute;
+    bottom: 5%;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 99;
+    color: #ddd;
+    text-shadow: 0 0 10px #000;
+}
+.logo {
+    position: absolute;
+    top: 2%;
+    left: 32%;
+    width: 36%;
+}
+.buttons .btn {
+    position: relative;
+    display: block;
+}
+.btn > .bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: .6rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.top-buttons {
+    top: 2%;
+    left: 2%;
+    width: 96%;
+    display: flex;
+    justify-content: space-between;
+    color: #f9668a;
+    font-weight: bold;
+}
+.btn-2 {
+    width: 6rem;
+}
+.btn-2 > .bg {
+    color: #fa5d84;
+    padding: 0 .2rem .4rem 0;
+}
+
+.buttom-buttons {
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+.buttom-buttons > .btn {
+    width: 12em;
+}
+
+
+/**
+ * 欢迎页
+ *******************************/
+.title {
+    top: 20%;
+    left: 0;
+    width: 95%;
+}
+.start-buttons {
+    bottom: 8%;
+    left: 20%;
+    width: 60%;
+    color: #fff;
+    font-weight: bold;
+}
+.start-buttons .bg {
+    justify-content: space-between;
+    max-width: 11rem;
+    margin: auto;
+}
+
+/**
+ * 规则页
+ *******************************/
+.rule-box {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    width: 90%;
+    transform: translateY(-50%);
+}
+
+/**
+ * 分享页
+ *******************************/
+.share {
+    z-index: 2;
+}
+.arrow {
+    top: 5%;
+    right: 5%;
+    width: 20%;
+}
+
+/**
+ * 选择页
+ *******************************/
+.choose-box {
+    top: 50%;
+    left: 5%;
+    width: 90%;
+    transform: translateY(-50%);
+    overflow: hidden;
+}
+.choose-item {
+    position: relative;
+    width: 25%;
+    float: left;
+    padding: 1rem;
+    color: #f9668a;
+}
+.choose .word {
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+.choose-item:before {
+    content: "\2714";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f9668a;
+    font-size: 3em;
+    visibility: hidden;
+}
+.choose-item.hasRight:before {
+    visibility: visible;
+    color: #f9668a;
+}
+
+
+/**
+ * 答题页
+ *******************************/
+.question .tips {
+    z-index: 1;
+    display: none;
+    background: rgba(0,0,0,.8) url(../img/question-tips.png) center / 90% auto no-repeat;
+}
+.problem-box {
+    top: 22%;
+    left: 0;
+    width: 100%;
+    color: #fa5d84;
+    text-align: center;
+}
+.problem-item {
+    font-weight: bold;
+    /*font-size: 1.4em;*/
+    min-height: 1em;
+}
+.problem-item > span {
+    position: relative;
+    padding: .2rem .5rem;
+}
+.problem-item:first-child span:after {
+    content: "";
+    position: absolute;
+    bottom: -1.6em;
+    left: 5%; right: 10%;
+    height: 2px;
+    background: #fa5d84;
+}
+
+.problem-tips {
+    margin-top: 2rem;
+    margin-right: 1rem
+}
+.answer-box {
+    top: 50%;
+    left: 10%;
+    width: 80%;
+}
+.btn-3 {
+    color: #fff;
+    font-weight: bold;
+    padding-left: 4%;
+}
+.btn-3 > .bg {
+    padding-left: 10%;
+}
+.btn-3 > .bg {
+    font-size: 0.8em;
+}
+.question-mark {
+    position: absolute;
+    top: -20%;
+    left: -5%;
+    bottom: -10%;
+}
+.question-mark > img {
+    height: 100%;
+    width: auto;
+}
+.mark-num {
+    position: absolute;
+    top: 30%;
+    left: 45%;
+}
+
+
+/**
+ * 答题提示页
+ *******************************/
+.question-tips {
+    top: 50%;
+    left: 5%;
+    width: 90%;
+    transform: translateY(-50%);
+}
+.question-tips > .word-box {
+    font-size: 2rem;
+    margin-top: -13%;
+}
+
+/**
+ * 答对页
+ *******************************/
+.word-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-align: center;
+    color: #fa5d84;
+    font-size: 4rem;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+}
+.result-good .buttons,
+.result-bad .buttons {
+    position: absolute;
+    bottom: 8%;
+    left: 20%;
+    width: 60%;
+}
+.result-good .word-box,
+.result-bad .word-box {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    bottom: 33%;
+}
+.result-good .result2 .buttons,
+.result-bad .result2 .buttons {
+    bottom: 5%;
+}
+
+.result-good .result2 .w2,
+.result-good .result1 .w3 {
+    font-size: 1.3em;
+}
+.result-good .result1 .w4 {
+    opacity: 0.5;
+    font-weight: normal;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+/**
+ * 答错页
+ *******************************/
+.result-bad .result1 .w1 {
+    margin-top: -5%;
+    font-size: 1.4em;
+}
+.result-bad .result1 .w2 {
+    font-size: .7em;
+    margin-top: 1rem;
+}
+.result-bad .result2 .w1 {
+    margin-top: -5%;
+    font-size: 1.2em;
+}
+.result-bad .result2 .w2 {
+    font-size: 1.4em;
+    margin-top: 1rem;
+}
+
+/**
+ * 中奖页
+ *******************************/
+.prize-good .word-box {
+    top: 20%;
+    bottom: 30%;
+    left: 10%;
+    width: 80%;
+    font-size: inherit;
+}
+.qrcode {
+    height: 50%;
+    width: auto;
+    margin: 1rem auto;
+    border: 1px solid #fa5d84;
+}
+.qrcode > img {
+    width: auto;
+    height: 100%;
+}
+.prize-good .w1 {
+    font-size: 3em;
+    margin-bottom: .5rem;
+}
+.prize-good .w2 {
+    font-weight: bold;
+}
+.prize-good .w3 {
+    font-size: 1rem;
+}
+
+/**
+ * 未中奖页
+ *******************************/
+.prize-bad .word-box {
+    top: 25%;
+    bottom: 30%;
+    left: 10%;
+    width: 80%;
+}
+.prize-bad .btn-index {
+    bottom: 8%;
+    left: 20%;
+    width: 60%;
+}

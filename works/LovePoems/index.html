@@ -1,0 +1,537 @@
+﻿<!DOCTYPE html>
+<html class="mobile h5">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>2017，爱在一起</title>
+    <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+    <link rel="stylesheet" href="libs/style.css">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="rotate-info" id="info">请保持竖屏浏览</div>
+    <div class="notice hide" id="notice">我的天啦</div>
+    <div class="body" id="main">
+        <main class="main">
+            <div class="main-load" id="main-load">
+                <div class="loading-img"><img src="img/loading.gif"></div>
+                <div class="loading-text"><span id="load-text">0</span>% 加载中</div>
+            </div>
+            <!--首页-->
+            <div class="page welcome" id="welcome">
+                <div class="bg"><img src="img/bg-welcome.jpg"></div>
+                <div class="title" id="title"><img src="img/title.png"></div>
+                <div class="buttons start-buttons">
+                    <a href="#" class="btn btn-1 btn-start">
+                        <img src="img/bg-btn.png">
+                        <span class="bg">
+                            <span>有</span><span>缘</span><span>千</span><span>里</span><span>来</span><span>对</span><span>诗</span>
+                        </span>
+                    </a>
+                    <a href="#" class="btn btn-1 btn-rule">
+                        <img src="img/bg-btn.png">
+                        <span class="bg">
+                            <span>规</span><span>则</span>
+                        </span>
+                    </a>
+                    <a href="#" class="btn btn-1 btn-bonus">
+                        <img src="img/bg-btn.png">
+                        <span class="bg">
+                            <span>我</span><span>的</span><span>“</span><span>小</span><span>幸</span><span>运</span><span>”</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <!--规则页-->
+            <div class="modal rule" id="rule">
+                <div class="bg modal-bg"></div>
+                <div class="modia-panel rule-box">
+                    <img src="img/bg-rule.png">
+                </div>
+            </div>
+            <!--选择页-->
+            <div class="page choose" id="choose">
+                <div class="bg"><img src="img/bg-choose.jpg"></div>
+                <div class="buttons top-buttons">
+                    <a href="#" class="btn btn-2 btn-back"><img src="img/bg-btn-2.png"><span class="bg font">返回</span></a>
+                    <a href="#" class="btn btn-2 btn-share"><img src="img/bg-btn-2.png"><span class="bg font">分享</span></a>
+                </div>
+                <div class="buttons choose-box">
+                    <a href="#" class="btn choose-item" data-id="0"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="1"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="2"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="3"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="4"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="5"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="6"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="7"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="8"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="9"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="10"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="11"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="12"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="13"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="14"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="15"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="16"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="17"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="18"><img src="img/flower.png"></a>
+                    <a href="#" class="btn choose-item" data-id="19"><img src="img/flower.png"></a>
+                </div>
+                <div class="word"><small>(点击任意一朵桃花，选择心仪的诗词)</small></div>
+            </div>
+            <!--回答页-->
+            <div class="page question" id="question">
+                <div class="bg"><img src="img/bg-question.jpg"></div>
+                <div class="buttons top-buttons">
+                    <a href="#" class="btn btn-2 btn-back"><img src="img/bg-btn-2.png"><span class="bg font">返回</span></a>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-item font"><span id="answer-question"></span></div>
+                    <div class="problem-item font"><span id="answer-result"></span></div>
+                    <div class="problem-tips" id="author"></div>
+                </div>
+                <div class="buttons answer-box gap-mt-m">
+                    <a href="#" class="btn btn-3 answer-item" data-id="4">
+                        <span class="question-mark">
+                            <img src="img/heart.png">
+                            <span class="mark-num">A</span>
+                        </span>
+                        <img src="img/bg-btn-3.png">
+                        <span class="bg" id="answer0"></span>
+                    </a>
+                    <a href="#" class="btn btn-3 answer-item" data-id="4">
+                        <span class="question-mark">
+                            <img src="img/heart.png">
+                            <span class="mark-num">B</span>
+                        </span>
+                        <img src="img/bg-btn-3.png">
+                        <span class="bg" id="answer1"></span>
+                    </a>
+                    <a href="#" class="btn btn-3 answer-item" data-id="4">
+                        <span class="question-mark">
+                            <img src="img/heart.png">
+                            <span class="mark-num">C</span>
+                        </span>
+                        <img src="img/bg-btn-3.png">
+                        <span class="bg" id="answer2"></span>
+                    </a>
+                    <a href="#" class="btn btn-3 answer-item" data-id="4">
+                        <span class="question-mark">
+                            <img src="img/heart.png">
+                            <span class="mark-num">D</span>
+                        </span>
+                        <img src="img/bg-btn-3.png">
+                        <span class="bg" id="answer3"></span>
+                    </a>
+                </div>
+                <div class="buttons buttom-buttons">
+                    <a href="#" class="btn btn-1 btn-submit"><img src="img/bg-btn.png"><span class="bg">提&nbsp;&nbsp;交</span></a>
+                </div>
+            </div>
+            <!--回答提示页-->
+            <div class="page tips" id="question-tips">
+                <div class="bg modal-bg"></div>
+                <div class="question-tips">
+                    <img src="img/tips.png" />
+                    <div class="bg word-box font hide" id="tips1">
+                        <div class="w1">自己答题，答对即可抽奖</div>
+                        <div class="w2">答错，可让朋友帮助答题</div>
+                        <div class="w1">获得抽奖机会</div>
+                    </div>
+                    <div class="bg word-box font hide" id="tips2">
+                        <div class="w1">请帮助朋友答题</div>
+                    </div>
+                </div>
+            </div>
+            <!--答对页-->
+            <div class="page result-good" id="result-good">
+                <div class="bg"><img src="img/bg-result.jpg"></div>
+                <div class="bg result1 hide" id="result-1">
+                    <div class="word-box font">
+                        <div class="w1">恭喜你</div>
+                        <div class="w2">帮您的好友</div>
+                        <div class="w3">答对啦!</div>
+                        <div class="w4">TA将获得第一八佰伴提供的好礼一份</div>
+                    </div>
+                    <div class="buttons">
+                        <a href="#" class="btn btn-1 btn-share2"><img src="img/bg-btn.png"><span class="bg">我也要选诗</span></a>
+                    </div>
+                </div>
+                <div class="bg result2 hide" id="result-2">
+                    <div class="word-box font">
+                        <div class="w1">恭喜你</div>
+                        <div class="w2">答对啦!</div>
+                    </div>
+                    <div class="buttons">
+                        <a href="#" class="btn btn-1 btn-right" id="btn-right"><img src="img/bg-btn.png"><span class="bg"></span></a>
+                        <a href="#" class="btn btn-1 btn-share"><img src="img/bg-btn.png"><span class="bg">选诗赠良人</span></a>
+                    </div>
+                </div>
+            </div>
+            <!--答错页-->
+            <div class="page result-bad" id="result-bad">
+                <div class="bg"><img src="img/bg-result.jpg"></div>
+                <div class="bg result1 hide" id="result-1">
+                    <div class="word-box font">
+                        <div class="w1">很遗憾!</div>
+                        <div class="w2">您未帮好友答对!</div>
+                    </div>
+                    <div class="buttons">
+                        <a href="#" class="btn btn-1 btn-index"><img src="img/bg-btn.png"><span class="bg">我也要玩</span></a>
+                    </div>
+                </div>
+                <div class="bg result2 hide" id="result-2">
+                    <div class="word-box font">
+                        <div class="w1">很遗憾</div>
+                        <div class="w2">答错啦!</div>
+                    </div>
+                    <div class="buttons">
+                        <a href="#" class="btn btn-1 btn-index"><img src="img/bg-btn.png"><span class="bg">换一道试试手气</span></a>
+                        <a href="#" class="btn btn-1 btn-share2"><img src="img/bg-btn.png"><span class="bg">邀请朋友帮你答题</span></a>
+                    </div>
+                </div>
+            </div>
+            <!--中奖页-->
+            <div class="page prize-good" id="prize-good">
+                <div class="bg"><img src="img/bg-prize.jpg"></div>
+                <div class="word-box">
+                    <div class="w1 font">恭喜你!</div>
+                    <div class="w2">获得第一八佰伴<span id="prize-name">“甜蜜礼” 1 份</span></div>
+                    <div class="qrcode"><img src="img/qrcode.jpg" id="qrcode"></div>
+                    <div class="w3">活动期间，用户凭中奖二维码，于商场营<br>业时间内至第一八佰伴一楼服务台领奖。</div>
+                </div>
+                <div class="buttons top-buttons">
+                    <a href="#" class="btn btn-2 btn-back"><img src="img/bg-btn-2.png"><span class="bg font">返回</span></a>
+                    <a href="#" class="btn btn-2 btn-rule"><img src="img/bg-btn-2.png"><span class="bg font">规则</span></a>
+                </div>
+            </div>
+            <!--未中奖页-->
+            <div class="page prize-bad" id="prize-bad">
+                <div class="bg"><img src="img/bg-prize.jpg"></div>
+                <div class="word-box font">
+                    <div class="w1">很遗憾</div>
+                    <div class="w2">请再接再厉</div>
+                </div>
+                <a href="#" class="btn btn-1 btn-index"><img src="img/bg-btn.png"><span class="bg">返回首页</span></a>
+            </div>
+            <div class="page share" id="share">
+                <div class="bg modal-bg"></div>
+                <div class="arrow"><img src="img/share.png"></div>
+            </div>
+        </main>
+        <div class="others">
+            <div class="logo"><img src="img/logo.png"></div>
+            <audio src="img/bgm.mp3" id="bgm" preload autoplay hidden></audio>
+        </div>
+    </div>
+    <script src="libs/common.js"></script>
+    <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="libs/question.js"></script>
+    <script>
+        var $bgm = $('#bgm')[0]; $bgm.play();
+        var $notice = $('#notice');
+        var UserType = '';  // 用户身份
+        // var QuesArr = [];   // 存储题库，静态由 quesiotn.js 获得
+        var parentID;    // 存储题目索引
+        var firstAnswer = true; // 第一次回答，显示提示
+
+        // 分享
+        WxShare();
+        function WxShare(type, id) {
+            switch (type) {
+                case 'other': WeChat('2017，爱在一起', '爱是永恒的动力，缘分就是你！', 'http://sum.kdcer.com/LovePoems/img/icon.jpg', ('http://sum.kdcer.com/Event/Valentine?EventId=16&ValentineId=' + id)); break;
+                default: WeChat('2017，爱在一起', '爱是永恒的动力，缘分就是你！', 'http://sum.kdcer.com/LovePoems/img/icon.jpg', 'http://sum.kdcer.com/Event?EventId=16');
+            }
+        }
+
+        // 记载
+        var $loadText = $('#load-text');
+        var imgArr = ['img/loading.gif', 'img/bg-btn.png', 'img/bg-btn-2.png', 'img/bg-btn-3.png', 'img/bg-choose.jpg', 'img/bg-prize.jpg', 'img/bg-question.jpg', 'img/bg-result.jpg', 'img/bg-rule.png', 'img/bg-welcome.jpg', 'img/flower.png', 'img/heart.png', 'img/icon.jpg', 'img/logo.png', 'img/qrcode.jpg', 'img/title.png'];
+        preloadImage(imgArr, function (i) {
+            $loadText.text(parseInt(i));
+        }, function () {
+            // 静态访问
+            $('#main-load').fadeOut('fast');
+            Welcome();
+
+            // Post('/Event/ValentineEnter', {
+            //     EventId: 16,
+            // }, function (r) {
+            //     console.log(r);
+            //     $('#main-load').fadeOut('fast');
+            //     QuesArr = r.Poetry;
+
+            //     // 开始逻辑判断
+            //     if (!r.ErrorState) {  // 非法
+            //         $('.body').html(r.ErrorMessage);
+            //     } else {
+            //         if (r.Bonus.length > 0) {  // 已中奖
+            //             $('#qrcode').prop('src', r.Bonus.QRCode);
+            //             $('#prize-name').text(r.Bonus.Des);
+            //         } else {        // 未中过奖
+            //             $('.btn-bonus').disable().addClass('grey');
+            //         }
+
+            //         if (r.Hisotry) {    // 接收者
+            //             UserType = 'other';
+            //             var ques = r.Hisotry.Poetry;
+            //             parentID = ques.Id;
+            //             SetQuestion(ques.BeforeSenten, ques.Abstract, ques.ChoiceList);
+            //             $('#question').find('.top-buttons').hide(0);
+            //             Question(UserType);
+            //         } else {
+            //             Welcome();
+            //         }
+
+            //         for (var i = 0, len = r.Poetry.length; i < len; i++) {
+            //             if (r.Poetry[i].State) {
+            //                 $('.choose-item').eq(i).addClass('hasRight').disable();
+            //             }
+            //         }
+            //     }
+            // });
+        });
+
+        // 全局分享
+        $('body').on('tap.share', '.btn-share', function(){
+            Share(); WxShare('default');
+        });
+        $('body').on('tap', '.btn-index', Reload);
+        $('body').on('tap', '.btn-rule', Rule);
+
+        // 刷新返回
+        function Reload() {
+            var uid = Math.random().toString(36).substring(2, 7);
+            window.location.replace('index.html?uid=' + uid);
+        }
+
+        // 欢迎页
+        function Welcome() {
+            PageShow('#welcome');
+            $('#title').addAnim('anim-title', function(){
+                $(this).addAnim('anim-title2', null, true);
+            });
+            $('.btn-start').off().on('tap', Choose);
+            $('.btn-bonus').off().on('tap', Good);
+        }
+
+        // 规则页
+        function Rule() {
+            var $rule = $('#rule');
+            $rule.addClass('open');
+            $rule.off().on('tap', function(){
+                $rule.removeClass('open');
+            });
+        }
+
+        // 选择页
+        function Choose(){
+            PageShow('#choose');
+
+            // 点击花朵
+            $('.choose-item').removeClass('active').off().on('tap', function () {
+                var index = $(this).index();
+
+                // 存储点击的题目索引
+                var ques = QuesArr[index].poetry;
+                parentID = ques.Id;
+                $(this).addClass('active').siblings().removeClass('active');
+
+                // 显示回答页
+                Question();
+                SetQuestion(ques.BeforeSenten, ques.Abstract, ques.ChoiceList);
+
+                // 从回答页返回
+                $('.btn-back').off().on('tap', Choose);
+                //window.location.hash = 'choose';
+                //$(window).off('.hash').on('hashchange.hash', function(){
+                //    var hash = window.location.hash.substring(1);
+                //    if (hash == '') Choose();
+                //});
+            });
+
+            // 从选择页返回首页
+            $('.btn-back').off().on('tap', Welcome);
+        }
+
+        // 设置题目
+        function SetQuestion(ques, author, choice) {
+            $('#answer-question').text(ques);
+            $('#author').text(author);
+            for (var i = 0, len = choice.length; i < len; i++) {
+                $('#answer' + i).text(choice[i].Senten).parents('.answer-item').attr('data-id', choice[i].CId);
+            }
+        }
+
+        // 回答提示页
+        function ShowTips(userType) {
+            var $tips = $('#question-tips');
+            $tips.fadeIn();
+            if (userType != 'other') {
+                $('#tips1').removeClass('hide');
+            } else {
+                $('#tips2').removeClass('hide');
+            }
+            $tips.off().on('tap', function(){
+                $tips.fadeOut('fast');
+            });
+        }
+
+        // 回答页
+        function Question(userType) {
+            PageShow('#question');
+            $('#answer-result').text('');
+
+            // 回答提示只显示一次，且只有发起者有
+            if (firstAnswer) { ShowTips(userType); firstAnswer = false; }
+            
+            // 选择题目
+            $('.answer-item').removeClass('active').off().on('tap', function () {
+                var $answer = $(this);
+                var text = $answer.find('.bg').text();
+                $('#answer-result').text(text);
+                $answer.addClass('active').siblings().removeClass('active');
+            });
+            // 提交
+            $('.btn-submit').off().on('tap', CheckAnswer);
+        }
+
+        // 核对答案
+        function CheckAnswer() {
+            var $child = $('.answer-item.active');
+
+            // 如果没选则提示选择
+            if ($child.length < 1) { alert('请先选择您的答案'); return; }
+
+            // 请求问答接口
+            var childID = $child.attr('data-id');
+            //alert(parentID+'  '+childID);
+            // Post('/Event/OwnPoetry', {
+            //     EventId: 16,
+            //     poetryId: parentID,
+            //     answerId: childID,
+            // }, function (r) {
+            //     console.log(r);
+            //     if (r.PoetryState) { // 答对
+            //         if (r.BonusState) { // 能抽奖
+            //             Right(UserType, false);
+            //         } else {
+            //             Right(UserType, true);
+            //         }
+            //         WxShare();
+            //         $('.choose-item.active').addClass('hasRight');
+            //         $('.btn-share2').off().on('tap', Reload);
+            //     } else {            // 答错
+            //         Wrong(UserType);
+            //         // 分享为请人答题
+            //         WxShare('other', r.ValentineId);
+            //         $('.btn-share2').off().on('tap', Share);
+            //     }
+            // });
+
+            var index = $('.choose-item.active').index();
+            var rightAnswer = QuesArr[index].poetry.AfterSenten;
+            if (rightAnswer == childID) {
+               Right();
+            } else {
+               Wrong();
+            }
+        }
+
+        // 分享页
+        function Share(){
+            $share = $('#share');
+            $share.fadeIn();
+            $share.off().on('tap', function(){
+                $share.fadeOut('fast');
+            });
+        }
+
+        // 回答正确
+        function Right(userType, canPrize) {
+            var $page = PageShow('#result-good');
+            if (userType !== 'other') { // 发出人
+                $page.find('#result-2').removeClass('hide');
+            } else {                    // 接受人
+                $page.find('#result-1').removeClass('hide');
+            }
+
+            if (canPrize) {     // 已中过奖
+                $('#btn-right').find('span').text('查看奖品');
+                $('#btn-right').off().on('tap', Good);
+            } else {
+                $('#btn-right').find('span').text('我要抽奖');
+                $('#btn-right').off().on('tap', GetPrize);
+            }
+        }
+
+        // 回答错误
+        function Wrong(userType) {
+            var $page = PageShow('#result-bad');
+            if (userType !== 'other') {
+                $page.find('#result-2').removeClass('hide');
+            } else {
+                $page.find('#result-1').removeClass('hide');
+            }
+        }
+
+        // 抽奖逻辑
+        function GetPrize() {
+            // Post('/Event/PoetryLotteryBehavior', {
+            //     EventId: 16,
+            // }, function (r) {
+            //     console.log(r);
+            //     if (!r.State) { // 未中奖或错误
+            //         //if (r.ErrorMessage) {
+            //         //    alert(r.ErrorMessage);
+            //         //}
+            //         Bad();
+            //     } else {
+            //         try {
+            //             var prize = r.Bonuses[0];
+            //             $('#qrcode').prop('src', prize.QRCode);
+            //             $('#prize-name').text(prize.Des);
+            //         } catch (r) { }
+            //         Good();
+            //     }
+            // });
+            
+
+            if (Math.round(Math.random())) {
+               Good();
+            } else {
+               Bad();
+            }
+        }
+
+        // 中奖页
+        function Good() {
+            PageShow('#prize-good');
+            $('.btn-back').off().on('tap', Reload);
+        }
+
+        // 未中奖页
+        function Bad() {
+            PageShow('#prize-bad');
+        }
+
+        // 显示哪一页
+        function PageShow(obj, callback) {
+            var $this = $(obj).fadeIn();
+            $this.siblings('.page').fadeOut('fast');
+            $this.siblings('.modal').removeClass('open');
+            callback && callback.apply($this);
+            return $this;
+        }
+    </script>
+</body>
+</html>
