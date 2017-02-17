@@ -17,66 +17,41 @@
 <body>
 <!-- <div class="rotate-info" id="info">请保持竖屏浏览</div> -->
 <div class="body" id="main">
-	<div class="main-load" id="main-load">
-		<div class="load-img"><div class="icon-music on"></div></div>
-		<div class="load-text"><span id="load-text">0</span>% 加载中</div>
-	</div>
-	<div class="page welcome" id="welcome">
-		<div class="logo"></div>
-		<div class="btn-game"></div>
-		<div class="btn-game-shadow"></div>
-		<div class="fish1"></div>
-		<div class="fish2"></div>
-		<div class="year"></div>
-		<div class="btn-fellow"></div>
-		<div class="btn-share"></div>
-		<div class="btn-again"></div>
-		<div class="btn-back"></div>
-		<div class="last-view"></div>
-	</div>
-<!-- 	<div class="page gallery" id="gallery">
-		<div id="pic1"><img src="img/1.jpg"></div>
-		<div id="pic2"><img src="img/2.jpg"></div>
-		<div id="pic3"><img src="img/3.jpg"></div>
-		<div id="pic4"><img src="img/4.jpg"></div>
-		<div id="pic5"><img src="img/5.jpg"></div>
-		<div id="pic6"><img src="img/6.jpg"></div>
+    <div class="main-load" id="main-load">
+        <div class="load-img"><div class="icon-music on"></div></div>
+        <div class="load-text"><span id="load-text">0</span>% 加载中</div>
+    </div>
+    <div class="page welcome" id="welcome">
+        <canvas id="game" class="bg"></canvas>
+    </div>
+<!--    <div class="page gallery" id="gallery">
+        <div id="pic1"><img src="img/1.jpg"></div>
+        <div id="pic2"><img src="img/2.jpg"></div>
+        <div id="pic3"><img src="img/3.jpg"></div>
+        <div id="pic4"><img src="img/4.jpg"></div>
+        <div id="pic5"><img src="img/5.jpg"></div>
+        <div id="pic6"><img src="img/6.jpg"></div>
         <div id="pic7"><img src="img/6_5.jpg"></div>
-		<div id="pic8"><img src="img/7.jpg"></div>
+        <div id="pic8"><img src="img/7.jpg"></div>
         <div id="pic9"><img src="img/7_5.jpg"></div>
-		<div id="pic10"><img src="img/8.jpg"></div>
+        <div id="pic10"><img src="img/8.jpg"></div>
         <div id="pic11"><img src="img/8_5.jpg"></div>
-		<div id="pic12"><img src="img/9.jpg"></div>
+        <div id="pic12"><img src="img/9.jpg"></div>
         <div id="pic13"><img src="img/9_5.jpg"></div>
-		<div id="pic14"><img src="img/10.jpg"></div>
+        <div id="pic14"><img src="img/10.jpg"></div>
         <div id="pic15"><img src="img/10_5.jpg"></div>
-		<div id="pic16"><img src="img/11.jpg"></div>
+        <div id="pic16"><img src="img/11.jpg"></div>
         <div id="pic17"><img src="img/11_5.jpg"></div>
-		<div id="pic18"><img src="img/12.jpg"></div>
+        <div id="pic18"><img src="img/12.jpg"></div>
         <div id="pic19"><img src="img/12_5.jpg"></div>
         <div id="pic20"><img src="img/13.jpg"></div>
-		<div id="pic21"><img src="img/13_5.jpg"></div>
-		<div id="pic22"><img src="img/14.jpg"></div>
-		<div id="pic23"><img src="img/15.jpg"></div>
-	</div> -->
-    <canvas id="game" class="bg"></canvas>
+        <div id="pic21"><img src="img/13_5.jpg"></div>
+        <div id="pic22"><img src="img/14.jpg"></div>
+        <div id="pic23"><img src="img/15.jpg"></div>
+    </div> -->
 </div>
 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 <script>
-$(function(){
-	$('#main-load').fadeOut('fast');
-	pageShow('#game');
-});
-
-
-function pageShow(page, callback) {
-	var $page = $(page).fadeIn(function(){
-		callback && callback();
-	});
-	$page.siblings('.page').fadeOut('fast');
-	$page.siblings('.modal').removeClass('open');
-	return $page;
-}
 
 var imgList = [{
     link: "img/1.jpg",
@@ -84,14 +59,14 @@ var imgList = [{
     imgH: "1206"
 }, {
     link: "img/2.jpg",
+    limitMax: .3,
+    limitMin: .2,
     imgW: "1875",
     imgH: "3015",
     areaW: "375",
     areaH: "603",
     areaL: "1379",
     areaT: "103",
-    limitMax: .3,
-    limitMin: .2
 }, {
     link: "img/3.jpg",
     limitMax: .12,
@@ -286,89 +261,120 @@ var imgList = [{
     areaT: "2034 "
 }];
 
-
-Game(function(){
-    alert();
+$(function(){
+    preload(imgList, function(list){
+        $('#main-load').fadeOut('fast');
+        $('#welcome').fadeIn(0, function(){
+            Game(list, function(){
+                alert('放完了！');
+            });
+        });
+    });
 });
-function Game(callback) {
+
+// 预加载，不加载完 drawImage 会出问题
+function preload(list, callback) {
+    for (var i=0,len=list.length; i<len; i++) {
+        list[i].dom = new Image();
+        list[i].dom.index = i;
+        list[i].dom.onload = function(){
+            if (this.index >= len - 1) {
+                callback && callback(list);
+            }
+        };
+        list[i].dom.src = list[i].link;
+    }
+}
+
+function Game(list, finish) {
+    // 初始化 canvas
     var canvas = $('#game')[0];
     var ctx = canvas.getContext('2d');
-    var w = canvas.width = window.innerWidth;
-    var h = canvas.height = window.innerHeight;
+    var W = canvas.width = window.innerWidth;
+    var H = canvas.height = window.innerHeight;
+    $(window).off('.game').on('resize', function(){
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        draw();
+    });
 
+    // 其他参数
+    var timer = null;   // 动画计时器
+    var index = 0;      // 当前显示的是哪一页
+    var len = list.length;
     var opt = {
-        radio: 1,
-        fps: 40,
-        scale: .985,
-        scaleSlow: .995,
+        radio: 1,       // 
+        fps: 40,        // 帧率，无用
+        scale: .97,    // 普通速度，越小越快
+        scaleSlow: .98,// 缓视速度，就是到重点地方了会放慢一点
+        // 测试用
+        // scale: .8,
+        // scaleSlow: .81,
     }
 
-    var timer = null;
-
-    var index = 0, list = imgList;
-
-    preload(list, start);
-
-    function preload(list, callback) {
-        for (var i=0,len=list.length-1; i<len; i++) {
-            list[i].dom = new Image();
-            list[i].dom.index = i;
-            list[i].dom.onload = function(){
-            	console.log(this.index, len)
-                if (this.index >= len - 1) {
-                    callback && callback();
-                } 
-            };
-            list[i].dom.src = list[i].link;
-        }
-    }
-
+    // 启动
+    start(); draw();
     function start() {
         cancelAnimationFrame(timer);
         timer = requestAnimationFrame(loop);
     }
 
-    function draw() {
-        // if (index+1 == list.length) return;
-        // console.log(index, ':',opt.radio <= list[index+1].areaW / list[index+1].imgW);
-        if(opt.radio <= list[index+1].areaW / list[index+1].imgW) {
-            index++;
-            opt.radio = 1;
-            // if (!list[index+1]) return void callback();
-        }
-        var imgNext = list[index+1];
-        var imgCur = list[index];
-        drawImgOversize(imgNext.dom, imgNext.imgW, imgNext.imgH, imgNext.areaW, imgNext.areaH, imgNext.areaL, imgNext.areaT, opt.radio);
-        drawImgMinisize(imgCur.dom, imgCur.imgW, imgCur.imgH, imgNext.imgW, imgNext.imgH, imgNext.areaW, imgNext.areaH, imgNext.areaL, imgNext.areaT, opt.radio);
-    }
-
+    // 循环
     var t = (new Date).getTime();
     function loop() {
         var a = (new Date).getTime();
-        // console.log(index);
-        if (index + 1 != imgList.length) {
+        // console.log(index, len)
+        if (index + 1 != len) {
+            // 播放太快中间空白期用另一个 loop 补上
             if (a - t < 1e3 / opt.fps) return void(timer = requestAnimationFrame(loop));
-            var limitMin = imgList[index+1].limitMax, limitMax = imgList[index+1].limitMin
-            if (limitMin && limitMax) {
-                if (opt.radio < limitMax && opt.radio > limitMin) {
-                    opt.radio = opt.scaleSlow * opt.radio
-                } else {
-                    opt.radio = opt.scale * opt.radio
-                }
+            // 判断速率，在 limitMin 和 limitMax 区间内使用 scaleSlow 速率，否则用 scale 普通速率
+            var limitMin = list[index+1].limitMin, limitMax = list[index+1].limitMax;
+            if (limitMin && limitMax && opt.radio < limitMax && opt.radio > limitMin) {
+                opt.radio = opt.scaleSlow * opt.radio
+            } else {
+                opt.radio = opt.scale * opt.radio
             }
-            draw(), 
+            // 绘制
+            draw();
+            // 循环
             timer = requestAnimationFrame(loop)
             t = a;
         }
     }
 
+    // 绘制
+    function draw() {
+        if (index + 1 == len) return;
+        // 当后一张图可视区域进入视野，则将 index 换成后图，速率还原
+        if (opt.radio <= list[index+1].areaW / list[index+1].imgW) {
+            index++;
+            opt.radio = 1;
+            if (!list[index+1]) return void finish();
+        }
+        // 绘制两张图
+        var imgNext = list[index+1], imgCur = list[index];
+        drawImgOversize(imgNext.dom, imgNext.imgW, imgNext.imgH, imgNext.areaW, imgNext.areaH, imgNext.areaL, imgNext.areaT, opt.radio);
+        drawImgMinisize(imgCur.dom, imgCur.imgW, imgCur.imgH, imgNext.imgW, imgNext.imgH, imgNext.areaW, imgNext.areaH, imgNext.areaL, imgNext.areaT, opt.radio);
+    }
+
+    // 后一张图，
     function drawImgOversize(img, e, t, a, n, m, s, g) {
-    	console.log(img)
-        ctx.drawImage(img, m - (a / g - a) * (m / (e - a)), s - (n / g - n) * (s / (t - n)), a / g, n / g, 0, 0, 750, 1206)
+        ctx.drawImage(img, m - (a / g - a) * (m / (e - a)), s - (n / g - n) * (s / (t - n)), a / g, n / g, 0, 0, W, H)
     }
+    // 当前图，
     function drawImgMinisize(img, e, t, a, n, m, s, g, r, o) {
-        ctx.drawImage(img, 0, 0, e, t, (m / o - m) * (g / (a - m)) * o * 750 / m, (s / o - s) * (r / (n - s)) * o * 1206 / s, 750 * o, 1206 * o)
+        ctx.drawImage(img, 0, 0, e, t, (m / o - m) * (g / (a - m)) * o * W / m, (s / o - s) * (r / (n - s)) * o * H / s, W * o, H * o)
     }
+}
+
+
+function pageShow(page, callback) {
+    var $page = $(page).fadeIn(function(){
+        callback && callback();
+    });
+    $page.siblings('.page').fadeOut('fast');
+    $page.siblings('.modal').removeClass('open');
+    return $page;
 }
 </script>
 </body>
