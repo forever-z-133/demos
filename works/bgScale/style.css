@@ -142,5 +142,15 @@ body {
     margin-bottom: 1rem;
 }
 
-.pic1 {transform: scale(1) rotate(0) translate(0,0);}
-.pic2 {transform: scale(2) rotate(0) translate(0,0);}
+.buttons {
+    position: absolute;
+    bottom: 5%;
+    left: 20%;
+    width: 60%;
+    display: flex;
+    justify-content: space-around;
+}
+.buttons > button {
+    font-size: 3em;
+    user-select: none;
+}
