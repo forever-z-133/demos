@@ -23,6 +23,10 @@
     </div>
     <div class="page welcome" id="welcome">
         <canvas id="game" class="bg"></canvas>
+        <div class="buttons">
+            <button id="start">按住播放</button>
+            <!-- <button id="stop">暂停</button> -->
+        </div>
     </div>
 <!--    <div class="page gallery" id="gallery">
         <div id="pic1"><img src="img/1.jpg"></div>
@@ -262,7 +266,11 @@ var imgList = [{
 }];
 
 $(function(){
-    preload(imgList, function(list){
+    var $text = $('#load-text');
+    preload(imgList, function(per){
+        console.log(per);
+        $text.text(parseInt(per));
+    },function(list){
         $('#main-load').fadeOut('fast');
         $('#welcome').fadeIn(0, function(){
             Game(list, function(){
@@ -273,12 +281,14 @@ $(function(){
 });
 
 // 预加载，不加载完 drawImage 会出问题
-function preload(list, callback) {
+function preload(list, fn,callback) {
     for (var i=0,len=list.length; i<len; i++) {
         list[i].dom = new Image();
         list[i].dom.index = i;
         list[i].dom.onload = function(){
+            fn && fn(this.index/len*100);
             if (this.index >= len - 1) {
+                fn && fn(99);
                 callback && callback(list);
             }
         };
@@ -313,10 +323,15 @@ function Game(list, finish) {
     }
 
     // 启动
-    start(); draw();
+    draw();
+    // start();
     function start() {
         cancelAnimationFrame(timer);
         timer = requestAnimationFrame(loop);
+    }
+
+    function stop() {
+        cancelAnimationFrame(timer);
     }
 
     // 循环
@@ -365,6 +380,16 @@ function Game(list, finish) {
     function drawImgMinisize(img, e, t, a, n, m, s, g, r, o) {
         ctx.drawImage(img, 0, 0, e, t, (m / o - m) * (g / (a - m)) * o * W / m, (s / o - s) * (r / (n - s)) * o * H / s, W * o, H * o)
     }
+
+    // $('#start').on('click', start);
+    // $('#stop').on('click', stop);
+    
+    $('#start').on('mousedown.map touchstart.map', function(){
+        start();
+        $(window).off('.xx').on('mouseup.map touchend.map', function(){
+            stop();
+        });
+    });
 }
 
 
