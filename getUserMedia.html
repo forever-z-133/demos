@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />
-<title>首页</title>
+<title>获取设备摄像头 getUserMedia</title>
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 .bg {
@@ -42,12 +42,16 @@ window.URL = (window.URL || window.webkitURL || window.mozURL || window.msURL);
 console.log(navigator.mediaDevices);
 
 // 获取能拿到的设备数组
+if (!MediaStreamTrack) {alert('不支持 MediaStreamTrack');}
+if (!MediaStreamTrack.getSources) {alert('不支持 getSources 方法');}
 var exArray = [];
 MediaStreamTrack.getSources(function(sourceInfos) {
     for (var i = 0; i != sourceInfos.length; ++i) {
         var sourceInfo = sourceInfos[i]; //这里会遍历audio,video，所以要加以区分 
         if (sourceInfo.kind === 'video') { exArray.push(sourceInfo.id); }
     }
+    if (!navigator.getUserMedia) {alert('不支持 getUserMedia 方法')}
+
     navigator.getUserMedia({
         "video": {
             "optional": [{
