@@ -13,8 +13,9 @@
 * 2017.02.15 [浏览器回退，history 和 hash](https://foreverz133.github.io/demos/history.html)
 * 2017.02.16 [简单路由实现](https://foreverz133.github.io/demos/router.html)
 * 2017.02.17 [图片缩放一镜到底(转)](https://foreverz133.github.io/demos/works/bgScale)
-* 2017.02.20 [全景图片(CSS版)](https://foreverz133.github.io/demos/works/3Dview/css.html)
+* 2017.02.20 [全景图片(CSS版)](https://foreverz133.github.io/demos/works/3Dview/)
 * 2017.02.22 [节流&去抖：throttle & debounce](https://foreverz133.github.io/demos/Throttle&Debounce.html)
+* 2017.02.22 [获取设备摄像头 getUserMeida](https://foreverz133.github.io/demos/getUserMedia.html)
 
 -------------
 
