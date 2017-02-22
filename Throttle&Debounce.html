@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<p>immediate<br>
+立即运行</p>
+
+<p>debounce(去抖)<br>
+持续触发无效，只有触发结束才会隔 delta 秒运行一次</p>
+
+<p>throttle(节流)<br>
+不断触发也只会每隔 delta 秒运行一次</p>
+<div class="body">
+</div>
+<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+// 立即
+function immediate(fn, delta, context) {
+  var timeoutID = null;
+  var safe = true;
+
+  return function() {
+    var args = arguments;
+
+    if (safe) {
+      fn.call(context, args);
+      safe = false;
+    }
+
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(function() {
+      safe = true;
+    }, delta);
+  };
+}
+
+// 去抖
+function debounce(fn, delta, context) {
+  var timeoutID = null;
+
+  return function() {
+    clearTimeout(timeoutID);
+
+    var args = arguments;
+    timeoutID = setTimeout(function() {
+      fn.apply(context, args);
+    }, delta);
+  };
+}
+
+// 节流
+function throttle(fn, delta, context) {
+  var safe = true;
+
+  return function() {
+    var args = arguments;
+
+    if (safe) {
+      fn.call(context, args);
+
+      safe = false;
+      setTimeout(function() {
+        safe = true;
+      }, delta);
+    }
+  };
+}
+
+function D() {
+  document.body.innerHTML += '触发结束后才隔1秒后运行<br>';
+}
+function I() {
+  document.body.innerHTML += '立即执行<br>';
+}
+function T() {
+  document.body.innerHTML += '不断触发但还是隔1秒运行一次<br>';
+}
+
+window.addEventListener('mousemove', immediate(I, 1000));
+window.addEventListener('mousemove', throttle(T, 1000));
+window.addEventListener('mousemove', debounce(D, 1000));
+</script>
+</body>
+</html>
