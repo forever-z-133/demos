@@ -16,6 +16,7 @@
 * 2017.02.20 [全景图片(CSS版)](https://foreverz133.github.io/demos/works/3Dview/)
 * 2017.02.22 [节流&去抖：throttle & debounce](https://foreverz133.github.io/demos/Throttle&Debounce.html)
 * 2017.02.23 [获取设备摄像头 getUserMeida](https://foreverz133.github.io/demos/getUserMedia.html)
+* 2017.02.23 [orienter.js（手机陀螺仪）](https://foreverz133.github.io/demos/works/phoneRotate)
 
 -------------
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>手机陀螺仪校准</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.ball {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100px;
+	height: 100px;
+	margin: -50px 0 0 -50px;
+	background: #000;
+}
+.tkx {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 5px;
+}
+</style>
+</head>
+
+<body>
+<div class="tkx">插件 orienter.js 来自于 <a href="https://github.com/shrekshrek/orienter" target="_blank">shrekshrek</a>，感谢</div>
+<div>alpha: <span id="a"></span></div>
+<div>beta: <span id="b"></span></div>
+<div>gamma: <span id="g"></span></div>
+<div>x轴: <span id="p1"></span></div>
+<div>y轴: <span id="p2"></span></div>
+<div>方向: <span id="p3"></span></div>
+<div class="ball" id="ball"></div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="orienter.min.js"></script>
+<script>
+var o = new Orienter();
+var $ball = $('#ball')[0];
+var pos = {x: 0, y: 0};
+var now = {x: 0, y: 0};
+o.onOrient = function(obj) {
+	$('#a').text(obj.a);
+	$('#b').text(obj.b);
+	$('#g').text(obj.g);
+	$('#p1').text(obj.lon);
+	$('#p2').text(obj.lat);
+	$('#p3').text(obj.dir);
+
+	if (obj.lon > 180) obj.lon -= 360;
+	var xx = obj.lon - pos.x;
+	var yy = obj.lat - pos.y;
+	now.x += xx; now.y += yy;
+	pos.x = obj.lon, pos.y = obj.lat;
+
+	$ball.style.transform = 'translate('+now.x+'px, '+now.y+'px)';
+}
+o.init();
+</script>
+</body>
+</html>
