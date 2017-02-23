@@ -41,6 +41,7 @@
 </div>
 <div class="tips"></div>
 <script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="orienter.min.js"></script>
 <script>
 function skyBox(box, options) {
     // 操作元素
@@ -62,6 +63,7 @@ function skyBox(box, options) {
             x: 0, y: 0,
         },
         touched = false;    // 已按住
+    var o = new Orienter(); // 陀螺仪校准
 
     init();
     bind();
@@ -113,30 +115,14 @@ function skyBox(box, options) {
         }).on('mouseup touchend', function(){
             touched = false;
         });
-        // var rotate = throttle(function(e){
-        //     e = e[0]
-        //     e.absolute = true;
-        //     console.log(e);
-        //     // 偏移的角度
-        //     var yy = e.gamma - pos.xx;
-        //     var xx = e.beta - pos.yy;
-        //     // 现在的角度
-        //     // now.x += xx;
-        //     // now.y += yy;
-        //     // 存储最近的角度
-        //     pos.xx = e.gamma;
-        //     pos.yy = e.beta;
-        //     // console.log(now);
-        //     // $tips.text(parseInt(now.x) + ' ' + parseInt(now.y));
-        //     // 手机屏幕面向自己
-        //     // e.beta 默认为 90，向屏幕方向倒增大，反之减小
-        //     // e.gamma 默认为 xx, 向右倒增大，反之减小
-        //     $tips.text(parseInt(e.alpha) + ' ' + parseInt(e.beta) + ' ' + parseInt(e.gamma));
-        // }, 50);
-        // $(window).on('deviceorientation', function(e){
-        //     e = e.originalEvent || e;
-        //     rotate(e);
-        // });
+        o.init();
+        o.onOrient = function(obj) {
+            if (obj.lon > 180) obj.lon -= 360;
+            var xx = obj.lat - pos.xx;
+            var yy = obj.lon - pos.yy;
+            now.x += xx / 3; now.y += yy;
+            pos.xx = obj.lat; pos.yy = obj.lon;
+        }
     }
     function start() {
         last = new Date().getTime();
