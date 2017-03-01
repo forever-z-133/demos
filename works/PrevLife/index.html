@@ -302,7 +302,10 @@
                     var $this = $('.member' + num)
                     var $obj = $this.find('.word');
                     $obj.each(function () {
-                        if ($(this).find('span').length > 0) return;
+                        if ($(this).find('span').length > 0) {
+                        	$(this).find('span').addClass('hide');
+                        	return;
+                        }
                         var _html = '', t = $(this).text();
                         for (var i = 0, len = t.length; i < len; i++) {
                             _html += '<span class="hide">' + t[i] + '</span>';
@@ -312,7 +315,7 @@
                     $this.addAnim('anim-member', function () {
                         var $word = $obj.find('span').removeClass('anim-word');
                         functionOneByOne($word.length, 200, function (i) {
-                            $word.eq(i).addAnim('anim-word');
+                            $word.eq(i-1).addAnim('anim-word');
                         }, function () {
                             $('.btn-go').removeClass('hide');
                             $('.btn-back').on('touchstart', Mirror);
@@ -349,7 +352,7 @@
                         complete: Prize,
                     });
                     draw.init();
-                    $notice.text('绘制标识，解开封印').removeClass('hide');
+                    $notice.html('<span class="white">绘制符文，解开封印</span>').removeClass('hide');
                 });
             }
 
@@ -357,7 +360,7 @@
              * 抽奖逻辑
              ***************************************/
             function Prize() {
-                $notice.text('').addClass('hide');
+                $notice.html('').addClass('hide');
                 $('#number').fadeIn();
                 $('#symbol, #screen').fadeOut('fast');
                 $('#wait').text(3).addAnim('anim-num', function () {

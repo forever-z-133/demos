@@ -181,12 +181,6 @@ a {
 
 /***
  样式 5
-<div class="wrap">
-    <div class="comb comb5 style1">我是内容</div>
-    <div class="comb comb5 style2">我是内容</div>
-    <div class="comb comb5 style3">我是内容</div>
-    <div class="comb comb5 style4">我是内容</div>
-</div>
  ***********************/
 .comb5 {
     position: relative;
@@ -234,6 +228,36 @@ a {
 }
 .comb5 {
     padding: .5rem 1rem;
+}
+
+/***
+ 样式 6
+ ***********************/
+
+.comb6 {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+}
+.comb6:before {
+    content: "";
+    display: block;
+    padding-top: 86.602%
+}
+.comb6:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    display: block;
+    left: 0; right: 0;
+    top: 50%;
+    padding-top: 86.6%; 
+    background: #ccc;
+    transform: translate(0, -50%) rotateZ(-60deg) skew(-30deg);
+}
+.comb6 > * {
+    position: absolute;
+    top: 0;
 }
 </style>
 </head>
@@ -297,6 +321,13 @@ a {
             <div class="comb comb5 style2">我是内容</div>
             <div class="comb comb5 style3">我是内容</div>
             <div class="comb comb5 style4">我是内容</div>
+        </div>
+        <h3>蜂巢 6 —— 大背景2</h3>
+        <small>缺点：无法设置边框，无法使用背景图，点击范围不对</small>
+        <div class="wrap">
+            <div class="comb comb6">
+                <span>我是内容</span>
+            </div>
         </div>
     </main>
 </div>

@@ -416,6 +416,9 @@ table {
 /*****************************************
  * 公共类
  *****************************************/
+.white {
+    color: #fff;
+}
 .alert-bg, .modal-bg {background-color: rgba(0, 0, 0, .8)}
 .logo {
     top: 2%;
@@ -803,7 +806,7 @@ table {
     }
 }
 @media (min-resolution: 1dppx) {
-    .good-panel {
+    .body {
         font-size: 0.8em;
     }
 }
