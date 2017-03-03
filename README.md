@@ -4,6 +4,7 @@
 ==================
 ### 2017 年 3 月
 * 2017.03.03 [封装 requestAnimationFrame](https://foreverz133.github.io/demos/smooth.html)
+* 2017.03.03 [canvas 的更多学习](https://foreverz133.github.io/demos/canvas.html)
 
 -------------
 

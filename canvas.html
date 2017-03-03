@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>canvas 的更多学习</title>
+<style>
+canvas {
+/*  position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    width: 100%; height: 100%;*/
+}
+</style>
+</head>
+
+<body>
+<script>
+// 笑脸
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.beginPath();
+ctx.arc(75,75,50,0,Math.PI*2,true); // Outer circle
+ctx.moveTo(110,75);
+ctx.arc(75,75,35,0,Math.PI,false);   // Mouth
+ctx.moveTo(65,65);
+ctx.arc(60,65,5,0,Math.PI*2,true);  // Left eye
+ctx.moveTo(95,65);
+ctx.arc(90,65,5,0,Math.PI*2,true);  // Right eye
+ctx.stroke();
+
+// 填充三角形
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.beginPath();
+ctx.moveTo(25,25);
+ctx.lineTo(105,25);
+ctx.lineTo(25,105);
+ctx.fill();
+
+ 
+
+// 勾边三角形
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.beginPath();
+ctx.moveTo(125,125);
+ctx.lineTo(125,45);
+ctx.lineTo(45,125);
+ctx.closePath();
+ctx.stroke();
+
+// 圆的几种状态
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+canvas.height = 200;
+ctx.fillStyle = 'red';
+for (i=0;i<4;i++){
+   for(j=0;j<3;j++){    //chinese_xu 原始代码
+    ctx.beginPath();
+    var x              = 25+j*50;               // x coordinate
+    var y              = 25+i*50;               // y coordinate
+    var radius         = 20;                    // Arc radius
+    var startAngle     = 0;                     // Starting point on circle
+    var endAngle       = Math.PI+(Math.PI*j)/2;  // End point on circle ---//修复错误标点
+    var anticlockwise  = i%2==0 ? false : true; // clockwise or anticlockwise
+    ctx.arc(x,y,radius,startAngle,endAngle, anticlockwise);
+    if (i>1){
+      ctx.fill();
+    } else {
+      ctx.stroke();
+    }
+  }
+}
+
+// 贝塞尔曲线，非圆弧曲线  // 据说 firefox有 bug
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.beginPath();
+var gap = 25;
+for(var len=canvas.height/gap; len>=0; len--) {
+    ctx.moveTo(0, len*gap);
+    ctx.lineTo(canvas.width, len*gap);
+}
+for(var len=canvas.width/gap; len>=0; len--) {
+    ctx.moveTo(len*gap, 0);
+    ctx.lineTo(len*gap, canvas.height);
+}
+ctx.closePath();
+ctx.stroke();
+ctx.fillStyle = 'green';
+ctx.beginPath();
+ctx.moveTo(75,25);
+ctx.quadraticCurveTo(25,25,25,62.5);
+ctx.quadraticCurveTo(25,100,50,100);
+ctx.quadraticCurveTo(50,120,30,125);
+ctx.quadraticCurveTo(60,120,65,100);
+ctx.quadraticCurveTo(125,100,125,62.5);
+ctx.quadraticCurveTo(125,25,75,25);
+ctx.stroke();
+
+
+// 三次方贝塞尔曲线（两个控制点版）
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.beginPath();
+var gap = 20;
+for(var len=canvas.height/gap; len>=0; len--) {
+    ctx.moveTo(0, len*gap);
+    ctx.lineTo(canvas.width, len*gap);
+}
+for(var len=canvas.width/gap; len>=0; len--) {
+    ctx.moveTo(len*gap, 0);
+    ctx.lineTo(len*gap, canvas.height);
+}
+ctx.closePath();
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(75,40);
+ctx.bezierCurveTo(75,37,70,25,50,25);
+ctx.bezierCurveTo(20,25,20,62.5,20,62.5);
+ctx.bezierCurveTo(20,80,40,102,75,120);
+ctx.bezierCurveTo(110,102,130,80,130,62.5);
+ctx.bezierCurveTo(130,62.5,130,25,100,25);
+ctx.bezierCurveTo(85,25,75,37,75,40);
+ctx.fill();
+
+// 色块
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+for (var i=0;i<6;i++){ 
+    for (var j=0;j<6;j++){ 
+        ctx.fillStyle = 'rgb(' + Math.floor(255-42.5*i) + ',' +  Math.floor(255-42.5*j) + ',0)'; 
+        ctx.fillRect(j*25,i*25,25,25); 
+    } 
+}
+// 边框色
+for (var i=0;i<6;i++){
+    for (var j=0;j<6;j++){
+        ctx.strokeStyle = 'rgb(0,' + Math.floor(255-42.5*i) + ',' +  Math.floor(255-42.5*j) + ')';
+        ctx.beginPath();
+        ctx.arc(12.5+j*25, 12.5+i*25, 10, 0, Math.PI*2,true);
+        ctx.stroke();
+    }
+}
+
+
+// 线的艺术
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+// lineWidth = value    // 线宽
+var lineCap = ['butt','round','square'];    // 普通 | 圆头 | 外头
+var lineJoin = ['round','bevel','miter'];   // 圆转角 | 平转角 | 尖转角
+// miterLimit = value   // miterLimit 两线夹角较小时的延伸数
+// 辅助线
+ctx.strokeStyle = '#09f'; 
+ctx.beginPath(); 
+ctx.moveTo(10,10); 
+ctx.lineTo(140,10); 
+ctx.moveTo(10,140); 
+ctx.lineTo(140,140); 
+ctx.stroke(); 
+// 线头 
+ctx.strokeStyle = 'black'; 
+for (var i=0;i<lineCap.length;i++){ 
+    ctx.lineWidth = 7; 
+    ctx.lineCap = lineCap[i]; 
+    ctx.beginPath(); 
+    ctx.moveTo(15+i*40,10); 
+    ctx.lineTo(15+i*40,140); 
+    ctx.stroke(); 
+}
+// 线的链接处
+ctx.lineWidth = 10; 
+for (var i=0;i<lineJoin.length;i++){ 
+    ctx.lineJoin = lineJoin[i]; 
+    ctx.beginPath(); 
+    ctx.moveTo(-5,5+i*40); 
+    ctx.lineTo(35,45+i*40); 
+    ctx.lineTo(75,5+i*40); 
+    ctx.lineTo(115,45+i*40); 
+    ctx.lineTo(155,5+i*40); 
+    ctx.stroke(); 
+} 
+
+
+// 渐变
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.fillStyle = '#000000';
+ctx.fillRect(0,0,canvas.width, canvas.height);
+var lingrad = ctx.createLinearGradient(0,0,0,150);
+lingrad.addColorStop(0, '#FF0000');
+lingrad.addColorStop(0.15, '#FF8800');
+lingrad.addColorStop(0.3, '#FFFF00');
+lingrad.addColorStop(0.45, '#77FF00');
+lingrad.addColorStop(0.6, '#00FF99');
+lingrad.addColorStop(0.75, '#0066FF');
+lingrad.addColorStop(0.9, '#9900FF');
+lingrad.addColorStop(1, '#660077');
+ctx.fillStyle = lingrad;
+ctx.fillRect(10,10,20,130);
+// 起始圆中心即大小 | 目标圆中心即大小
+var radgrad = ctx.createRadialGradient(120,80,20,100,80,70);
+radgrad.addColorStop(0, '#FF0000');
+radgrad.addColorStop(0.15, '#FF8800');
+radgrad.addColorStop(0.3, '#FFFF00');
+radgrad.addColorStop(0.45, '#77FF00');
+radgrad.addColorStop(0.6, '#00FF99');
+radgrad.addColorStop(0.75, '#0066FF');
+radgrad.addColorStop(0.9, '#9900FF');
+radgrad.addColorStop(1, 'rgba(1,159,98,0)');
+ctx.fillStyle = radgrad;
+ctx.fillRect(0,0,300,300);
+
+// 阴影
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+ctx.save();
+ctx.shadowOffsetX = 2;
+ctx.shadowOffsetY = 2;
+ctx.shadowBlur = 2;
+ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+ctx.font = "20px Times New Roman";
+ctx.fillStyle = "Black";
+ctx.fillText("Sample String", 5, 30);
+ctx.fillRect(20, 50, 20, 30);
+ctx.restore();  // 读取初始状态，之后的就不带阴影了
+ctx.fillRect(50, 50, 20, 30);
+
+
+// 保存和读取(入栈|出栈)
+// 只保存以下属性 strokeStyle,fillStyle,globalAlpha,lineWidth,lineCap,lineJoin,miterLimit,shadowOffsetX,shadowOffsetY,shadowBlur,shadowColor,globalCompositeOperation
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+ctx.fillStyle = '#000';  // 黑色
+ctx.fillRect(0,0,150,150);
+ctx.save();
+ctx.fillStyle = '#09F';  // 天蓝
+ctx.fillRect(15,15,120,120);
+ctx.save();
+ctx.fillStyle = '#FFF';  // 白色
+ctx.globalAlpha = 0.5;  // 浅蓝
+ctx.fillRect(30,30,90,90);
+// 相当于天蓝色 ctx.fillStyle = '#09F'; 且覆盖掉了 globalAlpha
+ctx.restore();
+ctx.fillRect(45,45,60,60);
+ctx.restore();  // 相当于 ctx.fillStyle = '#000';
+ctx.fillRect(60,60,30,30);
+
+
+// translate // 坐标原点移动
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+canvas.height = 300;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+for (var i=0;i<3;i++) { // 行
+    for (var j=0;j<3;j++) { // 列
+        ctx.save();
+        ctx.strokeStyle = "#9CFF00";
+        ctx.translate(50+j*100,50+i*100);
+        drawSpirograph(ctx, 20*(j+2)/(j+1), -8*(i+3)/(i+1), 10);
+        ctx.restore();
+    }
+}
+
+
+// rotate // 画布旋转
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+ctx.translate(75,75);
+for (var i=1;i<6;i++){  // 6 中颜色
+    ctx.save();
+    ctx.fillStyle = 'rgb('+(51*i)+','+(255-51*i)+',255)';
+    for (var j=0;j<i*6;j++){    // 6 层结构
+        ctx.rotate(Math.PI*2/(i*6));
+        ctx.beginPath();
+        ctx.arc(0,i*12.5,5,0,Math.PI*2,true);
+        ctx.fill();
+    }
+    ctx.restore();
+}
+
+
+// scale
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+canvas.height = 300;
+ctx.strokeStyle = "#fc0";
+ctx.lineWidth = 1.5;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.save();
+ctx.translate(50,50);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(100,0);
+ctx.scale(0.75,0.75);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(133.333,0);
+ctx.scale(0.75,0.75);
+drawSpirograph(ctx,22,6,5);
+ctx.restore();
+ctx.strokeStyle = "#0cf";
+ctx.save()
+ctx.translate(50,150);
+ctx.scale(1,0.75);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(100,0);
+ctx.scale(1,0.75);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(100,0);
+ctx.scale(1,0.75);
+drawSpirograph(ctx,22,6,5);
+ctx.restore();
+ctx.strokeStyle = "#cf0";
+ctx.save()
+ctx.translate(50,250);
+ctx.scale(0.75,1);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(133.333,0);
+ctx.scale(0.75,1);
+drawSpirograph(ctx,22,6,5);
+ctx.translate(177.777,0);
+ctx.scale(0.75,1);
+drawSpirograph(ctx,22,6,5);
+ctx.restore();
+
+// transform // 变形矩阵
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+var sin = Math.sin(Math.PI/6);
+var cos = Math.cos(Math.PI/6);
+ctx.translate(100, 70);
+var c = 0;
+for (var i=1; i <= 12; i++) {
+    c = Math.floor(255 / 13 * i);
+    ctx.fillStyle = "rgb(" + c + "," + c + "," + c + ")";
+    ctx.fillRect(0, 0, 50, 10);
+    ctx.transform(cos, sin, -sin, cos, 5, 10);
+}
+// ctx.setTransform(-1, 0, 0, 1, 200, 200);
+// ctx.fillStyle = "rgba(255, 128, 255, 0.5)";
+// ctx.fillRect(0, 50, 100, 100);
+
+
+
+// 螺旋曲线
+function drawSpirograph(ctx,R,r,O){
+    var x1 = R-O;
+    var y1 = 0;
+    var i  = 1;
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    do {
+        if (i>20000) break;
+        var x2 = (R+r)*Math.cos(i*Math.PI/72) - (r+O)*Math.cos(((R+r)/r)*(i*Math.PI/72))
+        var y2 = (R+r)*Math.sin(i*Math.PI/72) - (r+O)*Math.sin(((R+r)/r)*(i*Math.PI/72))
+        ctx.lineTo(x2,y2);
+        x1 = x2;
+        y1 = y2;
+        i++;
+    } while (x2 != R-O && y2 != 0 );
+    ctx.closePath();
+    ctx.stroke();
+}
+console.log(sum);
+</script>
+</body>
+</html>
