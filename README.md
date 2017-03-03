@@ -2,6 +2,11 @@
 
 ## 2017年
 ==================
+### 2017 年 3 月
+* 2017.03.03 [封装 requestAnimationFrame](https://foreverz133.github.io/demos/smooth.html)
+
+-------------
+
 ### 2017 年 2 月
 * 2017.02.04 [无限滑稽脸(转)](https://foreverz133.github.io/demos/works/emoji/)
 * 2017.02.04 [随机，中饭吃什么](https://foreverz133.github.io/demos/eatWhat.html)
