@@ -212,7 +212,7 @@ body {
         }
         // 继续循环
         ctx.frame++;
-        ctx.stats.update();
+        // ctx.stats.update();
         requestAnimFrame(loop);
     }
     // 响应屏幕大小(但会卡住，需要再点一下)
@@ -303,7 +303,7 @@ body {
     window.onload = function() {
         // 初始 canvas
         ctx = document.getElementById('canvas').getContext('2d');
-        ctx.stats = new Stats();
+        // ctx.stats = new Stats();
         ctx.running = true;
         ctx.frame = 1;
         resize();
@@ -335,7 +335,7 @@ body {
             settings.gui.add(settings, 'friction', 0.45, 0.55).onFinishChange(reset);
             settings.gui.add(settings, 'dampening', 0.01, 0.4).onFinishChange(reset);
             settings.gui.add(settings, 'tension', 0.95, 0.999).onFinishChange(reset);
-            document.body.appendChild(ctx.stats.domElement);
+            // document.body.appendChild(ctx.stats.domElement);
         }
     };
 

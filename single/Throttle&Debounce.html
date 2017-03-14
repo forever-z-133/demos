@@ -24,9 +24,10 @@
 
 <p>throttle(节流)<br>
 不断触发也只会每隔 delta 秒运行一次</p>
+
+<p>在页面上用手指滑动或移动鼠标至屏幕外...</p>
 <div class="body">
 </div>
-<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
 
 // 立即
@@ -91,9 +92,24 @@ function T() {
   document.body.innerHTML += '不断触发但还是隔1秒运行一次<br>';
 }
 
+
+var isPhone, e_move;
+justify();
+window.addEventListener('resize', justify);
+// window.addEventListener(e_move, immediate(I, 1000));
+// window.addEventListener(e_move, throttle(T, 1000));
+// window.addEventListener(e_move, debounce(D, 1000));
 window.addEventListener('mousemove', immediate(I, 1000));
 window.addEventListener('mousemove', throttle(T, 1000));
 window.addEventListener('mousemove', debounce(D, 1000));
+window.addEventListener('touchmove', immediate(I, 1000));
+window.addEventListener('touchmove', throttle(T, 1000));
+window.addEventListener('touchmove', debounce(D, 1000));
+
+function justify() {
+  isPhone = /AppleWebKit.*Mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent));
+  e_move = isPhone ? 'touchmove' : 'mousemove';
+}
 </script>
 </body>
 </html>
