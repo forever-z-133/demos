@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="mobile">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>封装本地存储 localStorage 和 sessionStorage</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+pre {
+    overflow-x: auto;
+}
+</style>
+</head>
+
+<body>
+请查看源码和 console 控制台观看效果
+<pre><code>function Storage(item, isSession) {
+    var db = isSession ? sessionStorage : localStorage;
+    return {
+        get: function(name) {
+            // 为 true 获取所有
+            if (typeof name === 'boolean' && name) return db;
+            // 与 item 不同则获取 name
+            // 否则获取 item
+            var _item = name || item;
+            return db.getItem(_item);
+        },
+        remove: function(name){
+            // 同 get 方法
+            if (typeof name === 'boolean' && name) {
+                db.clear(); return db;
+            }
+            var _item = name || item;
+            db.removeItem(_item);
+            return db;
+        },
+        set: function(name, val) {
+            // 当 name 与 item 不同，且 val 存在时，set(name, val)
+            // 当 name 为 val 时, set(item, name);
+            if (name != item) {
+                if (val)  {
+                    db.setItem(name, val);
+                    return db;
+                }
+            }
+            db.setItem(item, name);
+            return db;
+        },
+        clear: function() {
+            // 清空数据库
+            db.clear();
+            return db
+        },
+    }
+}</code></pre>
+<script>
+function Storage(item, isSession) {
+    var db = isSession ? sessionStorage : localStorage;
+    return {
+        get: function(name) {
+            // 为 true 获取所有
+            if (typeof name === 'boolean' && name) return db;
+            // 与 item 不同则获取 name
+            // 否则获取 item
+            var _item = name || item;
+            return db.getItem(_item);
+        },
+        remove: function(name){
+            // 同 get 方法
+            if (typeof name === 'boolean' && name) {
+                db.clear(); return db;
+            }
+            var _item = name || item;
+            db.removeItem(_item);
+            return db;
+        },
+        set: function(name, val) {
+            // 当 name 与 item 不同，且 val 存在时，set(name, val)
+            // 当 name 为 val 时, set(item, name);
+            if (name != item) {
+                if (val)  {
+                    db.setItem(name, val);
+                    return db;
+                }
+            }
+            db.setItem(item, name);
+            return db;
+        },
+        clear: function() {
+            // 清空数据库
+            db.clear();
+            return db
+        },
+    }
+}
+
+var db = new Storage('test');
+
+console.log('清空数据库：', db.clear());
+console.log('设置 test 的值：', db.set('test val'));
+console.log('设置新元素：', db.set('new_obj', 'new value'));
+console.log('获取 test 的值：', db.get());
+console.log('获取 new_obj 的值：', db.get('new_obj'));
+console.log('获取整个数据库：', db.get(true));
+console.log('删除 test：', db.remove());
+console.log('删除 new_obj：', db.remove('new_obj'));
+console.log('清空数据库：', db.remove(true));
+</script>
+</body>
+</html>

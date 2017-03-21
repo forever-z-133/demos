@@ -8,6 +8,7 @@
 * 2017.03.13 [四处乱撞的弹窗广告](https://foreverz133.github.io/demos/single/floatAD.html)
 * 2017.03.14 [仿天猫邀请函（一镜到底）](https://foreverz133.github.io/demos/works/toTheEnd)
 * 2017.03.14 [WebSocket 操作大屏](http://sum.kdcer.com/test/SocketGame/)
+* 2017.03.21 [封装 localStorage](https://foreverz133.github.io/demos/single/storage.html)
 
 -------------
 
