@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>各种判断，不定期更新</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+pre {
+	overflow-x: auto;
+}
+</style>
+</head>
+
+<body>
+<pre><code></code></pre>
+<script>
+!(function(){
+    'use strict';
+
+    var _div = document.createElement('div');
+    var na = navigator.userAgent;
+
+    var is = {};
+
+    // 判断文件类型
+    is.image = function(x) {
+    	return /(\.|\/)(gif|jpe?g|png)$/i.test(x);
+    }
+    is.audio = function(url) {
+        return /(\.|\/)(mp3|wav|m4a|ogg|aac)$/i.test(url);
+    }
+    is.video = function(url) {
+        return /(\.|\/)(mp4|avi|mov|ogg|wmv|3gp|mkv|flv|rmvb|mpeg)$/i.test(url);
+    }
+
+    // 判断机型
+    is.ios = function() {
+        return /iPhone|mac|iPod|iPad/i.test(navigator.userAgent);
+    }
+    is.android = function() {
+        return /android/i.test(navigator.userAgent);
+    }
+
+
+    // 其他常见应用
+    is.telephone = function(str) {
+        return /1\d{10}/i.test(str);
+    }
+    is.chinese = function(str) {
+    	return /[\u4e00-\u9fa5]/.test(str);
+    }
+    is.emial = function(str) {
+    	return /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/i.test(str);
+    }
+    is.HTML = function(str) {
+    	return /<\/?(?!\d)[^\s>\/=.$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/ig.test(str);
+    }
+})();
+</script>
+</body>
+</html>

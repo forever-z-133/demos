@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>兼容与拓展，不定期更新</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+pre {
+    overflow-x: auto;
+}
+</style>
+</head>
+
+<body>
+<pre><code>// 获取当前秒数时间
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+// 兼容 location.origin，获取完整 host
+if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+}
+
+// 判断该对象是否存在
+$.fn.exist = function () {
+    return this.length > 0;
+}
+
+// 获取此元素现在已有的样式
+if (!HTMLElement.currentStyle) {
+    HTMLElement.prototype.currentStyle = function(prop) {
+        return window.getComputedStyle(this, null)[prop];
+    }
+}
+
+if (![].indexOf) {
+    Array.prototype.indexOf = function(val) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == val) return i;
+        }
+        return -1;
+    };
+}
+
+// 删除数组项
+if (![].remove) {
+    Array.prototype.remove = function(from, to, isValue) {
+        if (isValue) from = this.indexOf(from);
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
+    };
+}</code></pre>
+<script>
+</script>
+</body>
+</html>
