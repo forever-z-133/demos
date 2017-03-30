@@ -12,6 +12,7 @@
 * 2017.03.27 [常用方法，不定期更新](https://foreverz133.github.io/demos/single/common.html)
 * 2017.03.27 [兼容与拓展，不定期更新](https://foreverz133.github.io/demos/single/common2.html)
 * 2017.03.27 [各种正则与判断，不定期更新](https://foreverz133.github.io/demos/single/is.html)
+* 2017.03.30 [CSS 让子级等高](https://foreverz133.github.io/demos/single/sameHeight.html)
 
 -------------
 

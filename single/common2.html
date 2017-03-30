@@ -26,6 +26,22 @@ if (!Date.now) {
     };
 }
 
+// 对比两个对象是否相等
+function ObjectEqual(a, b) {
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+ 
+    if (aProps.length != bProps.length) return false;
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // 兼容 location.origin，获取完整 host
 if (!window.location.origin) {
     window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');

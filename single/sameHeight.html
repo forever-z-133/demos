@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>CSS 让子级拥有同等高度的办法</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+pre {overflow-x: auto}
+#wrap1.wrap {overflow: hidden;}
+#left {
+    width: 250px;
+    background: #00FFFF;
+}
+#center {
+    width: 500px;
+    background: #FF0000;
+}
+#right {
+    width: 250px;
+    background: #00FF00;
+}
+#wrap1 > * {
+    margin-bottom: -10000px;
+    padding-bottom: 10000px;
+    float: left;
+}
+#wrap2 > * {display: table-cell;}
+#wrap3 {display: -webkit-box; display: flex;}
+/*.wrap {width: 100%;}*/
+</style>
+</head>
+
+<body>
+<h1>将 div 设置为等高</h1>
+<div><pre><code>#wrap1 > *{
+    margin-bottom:-1000px;
+    padding-bottom:1000px;
+}</code></pre></div>
+<p>缺点：1. 文档长度必须大于 1000px，否则会出现白底<br>
+2. 父级宽度小于子级宽度之和时崩溃</p>
+<div id="wrap1" class="wrap">
+    <div id="left">
+        <p>left</p><p>left</p><p>left</p><p>left</p><p>left</p>
+    </div>
+    <div id="center">
+        <p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p>
+    </div>
+    <div id="right">
+        <p>right</p><p>right</p><p>right</p>
+    </div>
+</div>
+<div><pre><code>#wrap2 > *{display: table-cell;}</code></pre></div>
+<p>响应式可配合 @media 也是非常不错的<br>
+但屏宽小于子级总宽度时，子级的定宽就无效了</p>
+<div id="wrap2" class="wrap">
+    <div id="left">
+        <p>left</p><p>left</p><p>left</p><p>left</p><p>left</p>
+    </div>
+    <div id="center">
+        <p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p>
+    </div>
+    <div id="right">
+        <p>right</p><p>right</p><p>right</p>
+    </div>
+</div>
+<div><pre><code>#wrap3 {display: flex;}</code></pre></div>
+<p>强烈推荐，flex 非常强大，可见此<a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank">教程</a><br>
+但最好能结合 flex-grow 和 flex-shrink 一起玩耍</p>
+<p><small>特别注意：display: box 和 display: flex 虽然定义相近，但渲染结果是不一样的，你不妨一试</small></p>
+<div id="wrap3" class="wrap">
+    <div id="left">
+        <p>left</p><p>left</p><p>left</p><p>left</p><p>left</p>
+    </div>
+    <div id="center">
+        <p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p><p>center</p>
+    </div>
+    <div id="right">
+        <p>right</p><p>right</p><p>right</p>
+    </div>
+</div>
+<p>当然，用 min-height 和 超出就隐藏 也是不成办法的办法</p>
+
+
+<div class="copyright" style="margin-top: 3rem;">
+written by ForeverZ<br>
+contact me with <br><a href="mailto:617754841@qq.com">E-Mail</a> or <a href="http://www.cnblogs.com/foreverZ/">cnblog</a> or <a href="https://github.com/foreverZ133">GitHub</a><br>
+or 微信: letmefly98
+</div>
+<script>
+</script>
+</body>
+</html>
