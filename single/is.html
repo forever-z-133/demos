@@ -19,7 +19,49 @@ pre {
 </head>
 
 <body>
-<pre><code></code></pre>
+<pre><code>!(function(){
+    'use strict';
+
+    var _div = document.createElement('div');
+    var na = navigator.userAgent;
+
+    var is = {};
+
+    // 判断文件类型
+    is.image = function(x) {
+    	return /(\.|\/)(gif|jpe?g|png)$/i.test(x);
+    }
+    is.audio = function(url) {
+        return /(\.|\/)(mp3|wav|m4a|ogg|aac)$/i.test(url);
+    }
+    is.video = function(url) {
+        return /(\.|\/)(mp4|avi|mov|ogg|wmv|3gp|mkv|flv|rmvb|mpeg)$/i.test(url);
+    }
+
+    // 其他常见应用
+    is.telephone = function(str) {
+        return /1\d{10}/i.test(str);
+    }
+    is.chinese = function(str) {
+    	return /[\u4e00-\u9fa5]/.test(str);
+    }
+    is.emial = function(str) {
+    	return /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/i.test(str);
+    }
+    is.HTML = function(str) {
+    	return /<\/?(?!\d)[^\s>\/=.$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/ig.test(str);
+    }
+
+    // 判断机型
+    is.ios = function() {
+        return /iPhone|mac|iPod|iPad/i.test(navigator.userAgent);
+    }
+    is.android = function() {
+        return /android/i.test(navigator.userAgent);
+    }
+
+    window.is = is;
+})();</code></pre>
 <script>
 !(function(){
     'use strict';
@@ -62,6 +104,8 @@ pre {
     is.HTML = function(str) {
     	return /<\/?(?!\d)[^\s>\/=.$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/ig.test(str);
     }
+
+    window.is = is;
 })();
 </script>
 </body>

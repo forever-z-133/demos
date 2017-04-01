@@ -2,6 +2,12 @@
 
 ## 2017年
 ==================
+### 2017 年 4 月
+* 2017.04.01 [多行文本溢出省略的三种办法](https://foreverz133.github.io/demos/single/ellipsis.html)
+
+-------------
+
+==================
 ### 2017 年 3 月
 * 2017.03.03 [封装 requestAnimationFrame](https://foreverz133.github.io/demos/single/smooth.html)
 * 2017.03.03 [canvas 的更多学习](https://foreverz133.github.io/demos/single/canvas.html)

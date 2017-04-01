@@ -24,7 +24,7 @@ body {
     right: 0;
 }
 .body {
-    background: #000;
+    /*background: #000;*/
     color: #fff;
 }
  #canvas {
@@ -195,7 +195,9 @@ body {
         if (!ctx.running) return;
         // 线条样式
         ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = 'rgba(8,5,16,0.4)';
+        // ctx.fillStyle = 'rgba(8,5,16,0.4)';
+        ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height)
+        ctx.fillStyle = 'rgba(0,0,0,0)';
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.globalCompositeOperation = 'lighter';
         ctx.strokeStyle = 'hsla(' + Math.round(hue.update()) + ',90%,50%,0.25)';
