@@ -24,7 +24,7 @@
     <div class="page welcome" id="welcome">
         <canvas id="game" class="bg"></canvas>
         <div class="buttons">
-            <button id="start">按住播放</button>
+            <a href="#" class="btn" id="start">按住播放</a>
             <!-- <button id="stop">暂停</button> -->
         </div>
     </div>
@@ -384,7 +384,8 @@ function Game(list, finish) {
     // $('#start').on('click', start);
     // $('#stop').on('click', stop);
     
-    $('#start').on('mousedown.map touchstart.map', function(){
+    $('#start').on('mousedown.map touchstart.map', function(e){
+        e.preventDefault();
         start();
         $(window).off('.xx').on('mouseup.map touchend.map', function(){
             stop();

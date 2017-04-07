@@ -7,6 +7,7 @@
 * 2017.04.05 [拓展 dropload 插件](https://foreverz133.github.io/demos/single/dropload.html)
 * 2017.04.06 [文本的特效](https://foreverz133.github.io/demos/single/text-filter.html)
 * 2017.04.07 [禁止微信浏览器下拉出黑底](https://foreverz133.github.io/demos/single/wxPreventScroll.html)
+* 2017.04.07 [grid 布局初体验（1）](https://foreverz133.github.io/demos/single/grid1.html)
 
 -------------
 
