@@ -50,7 +50,7 @@
 * 2017.01.12 [仿蚂蚁积分刻度盘](https://foreverz133.github.io/demos/single/mayicircle.html)
 * 2017.01.14 [Canvas 画符](https://foreverz133.github.io/demos/single/drawSymbol.html)
 * 2017.01.15 [自写拖拽插件(第二版)](https://foreverz133.github.io/demos/single/drag.html)
-* 2017.01.16 [合并 $.post 的报错](https://foreverz133.github.io/demos/single/post.html)
+* ~~2017.01.16 [合并 $.post 的报错](https://foreverz133.github.io/demos/single/post.html)~~（不使用于项目）
 * 2017.01.16 [描边效果，SVG 的 strokeDashoffset 属性](https://foreverz133.github.io/demos/single/svgLine.html)
 * 2017.01.17 [酷炫的鼠标跟随(转)](https://foreverz133.github.io/demos/single/coolHover.html)
 * 2017.01.17 [旗帜飘荡(转)](https://foreverz133.github.io/demos/single/flagWave.html)
