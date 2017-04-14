@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.body, .page {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+.body {
+    max-width: 640px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.page {
+    height: 100%;
+    max-height: 100%;
+    -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+    -webkit-transition: 1s linear;
+    transition: 1s linear;
+}
+.page1 {z-index: 4; background-color: red}
+.page2 {z-index: 3; background-color: pink}
+.page3 {z-index: 2; background-color: grey}
+.page4 {z-index: 1; background-color: green}
+
+.page:after {
+    content: "";
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 0; right: 0;
+    display: block;
+    padding-top: 33.22%;
+}
+.page:after {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 62%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 62%, 0 100%);
+    background: url(../img/corner.png) top center / 100% auto no-repeat;
+    background-color: inherit;
+}
+
+/* 1. 滑动式，不太好 */
+/*.page.rolling {
+    transform: translate3d(0, -150%, 0);
+}*/
+
+/* 2. slideUp 式 */
+.page.rolling {
+    max-height: 0;
+
+    /* 处理滑动中依然可点情况 */
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    /* 处理划上去后内容依然可见情况 */
+    -webkit-animation: hide .1s 1.5s forwards;
+            animation: hide .1s 1.5s forwards;
+}
+@-webkit-keyframes hide {
+    100% {z-index: -1;}
+}
+@keyframes hide {
+    100% {z-index: -1;}
+}
+.page.rolling:after {
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+    -webkit-transition: 1s linear .2s;
+    transition: 1s linear .2s;
+}
+.page.rolling > * {
+    opacity: 0;
+    -webkit-transition: opacity .8s .2s;
+    transition: opacity .8s .2s;
+}
+
+.copyright {
+    position: fixed;
+    z-index: 9999;
+    bottom: 0;
+    left: 0; right: 0;
+    padding: .5rem 1rem;
+    background: #fff;
+    box-shadow: 0 0 1rem rgba(0,0,0,.2);
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <div class="page page1" id="page1">
+        <p>请上下滑动</p>
+        <p>第一页</p>
+    </div>
+    <div class="page page2" id="page2">
+        <p>第二页</p>
+    </div>
+    <div class="page page3" id="page3">
+        <p>第三页</p>
+    </div>
+    <div class="page page4" id="page4">
+        <p>最后一页</p>
+    </div>
+</div>
+<div class="copyright">
+    本案例由张永恒<alias></alias>实现，<br>
+    联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+    <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+    或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+var $page = $('.page'); // 元素对象
+var rolling = false;    // 正在动画
+var len = $page.length; // 元素个数
+var page = 0;   // 当前页数
+var Timer = null;   // 定时清掉正在动画
+$page.on('touchstart mousedown', function(evt){
+    evt.preventDefault();
+    var evt = evt.touches ? evt.touches[0] : evt;
+    var top = evt.clientY;
+    var $win = $(window);
+    var height = $win.height() * 0.1;
+
+    // 添加滑动事件
+    $win = $(window).off('.roll').on('touchmove.roll mousemove.roll',function(e){
+        if (rolling) return;
+        var e = e.touches ? e.touches[0] : e;
+        if (e.clientY - top > height) {
+            // 上一页滑回
+            if (--page < 0) page = 0;
+            $page.eq(page).removeClass('rolling');
+            rolling = true;     // 添加正在滑动，不能有操作
+        } else if (e.clientY - top < -1*height) {
+            // 本页滑出
+            if (++page > len-1) page = len-1;
+            $page.eq(page-1).addClass('rolling');
+            rolling = true;
+        }
+        return false;
+    }).on('touchend.roll mouseup.roll',function(e){
+        $win.off('.roll');
+        console.log(rolling);
+        clearTimeout(Timer);
+        Timer = setTimeout(function(){rolling = false}, 400);
+    });
+    return false;
+});
+</script>
+</body>
+</html>
