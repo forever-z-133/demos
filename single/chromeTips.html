@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="mobile">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>Chrome 通知DEMO</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<div class="body">
+<!--     <header class="header">x</header>
+    <main class="main">x</main>
+    <footer class="footer">x</footer> -->
+</div>
+<script>
+if (window.Notification){
+    if (Notification.permission === 'granted') {
+        var notification = new Notification('Chrome 的推送通知现已可用（42.0 版本）',{body:"你再也不需要抢 Chrome 的测试版来推送消息给自己了。Google 已经发行了 Chrome 42 的最终版本，无论你的浏览器是否开启，它都能让网站发送通知给你。例如，你可以获取重大的新闻，或者有人在古董拍卖中竞价比你高的时候通知你。这些功能 Safari 用户会更熟悉一些，但是此功能是跨平台的——你可以在 Linux、Windows 上使用。Chrome 上没有任何显著的改进，但是 Google Chrome 在众多性能和安全性上的优化，还是值得去升级的。!",icon:"http://www.oschina.net/img/logo/chrome.png"});
+    } else {
+        Notification.requestPermission(function(result) {
+            if (result === 'denied' || result === 'default') {
+                alert('通知权限被无情的拒绝了！');
+            } else {
+                var notification = new Notification('Chrome 的推送通知现已可用（42.0 版本）',{body:"你再也不需要抢 Chrome 的测试版来推送消息给自己了。Google 已经发行了 Chrome 42 的最终版本，无论你的浏览器是否开启，它都能让网站发送通知给你。例如，你可以获取重大的新闻，或者有人在古董拍卖中竞价比你高的时候通知你。这些功能 Safari 用户会更熟悉一些，但是此功能是跨平台的——你可以在 Linux、Windows 上使用。Chrome 上没有任何显著的改进，但是 Google Chrome 在众多性能和安全性上的优化，还是值得去升级的。",icon:"http://www.oschina.net/img/logo/chrome.png"});
+            }
+        });
+    };
+} else {
+    alert('你的浏览器不支持此特性，快去升级chrome吧！');
+}
+</script>
+</body>
+</html>
