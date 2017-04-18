@@ -12,7 +12,8 @@
 * 2017.04.12 [postMessage - iframe 通信](https://foreverz133.github.io/demos/works/postMessage)
 * 2017.04.13 [投票 H5(业务)](https://foreverz133.github.io/demos/works/fotileVote0414)
 * 2017.04.14 [简单翻页效果](https://foreverz133.github.io/demos/single/pageRoll.html)
-* 2017.04.14 [问卷 H5(业务)](https://foreverz133.github.io/demos/works/kbquestion0417)
+* 2017.04.15 [问卷 H5(业务)](https://foreverz133.github.io/demos/works/kbquestion0417)
+* 2017.04.18 [input-file 的手机拍照功能](https://foreverz133.github.io/demos/single/input-file.html)
 
 -------------
 

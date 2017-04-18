@@ -105,6 +105,13 @@ pre {
     	return /<\/?(?!\d)[^\s>\/=.$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/ig.test(str);
     }
 
+    is.object = function(obj) {
+        return obj ? obj.constructor == Object : false;
+    }
+    is.Array = function(arr) {
+        return arr ? arr.constructor == Array : false;
+    }
+
     window.is = is;
 })();
 </script>
