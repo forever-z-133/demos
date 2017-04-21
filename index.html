@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />
 <title>永恒君的案例库</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="此网址主要存放张永恒所积累的DEMO和业务代码" />
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 html, body {
@@ -37,19 +39,39 @@ body {
     box-sizing: border-box;
 }
 
+header {
+	padding: 1rem 1rem .5rem;
+}
 .title {
 	margin: 0 0;
-	padding: .5rem 1rem;
+	padding: 0 0 1rem;
 	font-size: 2.8rem;
 }
 .list {
 	margin: .5rem 0 1rem;
 }
+h2, h3, h4 {
+	font-size: 1em;
+	margin: 0 0 .5rem;
+}
+h2 > span {
+	margin-right: .5rem;
+}
 </style>
 </head>
 
 <body>
-<h1 class="title">永恒的财宝啊，去找吧</h1>
+<header>
+	<h1 class="title">永恒的财宝啊，去找吧</h1>
+	<h2>
+		<span class="author">作者：张永恒</span>
+		<span><a href="https://github.com/foreverZ133" target="_blank">github</a></span>
+		<span><a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblogs</a></span>
+		<span><a href="mailto:617754841@qq.com" target="_blank">617754841@qq.com</a></span>
+	</h2>
+	<h3>用于存放和展示日常所做DEMO和业务</h3>
+	<h4>起始于 2017/01/12，现已累计 <span id="count">0</span> 个案例</h4>
+</header>
 <ul class="list">
 	<li><a href="https://foreverz133.github.io/demos/single/pageRoll2.html" target="_blank">简单翻页效果-2 | 2017-04-21</a></li>
 	<li><a href="https://foreverz133.github.io/demos/single/fireworks.html" target="_blank">烟花效果(转) | 2017-04-18</a></li>
@@ -105,6 +127,9 @@ body {
 </ul>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
+var $demos = document.querySelectorAll('li');
+var $number = document.querySelector('#count');
+$number.innerHTML = $demos.length;
 </script>
 </body>
 </html>
