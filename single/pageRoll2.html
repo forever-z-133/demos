@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="mobile">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+* {
+    box-sizing: border-box;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.book {
+    position: absolute;
+    z-index: 1;
+    top: 50%; left: 50%;
+    width: 90%;
+    perspective: 1500px;
+    background: #fff;
+    transform-style: preserve-3d;
+    transform: translate3d(-50%, -50%, 0);
+    user-select: none;
+}
+.book:before {
+    content: "";
+    display: block;
+    padding-top: 56%;
+    background: #fff;
+}
+
+.book-page {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.book-page {
+    z-index: -1;
+    will-change: transform;
+    transition: transform .8s, z-index 0s .8s;
+}
+.book-page:first-child {
+    z-index: 5;
+}
+.book-page {
+    backface-visibility: hidden;
+}
+.book-page:nth-child(2n) {
+    left: 0;
+    transform-origin: right center;
+    transform: rotateY(180deg);
+}
+.book-page:nth-child(2n-1) {
+    left: 50%;
+    transform-origin: left center;
+    transform: rotateY(0);
+}
+
+.book-page.next3 {
+    z-index: 8;
+    transform: rotateY(0);
+    transition: transform .8s;
+}
+.book-page.next2 {
+    z-index: 10;
+    transform: rotateY(0);
+    transition: transform .8s;
+}
+.book-page.next1 {
+    z-index: 9;
+    transform: rotateY(-180deg);
+    transition: transform .8s;
+}
+
+
+.book-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.copyright {
+    position: fixed;
+    z-index: 9999;
+    bottom: 0;
+    left: 0; right: 0;
+    padding: .5rem 1rem;
+    background: #fff;
+    box-shadow: 0 0 1rem rgba(0,0,0,.2);
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <section id="book"></section>
+</div>
+<div class="copyright">
+    本案例由张永恒<alias></alias>实现，<br>
+    联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+    <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+    或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+if (!HTMLElement.currentStyle) {
+    function _getStyle(prop) {
+        var _s = window.getComputedStyle(this, null)
+        return prop ? _s[prop] : _s;
+    }
+    HTMLElement.prototype.currentStyle = _getStyle;
+    HTMLElement.prototype.getStyle = _getStyle;
+}
+
+Book('#book');
+$('.book-page').eq(0).text('左右滑动')
+
+function Book(elem, options) {
+    var opt = $.extend({
+        pages: ['grey','red','yellow','pink','purple', 'lightblue', 'orange'],
+    });
+
+    var $wrap = $(elem);
+    var $book, $pages, $page;
+    var len = opt.pages.length, index = 0;
+    var touched = false, moving = false;
+
+    _init();
+
+    function _init() {
+        $book = $wrap.find('.book');
+        if ($book.length < 1) _create();
+
+        $pages = $wrap.find('.book-page');
+        if ($book.length < 1) {
+            alert('您的 HTML 结构不符合 Book.js 的使用规则');
+            return null;
+        }
+
+        len = $pages.length;
+
+        _event();
+    }
+
+
+    function _create() {
+        if (len%2 !== 0) {
+            opt.pages.splice(1, 0, '#efefef');
+            ++len;
+        }
+        var _html = '<div class="book" id="zyh-book">';
+        for (var i=0; i<len; i++) {
+            var _style = '';
+            if (/\.jpe?g|\.png|\.gif/i.test(opt.pages[i])) {
+                _style = 'background-image: url(' + opt.pages[i] + ');';
+            } else {
+                _style = 'background: ' + opt.pages[i] + ';';
+            }
+            _html += '<div class="book-page" style="' + _style + '">'+i+'</div>';
+        }
+        _html += '</div>';
+
+        $wrap.empty().append(_html);
+
+        $book = $wrap.find('.book');
+    }
+
+    function _event() {
+        var lastPos = 0, atLeft = 0;
+        $pages.on('touchstart.book mousedown.book', function(evt){
+            evt.preventDefault();
+            if (moving) return;
+            evt = evt.touches ? evt.touches[0] : evt;
+            lastPos = evt.clientX;
+            atLeft = $(this).index() % 2; // 鼠标所在区域，左边为0，右边为1
+            touched = true;
+        });
+        $(window).on('touchmove.book2 mousemove.book2', function(e){
+            if (!touched || moving) return;
+            e = e.touches ? e.touches[0] : e;
+            var offset = e.clientX - lastPos;
+            // console.log(atLeft, offset)
+            if (offset > 30 && atLeft) {
+                _goBack();
+                moving = true;
+            } else if (offset < -30 && !atLeft) {
+                _goNext();
+                moving = true;
+            }
+        }).on('touchend.book2 mouseup.book2', function(e){
+            setTimeout(function(){
+                touched = false;
+                moving = false;
+            }, 500);
+        });
+
+    }
+
+    function _goBack() {
+        console.log('back');
+        $pages.eq(index).removeClass('next3');
+        $pages.eq(--index).removeClass('next2');
+        $pages.eq(--index).removeClass('next1');
+    }
+
+    function _goNext() {
+        console.log('next');
+        $pages.eq(index).addClass('next1');
+        $pages.eq(++index).addClass('next2');
+        $pages.eq(++index).addClass('next3');
+    }
+}
+</script>
+</body>
+</html>
