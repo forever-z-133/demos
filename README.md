@@ -17,7 +17,8 @@
 * 2017.04.18 [input-file 的手机拍照功能](https://foreverz133.github.io/demos/single/input-file.html)
 * 2017.04.18 [globalCompositeOperation](https://foreverz133.github.io/demos/single/globalCompositeOperation.html)
 * 2017.04.18 [烟花效果(转)](https://foreverz133.github.io/demos/single/fireworks.html)
-* 2017.04.18 [简单翻页效果-2](https://foreverz133.github.io/demos/single/pageRoll2.html)
+* 2017.04.21 [简单翻页效果-2](https://foreverz133.github.io/demos/single/pageRoll2.html)
+* 2017.04.25 [常见的点击效果](https://foreverz133.github.io/demos/single/clickAnimation.html)
 
 -------------
 

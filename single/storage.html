@@ -62,6 +62,16 @@ pre {
 <script>
 function Storage(item, isSession) {
     var db = isSession ? sessionStorage : localStorage;
+
+    // 返回正确的 JSON 字符串解析
+    function JsonParse(str) {
+        try {
+            return JSON.parse(str);
+        } catch(e) {
+            return str;
+        }
+    }
+
     return {
         get: function(name) {
             // 为 true 获取所有
@@ -69,7 +79,7 @@ function Storage(item, isSession) {
             // 与 item 不同则获取 name
             // 否则获取 item
             var _item = name || item;
-            return db.getItem(_item);
+            return JsonParse(db.getItem(_item));
         },
         remove: function(name){
             // 同 get 方法
@@ -85,11 +95,11 @@ function Storage(item, isSession) {
             // 当 name 为 val 时, set(item, name);
             if (name != item) {
                 if (val)  {
-                    db.setItem(name, val);
+                    db.setItem(name, JSON.stringify(val));
                     return db;
                 }
             }
-            db.setItem(item, name);
+            db.setItem(item, JSON.stringify(name));
             return db;
         },
         clear: function() {
@@ -111,6 +121,9 @@ console.log('获取整个数据库：', db.get(true));
 console.log('删除 test：', db.remove());
 console.log('删除 new_obj：', db.remove('new_obj'));
 console.log('清空数据库：', db.remove(true));
+
+db.set({x: 'adflkasd'})
+console.log(db.get());
 </script>
 </body>
 </html>

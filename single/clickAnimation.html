@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.link {
+    /*display: inline-block;
+    vertical-align: middle;*/
+    display: block;
+    padding: 1rem 1rem;
+    color: inherit;
+    outline: none;
+    text-decoration: none;
+    background: #f9f9f9;
+}
+.link:active {
+    transition: background .3s;
+    background: #f0f0f0;
+}
+.ripple {
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(200, 200, 200, 0.4);
+    transform: scale(0);
+    position: absolute;
+    opacity: 1;
+}
+.ripple-in {
+    animation: rippleDrop .5s linear;
+}
+@keyframes rippleDrop {
+    100% {transform: scale(2); opacity: 0;}
+}
+.nav {
+    margin: 1rem 1rem;
+    padding: 0 0;
+    list-style: none;
+}
+.nav > li {
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.copyright {
+    position: fixed;
+    z-index: 9999;
+    bottom: 0;
+    left: 0; right: 0;
+    padding: .5rem 1rem;
+    background: #fff;
+    box-shadow: 0 0 1rem rgba(0,0,0,.2);
+}
+</style>
+</head>
+
+<body>
+<ul class="nav">
+    <li><a href="#" class="link">点我</a></li>
+    <li><a href="#" class="link">点我</a></li>
+    <li><a href="#" class="link">点我</a></li>
+    <li><a href="#" class="link">点我</a></li>
+</ul>
+<div class="copyright">
+    本案例由张永恒<alias></alias>实现，<br>
+    联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+    <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+    或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+</div>
+<script>
+SpecialClick();
+
+function SpecialClick(elem) {
+    // 获取此元素现在已有的样式
+    if (!HTMLElement.currentStyle) {
+        function _getStyle(prop) {
+            var _s = window.getComputedStyle(this, null)
+            return prop ? _s[prop] : _s;
+        }
+        HTMLElement.prototype.currentStyle = _getStyle;
+        HTMLElement.prototype.getStyle = _getStyle;
+    }
+
+    // 获取元素
+    var $link = document.querySelectorAll(elem || '.link');
+
+    // 绑定事件
+    for (var i=0,len=$link.length; i<len; i++) {
+        (function(){
+            $link[i].addEventListener('mousedown', function(e){fn.call(this, e)});
+            $link[i].addEventListener('touchstart', function(e){fn.call(this, e)});
+        })(i);
+    }
+
+    // 事件触发
+    var pos, ov;
+    var parent, _span, span;
+    var lasttime = Date.now();
+    function fn(e, elem) {
+        e.preventDefault();
+
+        // 两次点击时间间隔过小会出现 _span 没有删除的情况
+        // 加了点击其他的 $link 又不流畅，不加又重复，不开森
+        if (Date.now() - lasttime < 300) return;
+        lasttime = Date.now();
+
+        e = e.touches ? e.touches[0] : e;
+        parent = e.target;
+
+        // 为父级添加少量样式
+        pos = parent.currentStyle('position');
+        ov = parent.currentStyle('overflow');
+        if (!/absolute|relative|fixed/.test(pos)) {
+            parent.style.position = 'relative';
+        }
+        if (ov != 'hidden') {
+            parent.style.overflow = 'hidden';
+        }
+
+        // 清除以前的圆点
+        _span = parent.querySelector('.ripple');
+        _span && parent.removeChild(_span);
+
+        // 添加圆点
+        span = document.createElement('span');
+        span.className = 'ripple ';
+        span.style.width = this.offsetWidth + 'px';
+        span.style.height = this.offsetWidth + 'px';
+        span.style.top = e.pageY - parent.offsetTop - this.offsetWidth / 2 + 'px';
+        span.style.left = e.pageX - parent.offsetLeft - this.offsetWidth / 2 + 'px';
+        this.appendChild(span);
+
+        // 添加动画效果
+        span.className += 'ripple-in';
+
+        return false;
+    }
+}
+</script>
+</body>
+</html>
