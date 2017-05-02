@@ -45,6 +45,14 @@ console.log(navigator.mediaDevices);
 if (!MediaStreamTrack) {alert('不支持 MediaStreamTrack');}
 if (!MediaStreamTrack.getSources) {alert('不支持 getSources 方法');}
 var exArray = [];
+
+var mediaOpts = {
+    audio: false,
+    video: true,
+    // video: { width: 1280, height: 720 }
+    // { video: { facingMode: "user"} }; // 或者 "environment"
+}
+
 MediaStreamTrack.getSources(function(sourceInfos) {
     for (var i = 0; i != sourceInfos.length; ++i) {
         var sourceInfo = sourceInfos[i]; //这里会遍历audio,video，所以要加以区分 
@@ -52,54 +60,43 @@ MediaStreamTrack.getSources(function(sourceInfos) {
     }
     if (!navigator.getUserMedia) {alert('不支持 getUserMedia 方法')}
 
-    navigator.getUserMedia({
-        "video": {
-            "optional": [{
-                "sourceId": exArray[1]
-            }]
-        },
-        "audio": false
-    }, successFunc, errorFunc)
+    mediaOpts.video = {
+        optional: [{
+            sourceId: exArray[1]
+        }]
+    }
+    navigator.getUserMedia(mediaOpts, successFunc, errorFunc);
 });
 
-// var mediaOpts = {
-//     audio: false,
-//     // video: true,
-//     // video: { width: 1280, height: 720 }
-//     video: {
-//         // mandatory: {
-//         //     minAspectRatio: 1.40,
-//         //     maxAspectRatio: 1.78,
-//         //     minFrameRate: 15,
-//         //     maxFrameRate: 25,
-//         //     minWidth: 320,
-//         //     minHeight: 480,
-//         // },
-//         optional: [{
-//             sourceId: exArray[1]
-//         }]
-//     }
-// }
-// navigator.getUserMedia(mediaOpts, successFunc, errorFunc);
-
-
-
 function successFunc(stream) {
-    // alert('ok');
     var video = document.querySelector('video');
-    if (video.mozSrcObject !== undefined) {
-        video.mozSrcObject = stream
+    if ("srcObject" in video) {
+        video.srcObject = stream
     } else {
         video.src = window.URL && window.URL.createObjectURL(stream) || stream
     }
     video.play();
-    $('.tips').on('click', function(){
-        alert('xx');
-    });
 }
 function errorFunc(err) {
     alert(err.name);
 }
+
+
+// if (navigator.mediaDevices === undefined) {
+//     navigator.mediaDevices = {};
+// }
+// if (navigator.mediaDevices.getUserMedia === undefined) {
+//     navigator.mediaDevices.getUserMedia = function(constraints) {
+//         var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+//         if (!getUserMedia) {
+//             return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+//         }
+//         return new Promise(function(resolve, reject) {
+//             getUserMedia.call(navigator, constraints, resolve, reject);
+//         });
+//     }
+// }
+// navigator.mediaDevices.getUserMedia(mediaOpts).then(successFunc).catch(errorFunc);
 </script>
 </body>
 </html>
