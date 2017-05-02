@@ -1,6 +1,14 @@
 # 永恒君的案例库
 
 ## 2017年
+
+==================
+### 2017 年 5 月
+* 2017.05.02 [LazyMan 的实现](https://foreverz133.github.io/demos/single/lazyman.html)
+* 2017.05.02 [Promise 红绿灯的实现](https://foreverz133.github.io/demos/single/redgreenlight.html)
+
+-------------
+
 ==================
 ### 2017 年 4 月
 * 2017.04.01 [多行文本溢出省略的三种办法](https://foreverz133.github.io/demos/single/ellipsis.html)
