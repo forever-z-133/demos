@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>图像蒙版问题</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+}
+.main {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.footer {
+    flex-shrink: 0;
+}
+h1 {
+    margin-top: 0;
+}
+img {
+    width: 200px;
+    display: block;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.box {
+    width: 200px;
+    background-image: -webkit-linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
+    background-image: linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
+    background-size: 200% 100%;
+    -webkit-mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
+    mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
+    -webkit-mask-size: 100% auto;
+    mask-size: 100% auto;
+    animation: mask 2s linear infinite;
+}
+.box:before {
+    content: "";
+    display: block;
+    padding-top: 67.45%; /* 431/639 */
+}
+@-webkit-keyframes mask {
+    100% {background-position: 200% 50%}
+}
+@keyframes mask {
+    100% {background-position: 200% 50%}
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <main class="main">
+        <h1>图像遮罩问题</h1>
+        <p><code>mask-image</code> 能实现该元素被图片或其他色彩剪贴成蒙版的效果，下图为原图</p>
+        <img src="http://sum.kdcer.com/MotherDay/img/title.png">
+        <!-- <svg id="title-mask" width="300px"  viewBox="0 0 639 431">
+            <image xlink:href="http://sum.kdcer.com/MotherDay/img/title.png" width="100%">
+        </svg> -->
+        <p>而 <code>mask-image</code> 至今还未成为标准，兼容性极其不佳，不过 chrome 和微信支持感觉就够了<br>
+        <small>留个小问题 css 中有另一个 <code>mask</code> 属性，它与 <code>mask-image</code> 是什么关系有待研究</small></p>
+        <p>除此之外，还有另三个属性可用 <code>mask-origin</code> / <code>mask-repeat</code> 和 <code>mask-size</code></p>
+        <p>再配合上层的渐变与动效，可实现以下效果：</p>
+
+        <div class="box"></div>
+
+        <p>具体代码如下：</p>
+        <pre><code>&lt;div class="box">&lt;/div>
+
+.box {
+    width: 200px;
+    background-image: -webkit-linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
+    background-image: linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
+    background-size: 200% 100%;
+    -webkit-mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
+    mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
+    -webkit-mask-size: 100% auto;
+    mask-size: 100% auto;
+    animation: mask 2s linear infinite;
+}
+.box:before {
+    content: "";
+    display: block;
+    padding-top: 67.45%; /* 431/639 */
+}
+@-webkit-keyframes mask {
+    100% {background-position: 200% 50%}
+}
+@keyframes mask {
+    100% {background-position: 200% 50%}
+}</code></pre>
+        <p>其他：制作过程中 background 搭配 svg 的效果依然没有成功，甚至在 firefox 中 image 存有高度但不显示图像，不知是兼容问题还是其他，有待研究</p>
+    </main>
+    <footer class="copyright">
+        本案例由张永恒<alias></alias>实现，<br>
+        联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+        <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+        或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+</script>
+</body>
+</html>
