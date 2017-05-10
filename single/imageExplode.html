@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>图片爆炸效果</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.main {
+    padding: 10px;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.footer {
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <main class="main">
+        <div class="explode-image" data-image="http://www.placehold.it/300x200"></div>
+        <button id="btn-reset">重置</button>
+        <button id="btn-change">换张图</button>
+        <p>此案例为图片爆炸效果，点击图片使其分裂并散开。</p>
+        <p>但好像实现得效果一般，不够绚烂。有时会出现已加载但不显示的情况，请点击重置按钮。</p>
+    </main>
+    <footer class="footer">
+        本案例由张永恒<alias></alias>实现，<br>
+        联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+        <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+        或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </footer>
+</div>
+<!-- <img src="http://www.placehold.it/300x200" class="x"> -->
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+window.requestAnimationFrame = (function(){
+    return  window.requestAnimationFrame   ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+window.cancelAnimationFrame = (function(id){
+    return window.cancelRequestAnimationFrame ||
+        window.webkitCancelAnimationFrame         ||
+        window.webkitCancelRequestAnimationFrame  ||
+        window.mozCancelRequestAnimationFrame     ||
+        window.oCancelRequestAnimationFrame       ||
+        window.msCancelRequestAnimationFrame      ||
+        clearTimeout(id);
+})();
+function Random(min, max) {
+    return min + Math.random() * (max - min);
+}
+
+function ImageExplode(dom, options) {
+    var opt = $.extend({
+        event: 'click',
+        begin: null,
+        finish: null,
+    });
+    var $item = document.querySelector(dom || '.explode-image');
+    // canvas,2d,图片,图址, 盒宽,   盒高,     宽高比,  碎片数组, 碎片数, 动画
+    var cv, ctx, img, url, width=0, height=0, radio=0, pices=[], max=20, Timer;
+    // 摩擦，重力
+    var friction = 0.9, gravity = 1;
+    var canStart = false;
+
+    init();
+    
+    $item.addEventListener('click', function(){
+        if (!canStart) return;
+        canStart = false;
+        start.call(this);
+    });
+
+    function init() {
+        url = $item.getAttribute('data-image');
+        width = $item.offsetWidth, height = 0;
+        img = new Image();
+        img.onload = init2;
+        img.src = url;
+    }
+    function init2() {
+        cv = document.createElement('canvas');
+        radio = img.height / img.width;
+        cv.width = width;
+        cv.height = height = width * radio;
+        $item.appendChild(cv);
+        ctx = cv.getContext('2d');
+        ctx.drawImage(this, 0, 0, width, height);
+        canStart = true;
+    }
+    function start(){
+        ctx.clearRect(0, 0, width, height);
+        for(var a=0; a<50; a++) {
+            pices.push({
+                img: img,
+                x: Random(max, width-max),
+                y: Random(max, height-max),
+                size: Random(10, max),
+                speed: Random(1, 10),
+                opacity: 1,
+            });
+        }
+        requestAnimationFrame(loop);
+    }
+    function loop() {
+        // console.log(pices);
+        ctx.clearRect(0, 0, width, height);
+
+        if (pices.length < 1) {
+            // console.log(pices)
+            cancelAnimationFrame(Timer);
+            return false;
+        }
+
+        for (var i=0,len=pices.length; i<len; i++) {
+            var one = pices[i];
+            if (!one) continue;
+
+            // 图片蒙版截取的位置还是最初的位置
+            if (!one.imgX) one.imgX = one.x;
+            if (!one.imgY) one.imgY = one.y;
+
+            // 处理摩擦和阻力
+            one.speed *= friction;
+            one.y += gravity;
+
+            // 更新坐标值
+            if (one.x > width/2) {
+                one.x += one.speed;
+            } else {
+                one.x -= one.speed;
+            }
+            if (one.y > height/2) {
+                one.y += one.speed;
+            } else {
+                one.y -= one.speed;
+            }
+
+            one.opacity -= 0.02;
+            // if (one.opacity < 0) continue;
+            if (one.opacity <= 0) pices.splice(i-1, 1);
+
+            // 删除超出屏幕的数组项
+            // if (one.x > width || one.x < 0) pices.splice(i-1, 1);
+            // if (one.y > height || one.y < 0) pices.splice(i-1, 1);
+
+            // 重新绘制
+            drawOne(one);
+        }
+        // window.cancelAnimationFrame(Timer);
+        requestAnimationFrame(loop);
+    }
+    function drawOne(one) {
+        // console.log(one);
+        ctx.save();
+        ctx.globalAlpha = one.opacity > 0 ? one.opacity : 0;
+        ctx.beginPath();
+        ctx.arc(one.x, one.y, one.size/2, 0, Math.PI*2, true);
+        ctx.clip();
+        // ctx.drawImage(img, 0, 0, width, height);
+        ctx.drawImage(img, one.imgX-one.size/2, one.imgY-one.size/2, one.size, one.size, one.x-one.size/2, one.y-one.size/2, one.size, one.size);
+        ctx.restore();
+        ctx.globalAlpha = 1;
+    }
+
+    return {
+        reset: function(){
+            $item.removeChild(cv);
+            init();
+        },
+        change: function(url){
+            $item.removeChild(cv);
+            $item.setAttribute('data-image', url);
+            init();
+        }
+    }
+}
+
+var explode = new ImageExplode();
+
+document.querySelector('#btn-reset').addEventListener('click', function(e){
+    e.preventDefault();
+    explode.reset();
+});
+
+var imgArr = ['img/icon.jpg', 'img/btn-back.png', 'img/btn-close.png', 'img/btn-my.png', 'img/btn-police.png', 'img/btn-rule.png', 'img/btn-save.png', 'img/btn-send.png', 'img/btn-share.png', 'img/btn-start.png', 'img/btn-view.png', 'img/card1.png', 'img/card2.png', 'img/card3.png', 'img/logo.png', 'img/main.jpg', 'img/rule.png', 'img/title.png', 'img/word-ok.png'];
+document.querySelector('#btn-change').addEventListener('click', function(e){
+    e.preventDefault();
+    explode.change('http://sum.kdcer.com/MotherDay/' + imgArr[Math.floor(Math.random()*imgArr.length)]);
+});
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@
 * 2017.05.08 [母亲节留言 H5(业务)](https://foreverz133.github.io/demos/works/MotherDay)
 * 2017.05.10 [渐变与重复实现的视觉效果](https://foreverz133.github.io/demos/single/gradient-background.html)
 * 2017.05.10 [图像蒙版问题](https://foreverz133.github.io/demos/single/gradient-mask-word.html)
+* 2017.05.10 [图片炸开效果](https://foreverz133.github.io/demos/single/imageExplode.html)
 
 -------------
 
