@@ -12,8 +12,9 @@
 * 2017.05.10 [图像蒙版问题](https://foreverz133.github.io/demos/single/gradient-mask-word.html)
 * 2017.05.10 [图片炸开效果](https://foreverz133.github.io/demos/single/imageExplode.html)
 * 2017.05.12 [取巧的文字蒙版效果](https://foreverz133.github.io/demos/single/gradient-mask-word2.html)
-* 2017.05.12 [background-attachment 的程序实现(未完成)](https://foreverz133.github.io/demos/single/ScrollParallax-1.html)
+* 2017.05.12 [background-attachment 的程序实现(无法实现)](https://foreverz133.github.io/demos/single/ScrollParallax-1.html)
 * 2017.05.12 [translateZ的 3d 视觉差](https://foreverz133.github.io/demos/single/ScrollParallax-2.html)
+* 2017.05.15 [系统默认的表单合法判断](https://foreverz133.github.io/demos/single/inputTip.html)
 
 -------------
 
