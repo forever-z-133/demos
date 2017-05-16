@@ -14,7 +14,8 @@
 * 2017.05.12 [取巧的文字蒙版效果](https://foreverz133.github.io/demos/single/gradient-mask-word2.html)
 * 2017.05.12 [background-attachment 的程序实现(无法实现)](https://foreverz133.github.io/demos/single/ScrollParallax-1.html)
 * 2017.05.12 [translateZ的 3d 视觉差](https://foreverz133.github.io/demos/single/ScrollParallax-2.html)
-* 2017.05.15 [系统默认的表单合法判断](https://foreverz133.github.io/demos/single/inputTip.html)
+* 2017.05.15 [表单验证](https://foreverz133.github.io/demos/single/inputTip.html)
+* 2017.05.16 [仿QQ有趣的底部导航](https://foreverz133.github.io/demos/single/QQfooterbar.html)
 
 -------------
 
