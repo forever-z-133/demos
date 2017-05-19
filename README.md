@@ -16,6 +16,7 @@
 * 2017.05.12 [translateZ的 3d 视觉差](https://foreverz133.github.io/demos/single/ScrollParallax-2.html)
 * 2017.05.15 [表单验证](https://foreverz133.github.io/demos/single/inputTip.html)
 * 2017.05.16 [仿QQ有趣的底部导航](https://foreverz133.github.io/demos/single/QQfooterbar.html)
+* 2017.05.18 [移动端响应式研究](https://foreverz133.github.io/demos/single/respond-font-size.html)
 
 -------------
 

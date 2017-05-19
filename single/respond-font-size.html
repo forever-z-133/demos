@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+body, .body {
+    overflow: hidden;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dedede;
+    max-width: 768px;
+    margin: auto;
+}
+.main {
+    height: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+    -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+
+.main {
+	padding: 0 10px;
+	line-height: 1.6;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <header class="header"></header>
+    <main class="main">
+    	<article>
+    	</article>
+	    	<p>讲真，其实我也不知道该如何为此篇开头，因为响应式文字需不需要做其实我也没有深入探究过。<br>
+	    	但在学习其他网站的过程中，我发现了一些比较新奇的做法，所以想试着梳理一下，为何会出现这种有些奇怪，可能实则非常奇妙的解决方案。</p>
+
+	    	<p>如果理解有偏差的地方，还望大佬们不吝赐教。</p>
+
+			<p>简单来说，响应式是为了让网页在各种显示设备上都有不错的浏览体验，无论是 <code>@media</code> 将元素换行，后台获取 <code>userAgent</code> 返回不同页面，利用 <code>viewport</code> 限定视图，还是利用根元素属性来计算大小等，他们都能实现各自编程特色的响应式布局，非要说谁是最优，恐怕还是得依需求而定。</p>
+ 
+			<p>接下来我们先大致罗列一下，这几种布局方法的如何施展的。</p>
+
+			<hr>
+
+			<p>众所周知的 Bootstrap，它的栅栏布局即为媒体查询的代表，完全通过屏宽来判断元素是否换行和是否显示。</p>
+
+<pre><code>&lt;style>.col-xs-2 {width: 50%}
+@media (min-width: 768px) {
+    .col-sm-3 {width: 33.333333%}
+}
+@media (min-width: 992px) {
+    .col-md-4 {width: 25%}
+}
+@media (min-width: 1200px) {
+    .col-lg-5 {width: 20%}
+}
+&lt;/style>
+ 
+&lt;div class="col-xs-2 col-sm-3 col-md-4 col-lg-5">&lt;/div></code></pre>
+			
+			<p>非常方便操作和容易理解地将显示设备按宽度分成了四个区间，各区间内按栅栏占比给予宽度。</p>
+
+			<hr>
+ 
+			<p>然而，随着移动互联网的迅猛突进，以及 WebApp 的使用，也由于手机的分辨率和尺寸被厂商们不断更新，768px 以下的设计要求也相应拔高，人们开始对响应式的要求也有了些改变。比如 iPhone4 上的文字大小还适合 iPhone6 吗，Retina 屏的 1px 问题，devicePixelRate 和屏幕缩放问题等等...所以为了解决这些问题产生了非常丰富的解决方案，我们一个一个来。</p>
+
+			<hr>
+ 
+			<p>首先，随着屏幕越大，字体大小也越来越大，好像是个不错的想法耶。</p>
+
+<pre><code>html { font-size: 10px;}
+@media (min-width: 376px) and (max-width: 414px) {
+    html{font-size: 11px;}
+}
+@media (min-width: 415px) and (max-width: 639px) {
+    html{font-size: 13px;}
+}
+@media (min-width: 640px) and (max-width: 719px) {
+    html{font-size: 14px;}
+}
+@media (min-width: 720px) and (max-width: 749px) {
+    html{font-size: 15px;}
+}
+@media (min-width: 750px) and (max-width: 799px) {
+    html{font-size: 16px;}
+}
+@media (min-width: 800px) and (max-width: 992px) {
+    html{font-size: 20px;}
+}
+body {
+    margin: 0;
+    font-size: 1.6rem;
+}</code></pre>
+
+			<p>实践情况告诉我们，在 iPhone6 plus 上这种字大的体验确实不赖。不过好像并不是字越大就越好看，比如在 iPad 上，字大绝对不是一个好的视觉体验。</p>
+ 
+			<hr>
+
+			<p>所以又有了另一种搞法，根元素的字体大小由宽度和 <code>devicePixelRate</code> 来计算求得，也比上面的方法更注重了 dpr 的考虑。</p>
+
+<pre><code>&lt;style>
+body {font-size: .12rem}
+&lt;/style>
+ 
+&lt;script>
+!function() {
+    function e() {
+        r.innerText = "html{font-size:" + (a.style.fontSize = a.getBoundingClientRect().width / o * d + "px") + " !important;}"
+    }
+    var t = navigator.userAgent,
+        n = (t.match(/(iPhone|iPad|iPod)/), t.match(/Android/i), window),
+        i = document,
+        a = i.documentElement,
+        o = (n.devicePixelRatio, 375),
+        d = 100,
+        r = (i.head.querySelector('[name="viewport"]'), i.createElement("style"));
+    r.innerText = "html{font-size:100px !important}", i.head.appendChild(r), e(), n.addEventListener("resize", e, !1);
+    a.className += t.match(/ucbrowser/i) ? " app-uc " : ""
+}();
+&lt;/script></code></pre>
+
+			<p>这里并没有直接在设置 font-size 的时候就乘以 0.12 的原因可能是，这样会比较容易算宽度吧，比如 3.75rem 便是一个屏宽咯。</p>
+
+			<p>当然不用百分比而用 rem 来定宽，也是有些好处的。比如：两栏式百分比布局的间隙也只能百分比咯（calc 另当别论）造成左右和上下间隙不相等，元素纵横比直接用数值就能完成，因为现在的 rem 就像百分比那样非常自动了，后来发现，它还有 PC 端缩放浏览器比例保持页面不变的功效。</p>
+
+			<hr>
+
+			<p>除此之外，还有淘宝的搞法，lib-flexible.js。</p>
+			<p>它和上面的方法在 rem 方面是类似的，10rem 便是一个屏宽，但在文字方面不太一样。</p>
+			<p>淘宝网触屏版 并不想让字体越来越大，而始终为 12px 或 24px。</p>
+			<p>而结果来看，字小图大加留白好像反而有些精细的感觉，也解决了上面方法 PC 端字超大的问题。</p>
+			<p>另外，如果使用此类方法，那么 @media 划分屏宽节点就得靠 rem 了哟，比如淘宝用的 10rem。</p>
+
+			<hr>
+
+			<p>最后，再讲一个比较奇葩但又很有效的响应式方法。</p>
+
+<pre><code>&lt;meta name="viewport" content="width=750,user-scalable=no" />
+ 
+&lt;style>
+html, body {
+    width: 750px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+&lt;/style></code></pre>
+
+			<p>有没有感觉到一股我不管我不听的倔强气息，这种方法意味着，不管设备怎样，我只当设备是 750px 视图大小的设备。375px 就是半个屏幕，这对做应用场景 H5 的小伙伴可谓是福音，做雪碧图用 px 定位什么的才是最爽的，</p>
+			<p>但它也有着它的坏处，也就是设备的宽高比是不定的，比如 iPhone4 和 iPhone5 一样宽但高度短一截，所以最好再加上一个上下居中的解决办法。</p>
+
+			<p>这几种方法都各有特色，有各自方便的角度，所以依照需求和喜好，多研究下吧，我也期望能有人来 和我讨论，么么哒</p>
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒<alias></alias>实现，<br>
+            联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+            <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+</script>
+</body>
+</html>
