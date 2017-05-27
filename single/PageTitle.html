@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>页面标题跑马灯闪动效果</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<p>↑ 页面标题的小效果，娱乐一下</p>
+<div><button id="btn1">效果一（跑马灯式）</button></div>
+<div><button id="btn2">效果二（新消息闪烁）</button></div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+function PageTitle(str) {
+    document.title = str;
+    str += '____';
+    var len = str.length, Timer, st = Date.now();
+    function _do() {
+        if (Date.now() - st > 250) {
+            st = Date.now();
+            str = str.slice(1, len) + str.slice(0, 1);
+            document.title = str.slice(0, 17);
+        }
+        Timer = requestAnimationFrame(_do);
+    }
+    return {
+        start: function(){
+            Timer && cancelAnimationFrame(Timer);
+            Timer = requestAnimationFrame(_do);
+        },
+        stop: function(){
+            cancelAnimationFrame(Timer);
+        },
+    }
+}
+
+function PageTitle2(str, str2) {
+    document.title = str;
+    var shown = false, Timer, st = Date.now();
+    str2 = str2 || '你有新消息，快去看看';
+    function _do() {
+        if (Date.now() - st > 600) {
+            st = Date.now();
+            shown = !shown;
+            if (shown) {
+                document.title = str;
+            } else {
+                document.title = '【'+str2+'】';
+            }
+        }
+        Timer = requestAnimationFrame(_do);
+    }
+    return {
+        start: function(){
+            Timer && cancelAnimationFrame(Timer);
+            Timer = requestAnimationFrame(_do);
+        },
+        stop: function(){
+            cancelAnimationFrame(Timer);
+        },
+    }
+}
+
+var fn1 = PageTitle('我是标题1标题2标题3标题4标题5');
+var fn2 = PageTitle2('我是标题1标题2标题3标题4标题5');
+document.querySelector('#btn1').addEventListener('click', function(){
+    fn1.start(); fn2.stop();
+});
+document.querySelector('#btn2').addEventListener('click', function(){
+    fn2.start(); fn1.stop();
+});
+
+</script>
+</body>
+</html>
