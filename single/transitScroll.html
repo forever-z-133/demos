@@ -12,6 +12,9 @@
 <title>touch事件模拟手机滑动</title>
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
+* {
+    box-sizing: border-box;
+}
 .body {
     position: absolute;
     top: 0; bottom: 0;
@@ -30,12 +33,14 @@
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    /*transform: translate3d(0,0,0);*/
+    transform: translate3d(0,0,0);
 }
 .content {
     /*height: 3000px;*/
-    padding: 100px 10px;
-    background: linear-gradient(yellow, purple, green, grey, pink)
+    position: relative;
+    padding: 10px 10px 80px;
+    background: #f7f7f7;
+    box-shadow: 0 -3px 3px rgba(0,0,0,.1);
 }
 .item {
     height: 200px;
@@ -54,22 +59,65 @@
     background: #fff;
     padding: 5px 10px;
 }
+pre {
+    padding: .5rem;
+    background: #fff;
+    border-radius: .2rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.top-load, .drop-load {
+    padding: .5rem;
+    font-size: .8em;
+    text-align: center;
+}
+.drop-load:before {
+    content: "";
+    width: .8em; height: .8em;
+    margin-right: .3em;
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid #000;
+    border-left-color: transparent;
+    border-radius: 100%;
+    animation: load-rotate 1s infinite linear;
+}
+@keyframes load-rotate {
+    100% {transform: rotate(360deg);}
+}
 </style>
 </head>
 
 <body>
 <div class="body">
     <main class="main">
+        <div class="top-load">下拉刷新</div>
         <div class="content">
-            <p>一直被手机滑动的 bug 所困扰，比如微信浏览器下来出黑底，fixed 在苹果机弹性滑动时的乱跳，scroll 事件监听不实时，没有滑动前就运行的办法等等，因此部分借鉴 <a href="https://github.com/AlloyTeam/AlloyTouch" target="_blank">AlloyTouch</a> 的源码，用 touch 事件模拟出手机滑动的效果，已解决上述所有问题</p>
+            <p>请使用手机或浏览器的响应式工具来浏览本页。</p>
+            <p>一直被手机滑动的 bug 所困扰，比如微信浏览器下来出黑底，fixed 在苹果机弹性滑动时的乱跳，scroll 事件监听不实时，默认滑动超前于方法，下拉刷新效果等等，因此部分借鉴 <a href="https://github.com/AlloyTeam/AlloyTouch" target="_blank">AlloyTouch</a> 的源码，用 touch 事件模拟出手机滑动的效果，以解决上述所有问题</p>
             <a href="http://www.baidu.com">跳链接</a>
             <input type="text">
+            <pre>这里用来尝试其他 overflow 会怎样，比如左右的。
+所以加长加长加长加长加长加长加长加长加长加长加长加长加长加长加长加长加长。
+当然是不行，有待解决</pre>
             <div class="list"></div>
+            <div class="drop-load">底部加载</div>
         </div>
         <div class="bottom">我是fixed，不再出bug了</div>
     </main>
 </div>
+<!-- <script src="http://alloyteam.github.io/AlloyTouch//alloy_touch.css.js"></script> -->
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var _html = '';
+for(var i=0; i<10; i++) {
+    _html += '<div class="item"></div>';
+}
+$('.list').append(_html);
+$('.item').on('click', function(){
+    alert();
+})
+</script>
 <script>
 if (!Date.now) Date.now = function () { return new Date().getTime(); };
 
@@ -81,6 +129,9 @@ function TransitScroll(dom, options) {
     var opt = $.extend({
         vertical: true,     // 滑动方向，默认是上下滑动
         initialValue: 0,    // 初始时滑动起始位置
+        windowEventPrevent: true,
+        topStop: false,
+        bottomStop: false,
         change:function(value){},
         touchStart:function(evt, value){},
         touchMove:function(evt, value){},
@@ -94,10 +145,14 @@ function TransitScroll(dom, options) {
     var sp = 0, np = 0; // 滑动开始(start)/当前(now)位置
     var sx = sy = 0, nx = ny = 0;  // 滑动时的位置
     var st = nt = 0;    // 滑动开始/结束时间
+    var hasEnd = true;  // transitionEnd 是否结束
     var min = -$dom.offsetHeight + window.innerHeight, max = 0; // 移动范围
     var ease = 'cubic-bezier(0.1, 0.57, 0.1, 1)';
     var property = opt.vertical ? 'translateY' : 'translateX';
-    var transform = 'transform', transition = 'transition-duration', transitionEase = 'transition-timing-function';
+    var transform = 'transform',
+        transition = 'transition-duration',
+        transitionEase = 'transition-timing-function';
+        transitionEnd = 'webkitTransitionEnd',
 
     // 定义 translate 简单赋值，而不用 transform 赋值
     Object.defineProperty($dom, property, {
@@ -107,11 +162,20 @@ function TransitScroll(dom, options) {
             return opt.vertical ? (+(matrix[13] || matrix[5])) : (+(matrix[12] || matrix[4]));
         },
         set: function (value) {
-            this.style[transform] = property + '(' + (value || 0) + 'px)';
+            // this.style[transform] = property + '(' + (value || 0) + 'px)';
+            if (typeof value === 'undefined') return;
+            this.style[transform] = opt.vertical ? 'translate3d(0, ' + value + 'px, 0)' : 'translate3d(' + value + 'px, 0, 0)';
         }
     });
     np = opt.initialValue || _get() || 0;
     $dom[property] = np;
+
+    // 处理微信下拉出黑底问题
+    if (opt.windowEventPrevent) {
+        document.addEventListener("touchmove", function (evt) {
+            evt.preventDefault();
+        }, false);
+    }
 
     // 绑定事件函数
     function on(element, type, callback) {
@@ -122,11 +186,11 @@ function TransitScroll(dom, options) {
     }
 
     // 绑定事件
-    on(window, 'touchstart', _touchstart);
+    on($dom, 'touchstart', _touchstart);
     on(window, 'touchmove', _touchmove);
     on(window, 'touchend', _touchend);
-    on($dom, 'webkitTransitionEnd', _transitionEnd);
-    on(window, 'blur', function(){touched = false;});
+    on($dom, transitionEnd, _transitionEnd);
+    on(window, 'blur', _touchend);
 
     // 事件处理
     function _touchstart(evt) {
@@ -152,14 +216,22 @@ function TransitScroll(dom, options) {
         // 本次已滑动的距离
         var dx = Math.abs(e.pageX - sx), dy = Math.abs(e.pageY - sy);
         // 处理点击与滑动同时瞬发问题
-        if (dx < 5 || dy < 5) return;
-        // 处理微信下拉黑底问题
+        if (dx < 5 && dy < 5) return;
+        // opt.windowEventPrevent 为 false 时的粗略阻止
         if (!_preventDefault(evt.target)) {
             evt.preventDefault();
         }
         // 记录已滑动到的位置
         nx = e.pageX, ny = e.pageY
         np = (opt.vertical ? e.pageY : e.pageX) - sp;
+        // console.log(np);
+        // 是否限制超出滑动范围进行弹性回归
+        if (opt.topStop) { np = np > max ? max : np }
+        if (opt.bottomStop) { np = np < min ? min : np; }
+        // 看滑动得快不快
+        if (Date.now() - st > 300) {
+            st = Date.now();
+        }
         // 进行赋值
         $dom[property] = np;
         // 其他回调
@@ -169,20 +241,21 @@ function TransitScroll(dom, options) {
         if (!touched) return;
         touched = false;
         current = _get();
-        opt.touchEnd(evt, current);
-        cancelAnimationFrame(Timer);
+        // 如果自己写回调，就不用默认的咯
+        if (opt.touchEnd.call(this, evt, current) === false) return;
 
-        if (current > max) {
+        // 超出判断，弹性回归
+        if (current >= max) {
             _to(max, 600, ease);
-        } else if (current < min) {
-            // opt.atBottom();
+        } else if (current <= min) {
             _to(min, 600, ease);
         } else {
             nt = Date.now() - st;
+            // 划得特别快，则计算加速度，不快就随意啦
             if (nt < 300) {
+                // 此算法来自于 https://github.com/AlloyTeam/AlloyTouch
                 var distance = opt.vertical ? ny - sy : nx - sx;
                 var speed = distance / nt;
-                // console.log(distance, current,speed)
                 var destination = current + (speed * speed) / (2 * 0.006) * (distance < 0 ? -1 : 1);
                 var tRatio = 1;
                 if (destination < min) {
@@ -203,7 +276,10 @@ function TransitScroll(dom, options) {
                     }
                 }
                 var duration = Math.round(speed / 0.006) * tRatio;
-                console.log(destination, duration)
+                // if (opt.topStop) {
+                //     if (current >= max) return;
+                // }
+                if ((current >= max && opt.topStop) || (current <= min && opt.bottomStop)) return;
                 _to(Math.round(destination), Math.abs(duration), ease);
             } else _transitionEnd()
         }
@@ -215,13 +291,17 @@ function TransitScroll(dom, options) {
     }
     // 滑动时运行 change，比 touchmove 更稳定
     function _tick() {
-        opt.change(_get());
+        var current = _get();
+        opt.change(current);
+        if (current - 20 <= min) {
+            opt.atBottom();
+        }
         Timer = requestAnimationFrame(_tick);
     }
     // 滑动到某处
     function _to(value, time, ease) {
         $dom[property] = value || 0;
-        $dom.style[transition] = time + 'ms';
+        $dom.style[transition] = (time || 400) + 'ms';
         $dom.style[transitionEase] = ease;
     }
     // 获取当前 scrollTop
@@ -242,50 +322,87 @@ function TransitScroll(dom, options) {
             _to(min, 400, ease); return;
         } else if (current > max) {
             _to(max, 400, ease); return;
+        } else {
+            opt.animationEnd(current);
+            cancelAnimationFrame(Timer);
         }
-        // 其他回调
-        opt.animationEnd(current);
-        cancelAnimationFrame(Timer);
     }
-    // 
+    // 遇到表单滑动特殊对待
     function _preventDefault(el, exceptions) {
         exceptions = exceptions || {tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/};
         for (var i in exceptions) {
-            if (exceptions[i].test(el[i])) {
-                return true;
-            }
+            if (exceptions[i].test(el[i])) return true;
         }
         return false;
     }
+    // 容器面积变化，重新赋值滑动范围
+    function _resize(_max, _min) {
+        min = _min || -$dom.offsetHeight + window.innerHeight;
+        max = _max || 0;
+    }
 
     return {
+        initialValue: opt.initialValue,
+        resize: _resize,
         to: _to,
         get: _get,
     }
 }
 
-
-
-var _html = '';
-for(var i=0; i<20; i++) {
-    _html += '<div class="item"></div>';
-}
-$('.list').append(_html);
-$('.item').on('click', function(){
-    alert();
-})
-
 if ('ontouchstart' in window) {
     document.querySelector('.main').style.overflow = 'hidden';
+    var $top = $('.top-load'), offset = $top.outerHeight();
+    var hasLoaded = false;
     var scroller = TransitScroll('.content', {
-        initialValue: -20,
+        bottomStop: true,
+        initialValue: -offset,
         change: function(value) {
-            // console.log(value);
+            if (value > 0) $top.css('transform', 'translate3d(0,' + value + 'px,0');
+            else $top.css('transform', 'translate3d(0,0,0');
         },
+        touchMove: function(evt, value){
+            if (hasLoaded) return;
+            if (value > 20) {$top.text('嗯，我要刷新啦')}
+            else {$top.text('下拉刷新')}
+        },
+        // touchEnd: function(e, value){
+        //     if (hasLoaded) return;
+        //     console.log(value, offset)
+        //     if (value > 20 && scroller.get() > 0){
+        //         hasLoaded = true;
+        //         scroller.to(0);
+        //         $top.text('加载中...');
+        //         setTimeout(function(){
+        //             hasLoaded = false;
+        //             scroller.to(scroller.initialValue);
+        //             $top.text('下拉刷新');
+        //         }, 1000);
+        //     } else if (value > -offset) {
+        //         scroller.to(scroller.initialValue);
+        //     }
+        //     return false;
+        // },
         atBottom: function(){
-            alert();
-        }
+            if (hasLoaded) return;
+            hasLoaded = true;
+            setTimeout(function(){
+                var _html = '';
+                for(var i=0; i<3; i++) {
+                    _html += '<div class="item"></div>';
+                }
+                $('.list').append(_html);
+                $('.item').off().on('click', function(){
+                    alert();
+                });
+                scroller.resize(-offset);
+                hasLoaded = false;
+            }, 1000);
+        },
+        transitionEnd: function(){
+
+        },
     });
+    scroller.resize(-offset);
 }
 </script>
 </body>

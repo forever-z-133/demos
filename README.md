@@ -3,6 +3,12 @@
 ## 2017年
 
 ==================
+### 2017 年 6 月
+* 2017.06.01 [touch事件模拟手机滑动](https://foreverz133.github.io/demos/single/transitScroll.html)
+
+-------------
+
+==================
 ### 2017 年 5 月
 * 2017.05.02 [LazyMan 的实现](https://foreverz133.github.io/demos/single/lazyman.html)
 * 2017.05.02 [Promise 红绿灯的实现](https://foreverz133.github.io/demos/single/redgreenlight.html)
@@ -18,7 +24,6 @@
 * 2017.05.16 [仿QQ有趣的底部导航](https://foreverz133.github.io/demos/single/QQfooterbar.html)
 * 2017.05.18 [移动端响应式研究](https://foreverz133.github.io/demos/single/respond-font-size.html)
 * 2017.05.27 [页面标题跑马灯闪动效果](https://foreverz133.github.io/demos/single/PageTitle.html)
-* 2017.05.27 [touch事件模拟手机滑动](https://foreverz133.github.io/demos/single/transitScroll.html)
 
 -------------
 

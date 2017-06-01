@@ -17,14 +17,18 @@
     top: 0; bottom: 0;
     left: 0; right: 0;
     background: #f7f7f7;
+    display: -webkit-box;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column;
     max-width: 768px;
     margin: 0 auto;
 }
 .main {
     padding: 1rem;
-    flex-grow: 1;
+    -webkit-box-flex: 1;
+            flex-grow: 1;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -53,13 +57,29 @@ pre {
 .box {
     width: 200px;
     background-image: -webkit-linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
+    background-image: -webkit-linear-gradient(right, #B04096, #F482B8, #BC749E, #B04096);
     background-image: linear-gradient(to left, #B04096, #F482B8, #BC749E, #B04096);
     background-size: 200% 100%;
     -webkit-mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
     mask-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
     -webkit-mask-size: 100% auto;
     mask-size: 100% auto;
-    animation: mask 2s linear infinite;
+    -webkit-animation: mask 2s linear infinite;
+            animation: mask 2s linear infinite;
+}
+.box2 {
+    width: 200px;
+    background-image: url(http://sum.kdcer.com/MotherDay/img/title.png);
+    background-size: contain;
+    -webkit-mask: -webkit-radial-gradient(#000, transparent 80%) center / 100% auto no-repeat;
+    mask: radial-gradient(#000, transparent 80%) center / 100% auto no-repeat;
+    -webkit-animation: mask2 2s linear infinite;
+            animation: mask2 2s linear infinite;
+}
+.box2:before {
+    content: "";
+    display: block;
+    padding-top: 67.45%; /* 431/639 */
 }
 .box:before {
     content: "";
@@ -71,6 +91,12 @@ pre {
 }
 @keyframes mask {
     100% {background-position: 200% 50%}
+}
+@-webkit-keyframes mask2 {
+    50% {-webkit-mask-size: 0 auto; mask-size: 0 auto;}
+}
+@keyframes mask2 {
+    50% {-webkit-mask-size: 0 auto; mask-size: 0 auto;}
 }
 </style>
 </head>
@@ -84,9 +110,9 @@ pre {
         <!-- <svg id="title-mask" width="300px"  viewBox="0 0 639 431">
             <image xlink:href="http://sum.kdcer.com/MotherDay/img/title.png" width="100%">
         </svg> -->
-        <p>而 <code>mask-image</code> 至今还未成为标准，兼容性极其不佳，不过 chrome 和微信支持感觉就够了<br>
-        <small>留个小问题 css 中有另一个 <code>mask</code> 属性，它与 <code>mask-image</code> 是什么关系有待研究</small></p>
+        <p>而 <code>mask-image</code> 至今还未成为标准，兼容性极其不佳，唯有添加 -webkit-，chrome 和微信能支持暂时足够了。<br>
         <p>除此之外，还有另三个属性可用 <code>mask-origin</code> / <code>mask-repeat</code> 和 <code>mask-size</code></p>
+        <p><code>mask</code> 是类似 <code>background</code> 一般的简写形态，所以在实现 <code>transition</code> 时也和 <code>background</code> 是一样的。</p>
         <p>再配合上层的渐变与动效，可实现以下效果：</p>
 
         <div class="box"></div>
@@ -110,12 +136,24 @@ pre {
     display: block;
     padding-top: 67.45%; /* 431/639 */
 }
-@-webkit-keyframes mask {
-    100% {background-position: 200% 50%}
-}
 @keyframes mask {
     100% {background-position: 200% 50%}
 }</code></pre>
+        <p>上面是以图片为形状显示渐变，以下案例是以渐变为形状显示图片</p>
+        
+        <div class="box2"></div>
+
+        <pre><code>.box2 {
+    width: 200px;
+    background: url(http://sum.kdcer.com/MotherDay/img/title.png) center / contain no-repeat;
+    -webkit-mask: -webkit-radial-gradient(#000, transparent 80%) center / 100% auto no-repeat;
+    mask: radial-gradient(#000, transparent 80%) center / 100% auto no-repeat;
+    animation: mask2 2s linear infinite;
+}
+@keyframes mask2 {
+    50% {-webkit-mask-size: 0 auto; mask-size: 0 auto;}
+}</code></pre>
+
         <p>其他：制作过程中 background 搭配 svg 的效果依然没有成功，甚至在 firefox 中 image 存有高度但不显示图像，不知是兼容问题还是其他，有待研究</p>
     </main>
     <footer class="copyright">
