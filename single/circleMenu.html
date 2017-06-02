@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+* {
+    box-sizing: border-box;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+}
+.main {
+    padding: 10px;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.footer {
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .8em;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+}
+
+
+.nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.nav-box {
+    position: relative;
+    line-height: 1.5em;
+    height: 16.5em;
+    width: 8em;
+}
+.nav-box:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 100%;
+    bottom: 0;
+    width: 6em;
+    border-radius: 100%;
+    background: #000;
+    margin-right: -1em;
+}
+.nav-box a {
+    font: inherit;
+    color: inherit;
+    text-decoration: none;
+}
+.nav-place .one {
+    float: left;
+    clear: left;
+    display: inline;
+    height: 1.5em;
+}
+.nav-place .one1 {width: 0px;}
+.nav-place .one2 {width: 12px;}
+.nav-place .one3 {width: 19px;}
+.nav-place .one4 {width: 25px;}
+.nav-place .one5 {width: 28px;}
+.nav-place .one6 {width: 30px;}
+.nav-place .one7 {width: 28px;}
+.nav-place .one8 {width: 25px;}
+.nav-place .one9 {width: 19px;}
+.nav-place .one10 {width: 12px;}
+.nav-place .one11 {width: 0px;}
+
+.dropdown:after {
+	content: "\276E";
+    display: inline-block;
+    transform: rotate(-180deg);
+    margin-left: .5em;
+}
+.dropdown-menu {
+    display: none;
+}
+.dropdown:focus + .dropdown-menu {
+    display: block;
+}
+.dropdown:focus:after {
+    transform: rotate(-90deg);
+}
+
+.dropdown-menu .link {
+	font-size: .8em;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <main class="main">
+        <nav class="nav-box">
+            <div class="nav-place">
+                <div class="one one1"></div>
+                <div class="one one2"></div>
+                <div class="one one3"></div>
+                <div class="one one4"></div>
+                <div class="one one5"></div>
+                <div class="one one6"></div>
+                <div class="one one7"></div>
+                <div class="one one8"></div>
+                <div class="one one9"></div>
+                <div class="one one10"></div>
+                <div class="one one11"></div>
+            </div>
+            <ul class="nav">
+                <li class="item">
+                    <a href="#" class="btn dropdown">坤鼎传播</a>
+                    <ul class="nav dropdown-menu">
+                        <li class="item"><a href="#" class="link">菜单项跳页</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="#" class="btn dropdown">坤鼎文化</a>
+                    <ul class="nav dropdown-menu">
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="#" class="link">坤鼎人物</a>
+                </li>
+                <li class="item">
+                    <a href="#" class="btn dropdown">坤鼎活动</a>
+                    <ul class="nav dropdown-menu">
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="#" class="btn dropdown">案例</a>
+                    <ul class="nav dropdown-menu">
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                        <li class="item"><a href="#" class="link">菜单项</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <p>本案例纯 CSS 实现半弧形菜单，且拥有二级菜单。主要利用 float 的浮动特性。</p>
+        <p>缺陷是菜单数目要提前固定，宽高也因此固定，二级菜单的固定也最好简单依赖 js。</p>
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒<alias></alias>实现，<br>
+            联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+            <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+$('li > a').eq(0).focus();
+$('[href="#"]').on('click',function(evt){
+	evt.preventDefault();
+})
+</script>
+</body>
+</html>
