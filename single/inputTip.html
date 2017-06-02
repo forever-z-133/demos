@@ -106,11 +106,11 @@ pre {
 }
 
 /*.input:valid {border: 1px solid #1dda1d;}*/
-.input[value]:valid,
+/*.input[value]:valid,*/
 .input:valid:not(:placeholder-shown) {
     border: 1px solid #1dda1d;
 }
-.input:invalid {
+.input:focus:invalid {
     border: 1px solid red; /* 红色 */
 }
 :root {
@@ -133,25 +133,25 @@ pre {
 .input[value]:valid {
     border: 1px solid #1dda1d; /* 绿色 */
 }
-.input:invalid {
+.input:focus:invalid {
     border: 1px solid red; /* 红色 */
 }</code></pre>
         <form onsubmit="return false">
             <div class="input-box">
                 <label for="">默认</label>
-                <input type="text" class="input" placeholder="xx">
+                <input type="text" class="input" placeholder="xx" required>
             </div>
             <div class="input-box">
                 <label for="">数字（得小于 10）</label>
-                <input type="number" class="input" max="10" step="1" placeholder="1 to 10">
+                <input type="number" class="input" max="10" step="1" placeholder="1 to 10" required>
             </div>
             <div class="input-box">
                 <label for="">邮箱</label>
-                <input type="email" class="input" placeholder="xxx@a">
+                <input type="email" class="input" placeholder="xxx@a" required>
             </div>
             <div class="input-box">
                 <label for="">自定义 patten（只能输入数字）</label>
-                <input type="text" class="input" pattern="\d*" placeholder="number">
+                <input type="text" class="input" pattern="\d*" placeholder="number" required>
             </div>
             <div class="input-box">
                 <button type="submit">提交</button>
@@ -170,7 +170,7 @@ for(var i=0,len=$inputs.length; i&lt;len; i++) {
         }
     });
 }</code></pre>
-        <p>再者，拥有 <code>required</code> 属性的表单为必填，所以初始为空时就是错误态呈现红色，这个视觉体验上不太好，一时也没想到什么好办法</p>
+        <p>再者，拥有 <code>required</code> 属性的表单为必填，所以初始为空时就是错误态呈现红色，这个视觉体验上不太好，一时也没想到什么好办法，加了个 :focus 来让初始状态不做必填判断</p>
     </main>
     <footer class="footer">
         <div class="copyright">
