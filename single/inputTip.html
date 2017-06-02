@@ -105,14 +105,22 @@ pre {
     right: 0;
 }
 
-.input[value]:valid {
-    border: 1px solid #1dda1d;
-}
+/*.input:valid {border: 1px solid #1dda1d;}*/
+.input[value]:valid,
 .input:valid:not(:placeholder-shown) {
-    border: 1px solid #1dda1d; /* 绿色 */
+    border: 1px solid #1dda1d;
 }
 .input:invalid {
     border: 1px solid red; /* 红色 */
+}
+:root {
+    --grey: #aaa;
+}
+body {
+    background: var(--grey);
+}
+pre {
+    border: 1px solid var(--grey)
 }
 </style>
 </head>
@@ -121,27 +129,12 @@ pre {
 <div class="body">
     <main class="main">
         <p>本案例主要演示 <code>:valid</code> (合法) | <code>:invalid</code> (非法) 这两个 <code>CSS3</code> 伪类选择器</p>
-        <pre><code>.input[value]:valid {
-    border: 1px solid #1dda1d;
-}
-.input:valid:not(:placeholder-shown) {
+        <pre><code>.input:valid:not(:placeholder-shown),
+.input[value]:valid {
     border: 1px solid #1dda1d; /* 绿色 */
 }
 .input:invalid {
     border: 1px solid red; /* 红色 */
-}</code></pre>
-        <p>该伪类各大浏览器都支持，但表单为空值时也算作合法，这是不太妙的。</p>
-        <p>还找到了另一个伪类 <code>:placeholder-shown</code>，但这要求表单必须加上 <code>placeholder</code>，且非 <code>-webkit-</code> 不兼容。</p>
-        <p>因此我们还需再加上一段 JS（恕我没找到更好的办法了）</p>
-        <pre><code>var $inputs = document.getElementsByTagName('input');
-for(var i=0,len=$inputs.length; i&lt;len; i++) {
-    $inputs[i].addEventListener('input', function(e){
-        if (this.value == '') {
-            this.removeAttribute('value');
-        } else {
-            this.setAttribute('value', this.value);
-        }
-    });
 }</code></pre>
         <form onsubmit="return false">
             <div class="input-box">
@@ -164,6 +157,20 @@ for(var i=0,len=$inputs.length; i&lt;len; i++) {
                 <button type="submit">提交</button>
             </div>
         </form>
+        <p>该伪类各大浏览器都支持，但表单为空值时也属于无错，<code>:valid</code> 会被启用，呈现绿色，这是不太妙的。</p>
+        <p>还找到了另一个伪类 <code>:placeholder-shown</code>，但这要求表单必须加上 <code>placeholder</code>，且非 <code>-webkit-</code> 不兼容。</p>
+        <p>因此我们还需再加上一段 JS，用包含 <code>value</code> 值来判断（恕我没找到更好的办法了）</p>
+        <pre><code>var $inputs = document.getElementsByTagName('input');
+for(var i=0,len=$inputs.length; i&lt;len; i++) {
+    $inputs[i].addEventListener('input', function(e){
+        if (this.value == '') {
+            this.removeAttribute('value');
+        } else {
+            this.setAttribute('value', this.value);
+        }
+    });
+}</code></pre>
+        <p>再者，拥有 <code>required</code> 属性的表单为必填，所以初始为空时就是错误态呈现红色，这个视觉体验上不太好，一时也没想到什么好办法</p>
     </main>
     <footer class="footer">
         <div class="copyright">
