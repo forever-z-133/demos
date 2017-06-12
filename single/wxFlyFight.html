@@ -57,13 +57,19 @@ body {
     flex-direction: column;
 }
 .main {
+    position: relative;
     flex-grow: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0,0,0);
 }
 
 .body {
     max-width: 480px;
     max-height: 800px;
-    margin: 0 auto;
+    margin: auto;
 }
 .main {
     background: #ccc;
@@ -89,6 +95,9 @@ button {
     border: 2px solid #aaa;
     border-radius: 1000px;
 }
+canvas {
+    display: block;
+}
 </style>
 </head>
 <body>
@@ -102,7 +111,7 @@ button {
             <div class="panel-head">飞机大战分数</div>
             <div class="panel-body">0</div>
             <div class="panel-foot">
-                <button>继续</button>
+                <button id="replay">继续</button>
             </div>
         </div>
     </div>
@@ -143,6 +152,14 @@ button {
         return Math.floor(min + Math.random() * (max - min));
     }
 
+    // 时间绑定
+    function on(dom, eventName, fn) {
+        dom.addEventListener(eventName, fn);
+    }
+    function off(dom, eventName, fn) {
+        dom.removeEventListener(eventName, fn);
+    }
+
     // 模块内全局定量
     var canvas, ctx, winW, winH;
     var sourcesLink = 'http://sandbox.runjs.cn/uploads/rs/30/7mnuxrh7/'
@@ -163,119 +180,122 @@ button {
 
     // 加载资源
     function loadSources(imgs, fn, callback) {
-        var imgArr = Object.keys(imgs), len = imgArr.length, count  = 0;
-        imgArr.map(function(i, x, n){
+        var imgArr = Object.keys(imgs);
+        var len = imgArr.length, count  = 0;
+        imgArr.map(function(i){
+            if (imgs[i].constructor.toString().match(/html/i)) return;
             if (Array.isArray(imgs[i]) && imgs[i].length > 0) {
                 var a = 0, b = imgs[i].length;
                 for(var j in imgs[i]) {
-                    loadOne(imgs[i][j]).then(function(img){
-                        if (++a < b) return;
-                        sources[i][j] = img;
-                        if (++count >= len) callback && callback();
-                    });
+                    if (imgs[i][j].constructor.toString().match(/html/i)) return;
+                    (function(j){
+                        var img = new Image();
+                        img.onload = function(){
+                            if (!sources[i]) sources[i] = [];
+                            sources[i][j] = img;
+                            if (++a < b) return;
+                            if (++count >= len && callback) callback(sources);
+                        }
+                        img.src = sourcesLink + imgs[i][j];
+                    })(j)
                 }
             } else if (typeof imgs[i] === 'string') {
-                loadOne(imgs[i]).then(function(img){
-                    sources[i] = img;
-                    if (++count >= len) callback && callback();
-                });
-            }
-        });
-
-        function loadOne(url) {
-            return new Promise(function(resolve){
                 var img = new Image();
                 img.onload = function(){
-                    fn && fn(count/len*100, this);
-                    resolve(this);
+                    sources[i] = img;
+                    if (++count >= len && callback) callback(sources);
                 }
-                img.src = sourcesLink + url;
-            });
-        }
+                img.src = sourcesLink + imgs[i];
+            }
+        });
     }
 
     /**************************
      * 微信打飞机游戏
-     * @arg canvas[string] 画布对象标示
+     * @arg cv[string] 画布对象标示
      * @arg options[object] 参数配置
      * @cb reset() 游戏重头开始
      * @cb stop() 暂停游戏
      * @cb start() 开始游戏（暂停后）
      * @cb create()
      **************************/
-    function Game(canvas, options) {
+    function Game(cv, options) {
         this.opt = Object.assign({
             box: window,
             level: 1,
             begin: function(){},
             change: function(){},
-            somebody_die: function(){},
+            hero_die: function(){},
+            create_enemy: function(){},
+            enemy_die: function(){},
         }, options || {});
 
-        canvas = this.canvas = document.querySelector(canvas);
+        canvas = this.canvas = document.querySelector(cv);
         winW = this.canvas.width = this.opt.box.innerWidth || this.opt.box.offsetWidth;
         winH = this.canvas.height = this.opt.box.innerHeight || this.opt.box.offsetHeight;
         ctx = this.ctx = this.canvas.getContext('2d');
+        ctx.strokeStyle = 'red';
 
         this.Timer = null;
         this.bgScrollOffset = 0;
-        this.sources = {};
-        this.score = 0;
-        this.timecount = 0;
+        this.running = true;
 
         this.hero = {};
         this.enemys = [];
 
         this._init();
-        this._bind();
     }
     Game.prototype = {
         _init: function(){
             loadSources(sources, null, function(){
                 this.opt.begin();
                 this._loop();
+                this._bind();
             }.bind(this));
         },
         _bind: function(){
-            window.addEventListener('mousemove', this._control.bind(this));
-            window.addEventListener('touchmove', this._control.bind(this));
+            on(this.opt.box, 'mousemove', this._control.bind(this));
+            on(this.opt.box, 'touchmove', this._control.bind(this));
+            on(window, 'blur', this.stop.bind(this));
+            on(window, 'focus', this.start.bind(this));
         },
         _control: function(evt){
-            var e = evt.touches ? e.touches[0] : evt;
+            var e = evt.touches ? evt.touches[0] : evt;
             for (var i in this.hero) {
-                if (!this.hero[i].control) continue;
+                var hero = this.hero[i];
+                if (!hero) continue;
+                if (!hero.control) continue;
+                if (hero.state !== 'live') continue;
+                var img = hero.skin.img;
+                var box = this.opt.box;
+                if (!hero.lastX) {
+                    this.hero[i].lastX = e.pageX;
+                    this.hero[i].lastY = e.pageY;
+                    this.hero[i].x = e.pageX - box.offsetLeft - img.width / 2;
+                    this.hero[i].y = e.pageY - box.offsetTop - img.height / 2;
+                }
+                this.hero[i].x += e.pageX - hero.lastX;
+                this.hero[i].y += e.pageY - hero.lastY;
+                this.hero[i].lastX = e.pageX;
+                this.hero[i].lastY = e.pageY;
             }
         },
+        // 绘制游戏
         _loop: function(){
-            // 分数判断
-            if (this.score < 2000) {
-                this.opt.level = 1;
-            } else if (this.score < 8000) {
-                this.opt.level = 2;
-            } else if (this.score < 16000) {
-                this.opt.level = 3;
-            } else if (this.score < 25000) {
-                this.opt.level = 4;
-            } else {
-                this.opt.level = 5;
-            }
-
-            // 绘制游戏
             this.Timer = requestAnimationFrame(function(){
-                this._draw();
+                if (!this.running) return;
+                this.opt.change();
+                // 背景
+                this._bgScroll();
+                // 英雄
+                this._showHero();
+                // 敌军
+                this._showEnemy();
                 this._loop();
             }.bind(this))
         },
-        _draw: function(){
-            // 背景
-            this._bgScroll();
-            // 敌军
-            this._showEnemy();
-            // 英雄
-            this._showHero();
-        },
+        // 背景图的移动
         _bgScroll: function(){
-            // 背景图的移动
             var bg = sources.bg
             var offset = this.bgScrollOffset + 0.5;
             offset = offset > bg.height ? 0 : offset;
@@ -285,29 +305,37 @@ button {
         },
         _showHero: function(){
             for (var i in this.hero) {
+                var hero = this.hero[i];
+                if (hero.state === 'die') continue;
                 // 绘制该主角子弹
-                this._showBullet(this.hero[i], i);
+                this._showBullet(hero);
                 // 绘制主角
                 this.hero[i].draw();
+                // 主角死了
+                if (hero.state === 'die') {
+                    this.opt.hero_die(i, hero);
+                }
             }
         },
         _showBullet: function(fly){
             if (!fly.gun) return;
+            if (fly.state !== 'live') return;
             var img = fly.gun.skin.img;
             // 根据速度创建子弹
-            fly.temp3 = fly.temp3 ? ++fly.temp3 : 1;
-            if (fly.gun.speed > 0 && fly.gun.speed <= 10 && fly.temp3 == 12 - fly.gun.speed) {
-                fly.temp3 = 1;
+            fly._temp3 = fly._temp3 ? ++fly._temp3 : 1;
+            if (fly.gun.speed > 0 && fly.gun.speed <= 10 && fly._temp3 == 12 - fly.gun.speed) {
+                fly._temp3 = 1;
                 fly.gun.create(fly.x + fly.skin.img.width / 2 - img.width / 2, fly.y + fly.skin.img.height / 2 - img.height / 2);
             }
-
             // 计算子弹位移并绘制
             for (var i in fly.gun.bullets) {
                 var e = fly.gun.bullets[i];
+                if (!e) continue;
                 // 清除超出屏幕的子弹
-                if (e.y > winH + e.height || e.y < -1 * e.height) {
-                    this.enemys.splice(i, 1);
+                if (e.y < 0 || e.y > winH + e.height) {
+                    fly.gun.bullets.splice(i, 1);
                 }
+                if (!fly.gun.bullets[i]) continue;
                 // 计算位移
                 fly.gun.bullets[i].y -= 10;
                 // 绘制
@@ -316,20 +344,25 @@ button {
         },
         _showEnemy: function(){
             // 重新核算敌军数理，新建和销毁
-            this.temp = this.temp ? ++this.temp : 1;
-            var timeGap = 30 - this.opt.level * 2;
-            if (this.temp == timeGap) {
-                this.temp2 = this.temp2 ? ++this.temp2 : 1;
-                if (this.temp2 % 5 === 0) {
-                    this.enemys.push(new Enemy('md'));
+            this._temp = this._temp ? ++this._temp : 1;
+            this.opt.level = Math.min(5, this.opt.level);
+            var timeGap = 27 - this.opt.level * 3;
+            if (this._temp == timeGap) {
+                this._temp2 = this._temp2 ? ++this._temp2 : 1;
+                if (this._temp2 % 3 === 0) {
+                    var enemy = new Enemy('md');
+                    this.enemys.push(enemy);
                 }
-                if (this.temp2 == timeGap) {
-                    this.enemys.push(new Enemy('lg'));
-                    this.temp2 = 0;
+                if (this._temp2 == timeGap) {
+                    var enemy = new Enemy('lg');
+                    this.enemys.push(enemy);
+                    this._temp2 = 0;
                 } else {
-                    this.enemys.push(new Enemy('sm'));
+                    var enemy = new Enemy('sm');
+                    this.enemys.push(enemy);
                 }
-                this.temp = 0;
+                this._temp = 0;
+                this.opt.create_enemy(enemy);
             }
 
             // 计算敌军位移并绘制
@@ -340,46 +373,79 @@ button {
                 if (enemy.y > winH + img.height) {
                     this.enemys.splice(i, 1);
                 }
-                // 计算位移
-                this.enemys[i].y += enemy.speed;
-                // 碰撞
-                for (var h in this.hero) {
-                    var hero = this.hero[h];
-                    // 计算与主角碰撞
-                    if (this._ifHit(hero, enemy)) {
-                        this.hero[h].die(hero);
-                        this.opt.somebody_die(i, hero);
-                    };
-                    // 计算与子弹碰撞
-                    for (var b in hero.bullets) {
-                        var bullet = hero.bullets[b];
-                        if (this._ifHit(bullet, enemy)) {
-                            this.enemys[i].die(enemy);
+                // 已死亡的敌机清除
+                if (enemy.state === 'die') {
+                    this.enemys.splice(i, 1);
+                }
+                if (!this.enemys[i]) continue;
+                // 碰撞判断
+                if (enemy.state !== 'boom') {
+                    for (var h in this.hero) {
+                        if (!this.hero[h]) continue;
+                        // 计算与主角碰撞
+                        var hero = this.hero[h];
+                        if (hero.state !== 'live') continue;
+                        if (this._ifHit(hero, enemy, true)) {
+                            this.hero[h].state = 'boom';
+                        }
+                        // 计算与该主角子弹碰撞
+                        for (var b in hero.gun.bullets) {
+                            var bullet = hero.gun.bullets[b];
+                            if (!bullet) continue;
+                            if (this._ifHit(bullet, enemy)) {
+                                this.enemys[i].blood -= hero.gun.power;
+                                this.hero[h].gun.bullets.splice(b, 1);
+                                this.enemys[i].state = 'hurt';
+                                if (enemy.blood < 1) {
+                                    this.enemys[i].state = 'boom';
+                                    this.opt.enemy_die(enemy, hero);
+                                }
+                            }
                         }
                     }
+                    // 计算位移
+                    this.enemys[i].y += enemy.speed;
                 }
-
                 // 绘制
                 this.enemys[i].draw();
             }
         },
-        _ifHit: function(one, two) {
-            var img1 = one.skin.img;
-            var img2 = two.skin.img;
-            return one.x > two.x + img2.width || one.x + img1.width < two.x || one.y > two.y + img2.height || one.y + img1.height < two.y;
+        // 判断是否碰撞到了
+        _ifHit: function(one, two, tolerate) {
+            var img1 = one.skin.img, img2 = two.skin.img;
+            if (!tolerate) return !(one.x > two.x + img2.width || one.x + img1.width < two.x || one.y > two.y + img2.height || one.y + img1.height < two.y);
+            return !(one.x > two.x + img2.width / 3*2  || one.x + img1.width / 3*1 < two.x || one.y > two.y + img2.height / 3*2 || one.y + img1.height / 3*1 < two.y);
         },
+        // 创建一个主角
         create: function(id, x, y, skin){
             this.hero[id] = new Hero(x, y, skin);
+            this.hero[id].id = id;
+            this.tempHero = this.tempHero || {};
+            this.tempHero[id] = Object.assign({}, this.hero[id]);
+            return this.hero[id];
         },
         stop: function(){
+            this.running = false;
             if (this.Timer) {
                 cancelAnimationFrame(this.Timer);
                 this.Timer = null;
             }
         },
         start: function(){
+            this.running = true;
             !this.Timer && this._loop();
         },
+        reset: function(){
+            this.stop();
+            this.enemys = [];
+            // this.running = true;
+            for (var i in this.hero) {
+                this.hero[i].state = 'live';
+                this.hero[i].gun.bullets = [];
+            }
+            ctx.clearRect(0, 0, winW, winH);
+            this.start();
+        }
     }
 
     function Fly(x, y, blood, score, gun, skin) {
@@ -395,44 +461,49 @@ button {
             hurt: null,
             die: null,
         }
+        this.state = 'live'; // 'hurt' 'boom' 'die'
     }
     Fly.prototype = {
         draw: function(){
             var img = this.skin.img;
-            ctx.drawImage(img, this.x, this.y, img.width, img.height);
+            switch (this.state) {
+                case 'hurt': this.hurt(); break;
+                case 'boom': this.die(); break;
+                case 'live': 
+                default: ctx.drawImage(img, this.x, this.y, img.width, img.height);
+            }
         },
         hurt: function(){
-            if (this.skin && !this.skin.hurt) return;
-
+            if (!this.skin.hurt) return;
+            var img = this.skin.hurt;
+            this.state = 'live';
+            ctx.drawImage(img, this.x, this.y, img.width, img.height);
         },
-        die: function(fly){
-            // try {
-            //     for (var i in fly.skin.die) {
-            //         (function(fly, s){
-            //              console.log(s);
-            //             setInterval(function(){
-            //                 ctx.drawImage(s, fly.x, fly.y, s.width, s.height);
-            //             }, 200);
-            //         })(fly, fly.skin.die[i])
-            //     }
-            // } catch (err) {
-            //     this.stop();
-            // }
+        die: function(){
+            var imgs = this.skin.die, s = this.skin.img;
+            this.dieTemp = this.dieTemp ? ++this.dieTemp : 1;
+            if (this.dieTemp < imgs.length * 10) {
+                s = imgs[parseInt(this.dieTemp/10)];
+            } else {
+                s = imgs[imgs.length-1];
+                this.state = 'die';
+            }
+            ctx.drawImage(s, this.x, this.y, s.width, s.height);
         },
     }
 
     function Hero(x, y, control, skin) {
-        skin = Object.assign({
-            img: sources.hero1,
-            hurt: null,
-            die: sources.hero_die,
-        }, skin || {});
         Fly.call(this, x, y, 1, -1, true, skin);
+        this.skin.img = this.skin.img || sources.hero1;
+        this.skin.hurt = this.skin.img || null;
+        this.skin.die = this.skin.die || sources.hero_die;
+        x = typeof x === 'undefined' ? winW/2-this.skin.img.width/2 : x;
+        y = typeof y === 'undefined' ? winH-this.skin.img.height*2 : y;
         this.control = control || false;
     }
     Hero.prototype = Fly.prototype;
 
-    function Enemy(type) {
+    function Enemy(type, x, speed) {
         Fly.call(this);
         this.type = type;
         switch(type) {
@@ -465,7 +536,7 @@ button {
             default: 
                 this.blood = 1;
                 this.score = 100;
-                this.speed = random(1,4);
+                this.speed = random(2,5);
                 this.skin = {
                     img: sources.sm_emeny,
                     hurt: null,
@@ -492,52 +563,58 @@ button {
             this.bullets.push({
                 x: x,
                 y, y,
+                skin: this.skin,
             });
-        },
-        draw: function(){
-            var img = this.skin.img;
-            ctx.drawImage(img, this.x, this.y, img.width, img.height);
         },
     }
 
     window.Game = Game;
 })()
 
-var $box = document.querySelector('.main')
-var winW = $box.offsetWidth, winH = $box.offsetHeight
+var $box = document.querySelector('.body');
+var $modal = document.querySelector('.modal');
+var $score = $modal.querySelector('.panel-body');
+var $replay = $modal.querySelector('#replay');
+var hero, score = 0;
 var game = new Game('#game', {
     box: $box,
+    level: 1,
     begin: function(){
-        game.create('11', winW/2, winH/2);
-        game.hero['11'].x = 100;
-        game.create('22', winW/2, winH/2);
-        game.hero['22'].x = 200;
-    }
+        hero = game.create('11');
+        hero.control = true;
+        // game.create('22', winW/2, winH/2);
+        // game.hero['22'].x = 200;
+    },
+    create_enemy: function(enemy){
+        // console.log(enemy);
+    },
+    enemy_die: function(enemy, hero){
+        score += enemy.score;
+    },
+    hero_die: function(id, hero){
+        if (id == '11') {
+            game.stop();
+            $score.innerHTML = score;
+            $modal.className += ' in';
+        }
+    },
+});
+$replay.addEventListener('click', function(){
+    score = 0;
+    $score.innerHTML = score;
+    var className = $modal.className.split(' ').filter(function(i){
+        return i != 'in';
+    });
+    $modal.className = className.join('in');
+    game.reset();
 });
 
-function on(dom, eventName, fn) {
-    dom.addEventListener(eventName, fn);
-}
-function off(dom, eventName, fn) {
-    dom.removeEventListener(eventName, fn);
-}
-
-// on($box, 'mousemove', move);
-// on($box, 'touchmove', move);
-// var startX = game.hero
-// function move(evt) {
-//     evt.preventDefault();
-//     var e = evt.touches ? evt.touches[0] : evt;
-//     game.hero['11'].x = e.pageX - game.hero['11'].x;
-//     game.hero['11'].y = e.pageY - game.hero['11'].y;
-// }
-
-on(document, 'click', function(){
-    game.stop();
-});
-on(document, 'dblclick', function(){
-    game.start();
-});
+// on(document, 'click', function(){
+//     game.stop();
+// });
+// on(document, 'dblclick', function(){
+//     game.start();
+// });
 </script>
 </body>
 </html>
