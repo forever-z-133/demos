@@ -8,6 +8,8 @@
 * 2017.06.02 [纯 CSS 弧形菜单](https://foreverz133.github.io/demos/single/circleMenu.html)
 * 2017.06.02 [radio 和 checkbox 的运用](https://foreverz133.github.io/demos/single/radio&checkbox.html)
 * 2017.06.06 [口碑吃货节官网(业务)](https://foreverz133.github.io/demos/works/koubeifoodie/)
+* 2017.06.09 [getImageData 的实践](https://foreverz133.github.io/demos/single/canvas-brokec-word.html)
+* 2017.06.12 [仿微信打飞机双人版](https://foreverz133.github.io/demos/single/wxFlyFight.html)
 
 -------------
 

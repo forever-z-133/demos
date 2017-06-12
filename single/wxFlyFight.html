@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta name="viewport" content="initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+<meta charset="utf-8" />
+<title>微信打飞机</title>
+<!--[if IE]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background-color: #555;
+}
+.body, .bg, .modal {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    overflow: hidden;
+}
+.modal {
+    opacity: 0;
+    z-index: -1;
+    transition: .3s;
+}
+.modal-bg {
+    opacity: 0;
+    transition: opacity .2s;
+    background: rgba(0,0,0,.7);
+}
+.modal.in {
+    opacity: 1;
+    z-index: 10;
+}
+.modal.in .modal-bg {
+    opacity: 1;
+}
+.modal-box {
+    position: relative;
+}
+.panel {
+    display: flex;
+    flex-direction: column;
+}
+.panel-head,
+.panel-foot {
+    flex-shrink: 0;
+}
+.panel-body {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.body {
+    display: flex;
+    flex-direction: column;
+}
+.main {
+    flex-grow: 1;
+}
+
+.body {
+    max-width: 480px;
+    max-height: 800px;
+    margin: 0 auto;
+}
+.main {
+    background: #ccc;
+}
+.score-panel {
+    width: 70%;
+    margin: 20% auto 0;
+    background: #fff;
+    overflow: hidden;
+    border-radius: .3rem;
+    text-align: center;
+}
+.score-panel > div {
+    padding: .5rem 1rem;
+}
+.score-panel .panel-body {
+    line-height: 8em;
+    border-top: 2px solid #aaa;
+    border-bottom: 2px solid #aaa;
+}
+button {
+    padding: .3rem 2rem;
+    border: 2px solid #aaa;
+    border-radius: 1000px;
+}
+</style>
+</head>
+<body>
+<div class="body">
+    <main class="main">
+        <canvas id="game"></canvas>
+    </main>
+    <div class="modal" id="score">
+        <div class="bg modal-bg"></div>
+        <div class="modal-box panel score-panel">
+            <div class="panel-head">飞机大战分数</div>
+            <div class="panel-body">0</div>
+            <div class="panel-foot">
+                <button>继续</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+!(function(){
+    // 兼容 requestAnimationFrame
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+    }
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    }
+
+    // 兼容 Date.now()
+    if (!Date.now) {
+        Date.now = function() {
+            return new Date().getTime();
+        }
+    }
+
+    // 产生 min 到 max 之间的随机数
+    function random(min = 0, max = 1) {
+        return Math.floor(min + Math.random() * (max - min));
+    }
+
+    // 模块内全局定量
+    var canvas, ctx, winW, winH;
+    var sourcesLink = 'http://sandbox.runjs.cn/uploads/rs/30/7mnuxrh7/'
+    var sources = {
+        'bg': 'bg.jpg',
+        'bullet': 'cartridge.png',
+        'hero1': 'me.png',
+        'hero_die': ['me_die1.png', 'me_die2.png', 'me_die3.png', 'me_die4.png'],
+        'sm_emeny': 'plain1.png',
+        'sm_emeny_die': ['plain1_die1.png', 'plain1_die2.png', 'plain1_die3.png'],
+        'md_emeny': 'plain2.png',
+        'md_emeny_hurt': 'plain2_hurt.png',
+        'md_emeny_die': ['plain2_die1.png', 'plain2_die2.png', 'plain2_die3.png', 'plain2_die4.png'],
+        'lg_emeny': 'plain3.png',
+        'lg_emeny_hurt': 'plain3_hurt.png',
+        'lg_emeny_die': ['plain3_die1.png', 'plain3_die2.png', 'plain3_die3.png', 'plain3_die4.png', 'plain3_die5.png', 'plain3_die6.png'],
+    }
+
+    // 加载资源
+    function loadSources(imgs, fn, callback) {
+        var imgArr = Object.keys(imgs), len = imgArr.length, count  = 0;
+        imgArr.map(function(i, x, n){
+            if (Array.isArray(imgs[i]) && imgs[i].length > 0) {
+                var a = 0, b = imgs[i].length;
+                for(var j in imgs[i]) {
+                    loadOne(imgs[i][j]).then(function(img){
+                        if (++a < b) return;
+                        sources[i][j] = img;
+                        if (++count >= len) callback && callback();
+                    });
+                }
+            } else if (typeof imgs[i] === 'string') {
+                loadOne(imgs[i]).then(function(img){
+                    sources[i] = img;
+                    if (++count >= len) callback && callback();
+                });
+            }
+        });
+
+        function loadOne(url) {
+            return new Promise(function(resolve){
+                var img = new Image();
+                img.onload = function(){
+                    fn && fn(count/len*100, this);
+                    resolve(this);
+                }
+                img.src = sourcesLink + url;
+            });
+        }
+    }
+
+    /**************************
+     * 微信打飞机游戏
+     * @arg canvas[string] 画布对象标示
+     * @arg options[object] 参数配置
+     * @cb reset() 游戏重头开始
+     * @cb stop() 暂停游戏
+     * @cb start() 开始游戏（暂停后）
+     * @cb create()
+     **************************/
+    function Game(canvas, options) {
+        this.opt = Object.assign({
+            box: window,
+            level: 1,
+            begin: function(){},
+            change: function(){},
+            somebody_die: function(){},
+        }, options || {});
+
+        canvas = this.canvas = document.querySelector(canvas);
+        winW = this.canvas.width = this.opt.box.innerWidth || this.opt.box.offsetWidth;
+        winH = this.canvas.height = this.opt.box.innerHeight || this.opt.box.offsetHeight;
+        ctx = this.ctx = this.canvas.getContext('2d');
+
+        this.Timer = null;
+        this.bgScrollOffset = 0;
+        this.sources = {};
+        this.score = 0;
+        this.timecount = 0;
+
+        this.hero = {};
+        this.enemys = [];
+
+        this._init();
+        this._bind();
+    }
+    Game.prototype = {
+        _init: function(){
+            loadSources(sources, null, function(){
+                this.opt.begin();
+                this._loop();
+            }.bind(this));
+        },
+        _bind: function(){
+            window.addEventListener('mousemove', this._control.bind(this));
+            window.addEventListener('touchmove', this._control.bind(this));
+        },
+        _control: function(evt){
+            var e = evt.touches ? e.touches[0] : evt;
+            for (var i in this.hero) {
+                if (!this.hero[i].control) continue;
+            }
+        },
+        _loop: function(){
+            // 分数判断
+            if (this.score < 2000) {
+                this.opt.level = 1;
+            } else if (this.score < 8000) {
+                this.opt.level = 2;
+            } else if (this.score < 16000) {
+                this.opt.level = 3;
+            } else if (this.score < 25000) {
+                this.opt.level = 4;
+            } else {
+                this.opt.level = 5;
+            }
+
+            // 绘制游戏
+            this.Timer = requestAnimationFrame(function(){
+                this._draw();
+                this._loop();
+            }.bind(this))
+        },
+        _draw: function(){
+            // 背景
+            this._bgScroll();
+            // 敌军
+            this._showEnemy();
+            // 英雄
+            this._showHero();
+        },
+        _bgScroll: function(){
+            // 背景图的移动
+            var bg = sources.bg
+            var offset = this.bgScrollOffset + 0.5;
+            offset = offset > bg.height ? 0 : offset;
+            this.bgScrollOffset = offset;
+            ctx.drawImage(bg, 0, offset, bg.width, bg.height);
+            ctx.drawImage(bg, 0, offset - bg.height, bg.width, bg.height);
+        },
+        _showHero: function(){
+            for (var i in this.hero) {
+                // 绘制该主角子弹
+                this._showBullet(this.hero[i], i);
+                // 绘制主角
+                this.hero[i].draw();
+            }
+        },
+        _showBullet: function(fly){
+            if (!fly.gun) return;
+            var img = fly.gun.skin.img;
+            // 根据速度创建子弹
+            fly.temp3 = fly.temp3 ? ++fly.temp3 : 1;
+            if (fly.gun.speed > 0 && fly.gun.speed <= 10 && fly.temp3 == 12 - fly.gun.speed) {
+                fly.temp3 = 1;
+                fly.gun.create(fly.x + fly.skin.img.width / 2 - img.width / 2, fly.y + fly.skin.img.height / 2 - img.height / 2);
+            }
+
+            // 计算子弹位移并绘制
+            for (var i in fly.gun.bullets) {
+                var e = fly.gun.bullets[i];
+                // 清除超出屏幕的子弹
+                if (e.y > winH + e.height || e.y < -1 * e.height) {
+                    this.enemys.splice(i, 1);
+                }
+                // 计算位移
+                fly.gun.bullets[i].y -= 10;
+                // 绘制
+                ctx.drawImage(img, e.x, e.y, img.width, img.height);
+            }
+        },
+        _showEnemy: function(){
+            // 重新核算敌军数理，新建和销毁
+            this.temp = this.temp ? ++this.temp : 1;
+            var timeGap = 30 - this.opt.level * 2;
+            if (this.temp == timeGap) {
+                this.temp2 = this.temp2 ? ++this.temp2 : 1;
+                if (this.temp2 % 5 === 0) {
+                    this.enemys.push(new Enemy('md'));
+                }
+                if (this.temp2 == timeGap) {
+                    this.enemys.push(new Enemy('lg'));
+                    this.temp2 = 0;
+                } else {
+                    this.enemys.push(new Enemy('sm'));
+                }
+                this.temp = 0;
+            }
+
+            // 计算敌军位移并绘制
+            for (var i in this.enemys) {
+                var enemy = this.enemys[i];
+                var img = enemy.skin.img;
+                // 清除超出屏幕的敌军
+                if (enemy.y > winH + img.height) {
+                    this.enemys.splice(i, 1);
+                }
+                // 计算位移
+                this.enemys[i].y += enemy.speed;
+                // 碰撞
+                for (var h in this.hero) {
+                    var hero = this.hero[h];
+                    // 计算与主角碰撞
+                    if (this._ifHit(hero, enemy)) {
+                        this.hero[h].die(hero);
+                        this.opt.somebody_die(i, hero);
+                    };
+                    // 计算与子弹碰撞
+                    for (var b in hero.bullets) {
+                        var bullet = hero.bullets[b];
+                        if (this._ifHit(bullet, enemy)) {
+                            this.enemys[i].die(enemy);
+                        }
+                    }
+                }
+
+                // 绘制
+                this.enemys[i].draw();
+            }
+        },
+        _ifHit: function(one, two) {
+            var img1 = one.skin.img;
+            var img2 = two.skin.img;
+            return one.x > two.x + img2.width || one.x + img1.width < two.x || one.y > two.y + img2.height || one.y + img1.height < two.y;
+        },
+        create: function(id, x, y, skin){
+            this.hero[id] = new Hero(x, y, skin);
+        },
+        stop: function(){
+            if (this.Timer) {
+                cancelAnimationFrame(this.Timer);
+                this.Timer = null;
+            }
+        },
+        start: function(){
+            !this.Timer && this._loop();
+        },
+    }
+
+    function Fly(x, y, blood, score, gun, skin) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.blood = blood || 1;
+        this.score = score || 100;
+        if (gun) {
+            this.gun = new Bullet();
+        }
+        this.skin = skin || {
+            img: null,
+            hurt: null,
+            die: null,
+        }
+    }
+    Fly.prototype = {
+        draw: function(){
+            var img = this.skin.img;
+            ctx.drawImage(img, this.x, this.y, img.width, img.height);
+        },
+        hurt: function(){
+            if (this.skin && !this.skin.hurt) return;
+
+        },
+        die: function(fly){
+            // try {
+            //     for (var i in fly.skin.die) {
+            //         (function(fly, s){
+            //              console.log(s);
+            //             setInterval(function(){
+            //                 ctx.drawImage(s, fly.x, fly.y, s.width, s.height);
+            //             }, 200);
+            //         })(fly, fly.skin.die[i])
+            //     }
+            // } catch (err) {
+            //     this.stop();
+            // }
+        },
+    }
+
+    function Hero(x, y, control, skin) {
+        skin = Object.assign({
+            img: sources.hero1,
+            hurt: null,
+            die: sources.hero_die,
+        }, skin || {});
+        Fly.call(this, x, y, 1, -1, true, skin);
+        this.control = control || false;
+    }
+    Hero.prototype = Fly.prototype;
+
+    function Enemy(type) {
+        Fly.call(this);
+        this.type = type;
+        switch(type) {
+            case 'lg': 
+                this.blood = 12;
+                this.score = 1500;
+                this.speed = 1;
+                this.skin = {
+                    img: sources.lg_emeny,
+                    hurt: sources.lg_emeny_hurt,
+                    die: sources.lg_emeny_die,
+                }
+                break;
+            case 'md': 
+                Fly.call(this, 0, 0, 5, 500, false, {
+                    img: sources.md_emeny,
+                    hurt: sources.md_emeny_hurt,
+                    die: sources.md_emeny_die,
+                });
+                this.blood = 5;
+                this.score = 500;
+                this.speed = random(2,3);
+                this.skin = {
+                    img: sources.md_emeny,
+                    hurt: sources.md_emeny_hurt,
+                    die: sources.md_emeny_die,
+                }
+                break;
+            case 'sm': 
+            default: 
+                this.blood = 1;
+                this.score = 100;
+                this.speed = random(1,4);
+                this.skin = {
+                    img: sources.sm_emeny,
+                    hurt: null,
+                    die: sources.sm_emeny_die,
+                }
+        }
+        this.x = random(0, winW-this.skin.img.width);
+        this.y = this.skin.img.height * -1;
+    }
+    Enemy.prototype = Fly.prototype;
+
+    function Bullet(power, speed) {
+        this.bullets = [];
+        this.power = power || 1;
+        this.speed = speed || 1;
+        this.skin = {
+            img: sources.bullet,
+        };
+        this.width = this.skin.img.width;
+        this.height = this.skin.img.height;
+    }
+    Bullet.prototype = {
+        create: function(x, y){
+            this.bullets.push({
+                x: x,
+                y, y,
+            });
+        },
+        draw: function(){
+            var img = this.skin.img;
+            ctx.drawImage(img, this.x, this.y, img.width, img.height);
+        },
+    }
+
+    window.Game = Game;
+})()
+
+var $box = document.querySelector('.main')
+var winW = $box.offsetWidth, winH = $box.offsetHeight
+var game = new Game('#game', {
+    box: $box,
+    begin: function(){
+        game.create('11', winW/2, winH/2);
+        game.hero['11'].x = 100;
+        game.create('22', winW/2, winH/2);
+        game.hero['22'].x = 200;
+    }
+});
+
+function on(dom, eventName, fn) {
+    dom.addEventListener(eventName, fn);
+}
+function off(dom, eventName, fn) {
+    dom.removeEventListener(eventName, fn);
+}
+
+// on($box, 'mousemove', move);
+// on($box, 'touchmove', move);
+// var startX = game.hero
+// function move(evt) {
+//     evt.preventDefault();
+//     var e = evt.touches ? evt.touches[0] : evt;
+//     game.hero['11'].x = e.pageX - game.hero['11'].x;
+//     game.hero['11'].y = e.pageY - game.hero['11'].y;
+// }
+
+on(document, 'click', function(){
+    game.stop();
+});
+on(document, 'dblclick', function(){
+    game.start();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="format-detection" content="telephone=no" />
+        <title>getImageData 的实践</title>
+        <style>
+            *{
+                margin: 0; padding: 0;
+            }
+            html,body{
+                height: 100%;
+                overflow: hidden;
+            }
+            canvas{
+                background: #000;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="me"></canvas>
+        <script type="text/javascript">
+        !(function(){
+            // 兼容 requestAnimationFrame
+            var lastTime = 0;
+            var vendors = ['webkit', 'moz'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+            }
+            if (!window.requestAnimationFrame) {
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            }
+            if (!window.cancelAnimationFrame) {
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+            }
+
+            // 模块内的全局变量
+            var canvas, ctx, timer, winW, winH;
+
+            /***************************
+             * MyEffect 图片炸开后收回效果
+             * @arg canvas[string] 画布元素标识
+             * @arg options[object] 配置参数
+             * @cb reset(imgUrl) 重置本效果
+             * @cb stop() 暂停本效果
+             * @cb start(imgUrl) 开始本效果（暂停后）
+             ***************************/
+            function MyEffect(canvas, options) {
+                this.opt = Object.assign({
+                    box: window,    // 盒子容器
+                    imgUrl: '',     // 图片链接
+                    imgSize: 600,   // 图片宽度
+                    imgPosCenter: null, // 图片中心位置
+                    speed: 1,       // 动画速度
+                    pointSize: 1,   // 像素点大小
+                }, options || {});
+
+                if (!window.location.protocol.match(/https?/)) {
+                    document.write('canvas 的  getImageData 方法需要服务访问，否则无法浏览本案例'); return;
+                }
+
+                // 基础标量
+                canvas = this.canvas = document.querySelector(canvas);
+                winW = this.widht = canvas.width = this.opt.box.innerWidth;
+                winH = this.height = canvas.height = this.opt.box.innerHeight;
+                ctx = this.ctx = canvas.getContext('2d');
+                if (!this.opt.imgPosCenter) {
+                    this.opt.imgPosCenter = {};
+                    this.opt.imgPosCenter.x = winW / 2;
+                    this.opt.imgPosCenter.y = winH / 2;
+                }
+
+                // 开始运行
+                this._init(this.opt.imgUrl);
+
+                // 屏幕宽高变化
+                // window.addEventListener('resize', function(){
+                //     this.stop();
+                //     winW = this.width = canvas.width = this.opt.box.innerWidth;
+                //     winH = this.height = canvas.height = this.opt.box.innerHeight;
+                //     this.reset();
+                // }.bind(this));
+            }
+            MyEffect.prototype = {
+                // 处理资源加载
+                _init: function(imgUrl){
+                    img = new Image();
+                    img.onload = function(){
+                        this.img = img;
+                        var w = img.width, h = img.height;
+                        img.width = this.opt.imgSize;
+                        img.height = this.opt.imgSize * h / w;
+                        // img.x 无法设置，有点心酸，不语义了
+                        this.imgX = parseInt(this.opt.imgPosCenter.x - img.width / 2);
+                        this.imgY = parseInt(this.opt.imgPosCenter.y - img.height / 2);
+                        this._init2();
+                    }.bind(this);
+                    img.onerror = function(){
+                        alert('图片有误或下载失败。');
+                    };
+                    img.src = imgUrl;
+                },
+                // 正式开始配置
+                _init2: function(){
+                    var img = this.img;
+                    // 获取图像数据
+                    ctx.drawImage(img, this.imgX, this.imgY, img.width, img.height);
+                    var imgData = ctx.getImageData(this.imgX, this.imgY, img.width, img.height);
+                    var data = imgData.data;
+                    ctx.clearRect(0, 0, winW, winH);
+
+                    // 处理数据为点，保存数据点
+                    this.points = [], index = 0, point = {};
+                    var size = this.opt.pointSize;
+                    for(var i=0,col=imgData.width/size; i<col; i++) {
+                        for(var j=0,row=imgData.height/size; j<row; j++) {
+                            index = (j * col + i) * 4;
+                            if (data[index] <= 0) continue;
+                            var speed = parseInt(this._random(1, 10));
+                            var nowX = this.imgX + i * size;
+                            var nowY = this.imgY + j * size;
+                            var rmdX = parseInt(this._random(-100, window.innerWidth + 100));
+                            var rmdY = parseInt(this._random(-100, window.innerHeight + 100));
+                            point = {
+                                speed: speed,
+                                x: nowX,
+                                y: nowY,
+                                curX: rmdX,
+                                curY: rmdY,
+                                stepX: (rmdX - nowX) / speed,
+                                stepY: (rmdY - nowY) / speed,
+                                color: 'rgba('+data[index]+','+data[index+1]+','+data[index+2]+','+data[index+3]+')'
+                            }
+                            this.points.push(point);
+                        }
+                    }
+
+                    // 开始运行动画
+                    this.start();
+                },
+                _random: function(min = 0, max = 1) {
+                    return min + Math.random() * (max - min);
+                },
+                _resize: function(){
+                },
+                _draw: function() {
+                    var size = this.opt.pointSize;
+                    var isOk = 0;
+                    ctx.clearRect(0, 0, winW, winH);
+
+                    // 位置运算与绘制
+                    for (var i in this.points) {
+                        // 新位置设定
+                        var p = this.points[i];
+                        if (this.points[i].speed > 0) {
+                            this.points[i].speed -= 1;
+                            this.points[i].curX += -1 * p.stepX;
+                            this.points[i].curY += -1 * p.stepY;
+                        } else {
+                            isOk++;
+                        }
+
+                        // 绘制像素点
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(p.curX, p.curY, size, size);
+                    }
+
+                    // 游戏与否结束
+                    if (isOk >= this.points.length) {
+                        console.log('end');
+                        this.stop();
+                    } else {
+                        timer = requestAnimationFrame(this._draw.bind(this));
+                    }
+                },
+                reset: function(imgUrl){
+                	ctx.clearRect(0, 0, winW, winH);
+                    this._init(imgUrl || this.img.src);
+                },
+                stop: function(){
+                    if (timer) { cancelAnimationFrame(timer); timer = null; }
+                },
+                start: function(){
+                    !timer && this._draw();
+                },
+            }
+            window.MyEffect = MyEffect;
+        })();
+
+        var imgSize = window.innerWidth < 768 ? 300 : 600
+        var pointSize = window.innerWidth < 768 ? 3 : 10
+        var game = new MyEffect('#me', {
+            imgUrl: 'img/coder.png',
+            imgSize: imgSize,
+        });
+
+        document.addEventListener('click', function(){
+            game.reset();
+        })
+        </script>
+    </body>
+</html>
