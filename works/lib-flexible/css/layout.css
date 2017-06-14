@@ -1,0 +1,253 @@
+﻿@charset "utf-8";
+/*
+ * body 部分
+ ************************/
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    overflow: hidden;
+}
+.body > .header, .body > .footer {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+.body > .main {
+    position: relative;
+    flex-grow: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0,0,0);
+}
+.h5 .page {
+    display: none;
+}
+.body {
+    display: flex;
+    flex-direction: column;
+}
+.mobile .body {
+    /*max-width: 768px;*/
+    max-width: 10rem;
+    margin: auto;
+}
+@media (min-width: 10rem) {
+    .body {box-shadow: 0 0 10px rgba(0,0,0,.2)}
+}
+.body > .footer {
+    text-align: center;
+}
+@media (max-width: 768px) and (orientation: landscape) {
+    .body {
+        bottom: auto;
+        height: 200%;
+    }
+}
+
+
+/*
+ * 定位类
+ ***************************/
+.page,
+.bg,
+.cover,
+.radioBox > .img,
+.radioBox > img,
+.imgRadio > .img,
+.imgRadio > img {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+img.bg, img.full,
+canvas.bg, canvas.full,
+iframe.bg, iframe.full {
+    width: 100%;
+    height: 100%;
+}
+.h5 .page {
+    display: none;
+}
+
+.imgRadio,
+.radioBox {
+    position: relative;
+}
+.imgRadio:before,
+.radioBox:before {
+    content: "";
+    padding-top: 100%;
+    display: block;
+}
+.imgRadio.slide:before,
+.radioBox.slide:before {
+    padding-top: 56.25%;
+}
+.imgRadio.rect:before,
+.radioBox.rect:before {
+    padding-top: 100%;
+}
+.imgRadio > .img,
+.radioBox > .img {
+    background-color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.imgRadio > img,
+.radioBox > img {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+ * flex 封装
+ ***************************/
+.flex, .row {
+    display: -webkit-box;
+    display: flex;
+}
+/* 竖排居中等 */
+.col-c {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+            align-items: center;
+}
+.col-t {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: start;
+            align-items: flex-start;
+}
+.col-b {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: end;
+            align-items: flex-end;
+}
+/* 横排居中等 */
+.row-c {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+            justify-content: center;
+}
+.row-l {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: start;
+            justify-content: flex-start;
+}
+.row-r {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: end;
+            justify-content: flex-end;
+}
+.row-b {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+            justify-content: space-between;
+}
+.row-a {
+    display: -webkit-box;
+    display: flex;
+    justify-content: space-around;
+}
+/* 子元素 */
+.grow {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.shrink {
+    flex-shrink: 0;
+}
+/* 竖排 */
+.flex-col, .col {
+    display: flex;
+    flex-direction: column;
+}
+.flex-box {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+/*
+ * 间隙类
+ ***************************/
+.gap-mt > :not(:first-child) {
+    margin-top: 1rem;
+}
+.gap-mt-m > :not(:first-child) {
+    margin-top: .5rem;
+}
+.gap-mb > :not(:last-child) {
+    margin-bottom: 1rem;
+}
+.gap-mb-m > :not(:first-child) {
+    margin-bottom: .5rem;
+}
+.gap-ml > :not(:first-child) {
+    margin-left: 1rem;
+}
+.gap-ml-m > :not(:first-child) {
+    margin-left: .5rem;
+}
+.gap-mr > :not(:last-child) {
+    margin-right: 1rem;
+}
+.gap-mr-m > :not(:last-child) {
+    margin-right: .5rem;
+}
+
+
+/*
+ * 等分栅栏类
+ ***************************/
+[class*="col-in"] > * {
+    position: relative;
+    min-height: 1px;
+}
+[class*="col-in-"]:before, 
+[class*="col-in-"]:after {
+    content: "";
+    display: table;
+}
+[class*="col-in-"]:after {clear: both}
+[class*="col-in-"] > * {
+    float: left;
+}
+.col-in-2 > * {width: 50%}
+.col-in-3 > * {width: 33.33333333%}
+.col-in-4 > * {width: 25%}
+.col-in-5 > * {width: 20%}
+.col-in-6 > * {width: 16.66666667%}
+/*
+ * 等分栅栏类2
+ ***************************/
+.flex-tabs {
+    display: flex;
+    text-align: center;
+}
+.flex-tabs > .tab {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+
+/*
+ * 上下自适应
+ ***************************/
+.panel {
+    display: flex;
+    flex-direction: column;
+}
+.panel-body {
+    flex-grow: 1;
+}
