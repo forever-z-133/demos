@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html class="mobile">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title></title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.edit-box {
+  min-height: 120px;
+  background: #f7f7f7;
+  border-radius: 2px;
+  padding: 10px 10px;
+  box-shadow: 0 0 2px rgba(0,0,0,.5);
+}
+.modal, .modal-bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.modal {
+  opacity: 0;
+  z-index: -1;
+  transition: opacity .3s;
+}
+.modal-bg {
+  opacity: 0;
+  background: rgba(0,0,0,.7);
+  transition: opacity .3s;
+}
+.modal.in {
+  opacity: 1;
+  z-index: 10;
+}
+.modal.in .modal-bg {
+  opacity: 1;
+}
+.modal-box {
+  transform: translate3d(0,0,0);
+}
+
+#choose .modal-box {
+  width: 300px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 10px;
+}
+.at-text {
+  background: #ccc;
+}
+</style>
+</head>
+
+<body>
+<div class="edit-box" contenteditable>wdasda </div>
+<div class="modal" id="choose">
+  <div class="bg modal-bg"></div>
+  <div class="modal-box">
+    <ul class="list">
+      <li class="item"><a href="#">111111</a></li>
+      <li class="item"><a href="#">222222</a></li>
+      <li class="item"><a href="#">333333</a></li>
+    </ul>
+  </div>
+</div>
+<script>
+function ListenSrting(elem, className, whenBegin, whenEnd) {
+  var $elem = document.querySelector(elem);
+  var lastSelection = {};
+
+  // 绑定事件
+  $elem.addEventListener('click', _pressAt);
+  $elem.addEventListener('keydown', _pressAt);
+  function _pressAt(e) {
+    var selection = getSelection();
+    if (e.shiftKey && (e.keyCode === 50 || e.keyCode === 229)) {
+      // 当输入 @ 时
+      lastSelection = {
+        range: selection.getRangeAt(0),
+        offset: selection.focusOffset,
+        selection: selection
+      };
+      whenBegin && whenBegin();
+    } else if (e.keyCode === 8 || e.keyCode === 46) {
+      // 当按删除键时
+      var range = selection.getRangeAt(0);
+      if (range.startOffset <= 1 && range.startContainer.parentElement.className != "at-text") {
+        var removeNode = range.startContainer.previousElementSibling;
+      }
+      if (range.startContainer.parentElement.className == "at-text") {
+        var removeNode = range.startContainer.parentElement;
+      }
+      removeNode && $elem.removeChild(removeNode);
+    }
+  }
+  function _add(text) {
+    $elem.focus();
+    var selection = lastSelection.selection;
+    var range = lastSelection.range;
+    var textNode = range.startContainer;
+
+    // 删除 @ 符号。
+    range.setStart(textNode, range.endOffset);
+    range.setEnd(textNode, range.endOffset + 1);
+    range.deleteContents();
+
+    // 生成需要显示的内容，包括一个 span 和一个空格。
+    var spanNode1 = document.createElement('span');
+    var spanNode2 = document.createElement('span');
+    spanNode1.className = 'at-text';
+    spanNode1.innerHTML = '@' + text;
+    spanNode2.innerHTML = '&nbsp;';
+
+    // 将生成内容打包放在 Fragment 中，并获取生成内容的最后一个节点，也就是空格。
+    var frag = document.createDocumentFragment(),
+        node, lastNode;
+    frag.appendChild(spanNode1);
+    while ((node = spanNode2.firstChild)) {
+        lastNode = frag.appendChild(node);
+    }
+
+    // 将 Fragment 中的内容放入 range 中，并将光标放在空格之后。
+    range.insertNode(frag);
+    selection.extend(lastNode, 1);
+    selection.collapseToEnd();
+
+    whenEnd && whenEnd();
+  }
+  return {
+    add: _add,
+  }
+}
+
+var $result = document.querySelector('.edit-box');
+var $modal = document.querySelector('#choose');
+var $items = document.querySelectorAll('#choose .item a');
+
+var listener =  ListenSrting('.edit-box', '@', function(){
+  $modal.className += ' in';
+}, function(){
+  $modal.className = $modal.className.split(' ').filter((a) => a!='in').join(' ');
+});
+
+[...$items].map(($item) => {
+  $item.addEventListener('click', function(e){
+    e.preventDefault();
+    listener.add(e.target.innerText);
+  });
+});
+</script>
+</body>
+</html>
