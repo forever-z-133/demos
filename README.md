@@ -11,7 +11,7 @@
 * 2017.06.09 [getImageData 的实践](https://foreverz133.github.io/demos/single/canvas-brokec-word.html)
 * 2017.06.12 [仿微信打飞机双人版](https://foreverz133.github.io/demos/single/wxFlyFight.html)
 * 2017.06.14 [实验 lib-flexible 响应式布局](https://foreverz133.github.io/demos/works/lib-flexible)
-* 2017.06.18 [实现 @ 朋友](https://foreverz133.github.io/demos/single/inputAtFriend)
+* 2017.06.18 [实现 @ 朋友](https://foreverz133.github.io/demos/single/inputAtFriend.html)
 
 -------------
 
