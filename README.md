@@ -13,6 +13,7 @@
 * 2017.06.14 [实验 lib-flexible 响应式布局](https://foreverz133.github.io/demos/works/lib-flexible)
 * 2017.06.18 [实现 @ 朋友](https://foreverz133.github.io/demos/single/inputAtFriend.html)
 * 2017.06.26 [实验 clipboard.js](https://foreverz133.github.io/demos/single/clipboard.html)
+* 2017.06.28 [CSS 的 counter() 计数器](https://foreverz133.github.io/demos/single/css-counter.html)
 
 -------------
 

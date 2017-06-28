@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+label > [type="checkbox"] {
+  position: absolute;
+  left: -9999px;
+}
+.box {
+  counter-reset: characters;
+}
+.checkbox-input:checked {
+  counter-increment: characters;
+}
+.output:after {
+  content: counter(characters);
+}
+
+.checkbox-babel {
+  padding: .5rem 1rem;
+  display: inline-block;
+  border: 3px solid darkred;
+  border-radius: 10px;
+  margin: .5rem .5rem;
+}
+.checkbox-input:checked + .checkbox-babel {
+  box-shadow: inset 0 0 1rem pink;
+  background: rgba(255, 255, 0, 1);
+}
+.output {
+  margin: 1rem 0;
+  background: lightgrey;
+  padding: 1rem 1.5rem;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+  <p>利用 content 的 counter() 特性实现纯 CSS 的累加器。</p>
+  <label class="checkbox">
+    <input type="checkbox" class="checkbox-input">
+    <span class="checkbox-babel">选项1</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="checkbox-input">
+    <span class="checkbox-babel">选项2</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="checkbox-input">
+    <span class="checkbox-babel">选项2</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="checkbox-input">
+    <span class="checkbox-babel">选项2</span>
+  </label>
+  <div class="output">Total：</div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+</script>
+</body>
+</html>

@@ -260,6 +260,7 @@ canvas {
             on(window, 'focus', this.start.bind(this));
         },
         _control: function(evt){
+            evt.preventDefault();
             var e = evt.touches ? evt.touches[0] : evt;
             for (var i in this.hero) {
                 var hero = this.hero[i];
