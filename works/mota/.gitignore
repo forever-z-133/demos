@@ -1,0 +1,12 @@
+*.swp
+*.pyc
+*.bak
+*~
+~*
+*Thumbs.db
+*.tar.gz
+*.svn
+logs/*
+.idea
+.DS_Store
+/*/config/
