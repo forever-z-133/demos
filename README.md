@@ -6,6 +6,7 @@
 * 2017.07.04 [图灵聊天机器人](https://foreverz133.github.io/demos/single/ai-robot.html)
 * 2017.07.05 [鬼畜跳舞小人(转)](https://foreverz133.github.io/demos/single/canvas-member.html)
 * 2017.07.06 [魔塔(PC游戏)(转)](https://foreverz133.github.io/demos/works/mota/)
+* 2017.07.12 [点击打鼓](https://foreverz133.github.io/demos/single/left-and-right.html)
 
 -------------
 
