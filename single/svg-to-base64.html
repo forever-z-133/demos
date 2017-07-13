@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>SVG 转 base64</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #f9f9f9;
+}
+.body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  width: 768px;
+  margin: auto;
+}
+textarea {
+  width: 100%;
+  height: 300px;
+  padding: 5px 10px;
+  display: block;
+  max-width: 100%;
+}
+.buttons {
+  margin: 5px 0;
+  text-align: right;
+}
+button {
+  border: none;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 5px 20px;
+  background: burlywood;
+}
+#temp {display: none;}
+p {margin: 10px 0;}
+label {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+label input[type="file"] {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  z-index: 1;
+  opacity: 0;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <p>你可以先用 <a href="https://jakearchibald.github.io/svgomg/" target="_blank">svgomg</a> 对 SVG 文件进行一次压缩，复制其顶部 tab 中 CODE 对应的代码至本页面，即可转化为 base64 格式使用。</p>
+  <form onsubmit="return false">
+    <textarea id="input" placeholder="输入 SVG 代码"></textarea>
+    <div class="buttons">
+      <label>
+        <input type="file" id="file">
+        <button>图片 转 base64</button>
+      </label>
+      <button type="submit" id="convert">SVG 转 base64</button>
+      <button type="reset" id="empty">清空</button>
+    </div>
+    <textarea id="output" placeholder="输出结果"></textarea>
+  </form>
+</div>
+<div id="temp"></div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var $temp = document.querySelector('#temp');
+var $input = document.querySelector('#input');
+var $output = document.querySelector('#output');
+var $convert = document.querySelector('#convert');
+var $empty = document.querySelector('#reset');
+var $file = document.querySelector('#file');
+
+$convert.addEventListener('click', function(){
+  var val = $input.value;
+  if (!val) return;
+  $output.value = '转换中...';
+  $temp.innerHTML = val;
+  var svg = $temp.childNodes[0];
+  if (svg.constructor.toString().match(/SVGElement/)) {
+    var result = new XMLSerializer().serializeToString(svg);
+    result = window.btoa(result);
+    $output.value = 'data:image/svg+xml;base64,' + result;
+  } else {
+    alert('您传入的 SVG 代码格式不标准，无法形成 DOM 元素');
+  }
+  $temp.innerHTML = '';
+});
+
+
+$file.addEventListener('change', function(e){
+  var files = e.target.files;
+  if (files.length < 1) return;
+  var file = files[0];
+  if (file.size / 1024 > 10) {
+    alert('图片太大请小于 10K，太大并不适合使用 base64'); return;
+  }
+  $output.value = '转换中...';
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = function() {
+    $output.value = reader.result;
+  }
+});
+</script>
+</body>
+</html>
