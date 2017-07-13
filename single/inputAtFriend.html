@@ -146,13 +146,13 @@ var $items = document.querySelectorAll('#choose .item a');
 var listener =  ListenSrting('.edit-box', '@', function(){
   $modal.className += ' in';
 }, function(){
-  $modal.className = $modal.className.split(' ').filter((a) => a!='in').join(' ');
 });
 
 [...$items].map(($item) => {
   $item.addEventListener('click', function(e){
     e.preventDefault();
     listener.add(e.target.innerText);
+  $modal.className = $modal.className.split(' ').filter((a) => a!='in').join(' ');
   });
 });
 </script>
