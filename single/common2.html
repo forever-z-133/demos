@@ -47,11 +47,6 @@ if (!window.location.origin) {
     window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
 }
 
-// 判断该对象是否存在
-$.fn.exist = function () {
-    return this.length > 0;
-}
-
 // 获取此元素现在已有的样式
 if (!HTMLElement.currentStyle) {
     HTMLElement.prototype.currentStyle = function(prop) {
@@ -59,6 +54,7 @@ if (!HTMLElement.currentStyle) {
     }
 }
 
+// 在数组中找某 value
 if (![].indexOf) {
     Array.prototype.indexOf = function(val) {
         for (var i = 0; i < this.length; i++) {
@@ -76,6 +72,37 @@ if (![].remove) {
         this.length = from < 0 ? this.length + from : from;
         return this.push.apply(this, rest);
     };
+}
+
+// 判断该对象是否存在
+$.fn.exist = function () {
+    return this.length > 0;
+}
+
+// 判断该对象是否可见，以便在动画当中判断
+$.fn.visible = function() {
+    var $this = $(this);
+    return !!($this.width() &amp;&amp; $this.height()) &amp;&amp;
+        $this.css('display') !== 'none' &amp;&amp;
+        $this.css('visibility') !== 'hidden';
+}
+
+// 清空表格
+$.fn.clearForm = function() {
+    this.each(function(i, obj) {
+        $(obj).find(':input').addBack().each(function() {
+            var type = this.type;
+            var tag = this.tagName.toLowerCase();
+            if (type == 'checkbox' || type == 'radio') {
+                this.checked = false;
+            } else if (tag == 'select') {
+                this.selectedIndex = 0;
+            } else if (type == 'reset' || type == 'submit' || type == 'button') {
+            } else {
+                this.value = '';
+            }
+        });
+    });
 }</code></pre>
 <script>
 </script>
