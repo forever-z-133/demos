@@ -60,6 +60,14 @@ pre {
         return /android/i.test(navigator.userAgent);
     }
 
+    // 其他无聊判断
+    is.english = function(str) {
+        return /^[a-zA-Z\s]+$/.test(str);
+    }
+    is.chinese = function(str) {
+        return /^[\u4E00-\u9FA5\s]+$/.test(str);
+    }
+
     window.is = is;
 })();</code></pre>
 <script>
@@ -110,6 +118,14 @@ pre {
     }
     is.Array = function(arr) {
         return arr ? arr.constructor == Array : false;
+    }
+
+    // 其他无聊判断
+    is.english = function(str) {
+        return /^[a-zA-Z\s]+$/.test(str);
+    }
+    is.chinese = function(str) {
+        return /^[\u4E00-\u9FA5\s]+$/.test(str);
     }
 
     window.is = is;

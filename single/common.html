@@ -70,6 +70,30 @@ function randomColor() {
 // 生成唯一标识
 function guid(len) {
     return Math.random().toString(36).substring(2, (len||5)+2);
+}
+
+// 检测密码强度
+function CheckPasswordLevel(str) {
+    var level = 0;
+    if (str.length < 6) return level;
+    if (/[0-9]/.test(str)) level++;
+    if (/[a-z]/.test(str)) level++;
+    if (/[A-Z]/.test(str)) level++;
+    if (/\.|-|_/.test(str)) level++;
+    return level;
+}
+
+// className 操作
+function hasClass(dom, classStr) {
+    var arr = dom.className.split(/\s+/);
+    return arr.indexOf(classStr) > -1;
+}
+function addClass(dom, classStr) {
+    if (!hasClass(dom, className)) dom.classStr += ' ' + classStr;
+}
+function removeClass(dom, classStr) {
+    var reg = new RegExp('(\\s|^)' + classStr + '(\\s|$)');
+    dom.className = dom.className.replace(reg, '');
 }</code></pre>
 <script>
 </script>
