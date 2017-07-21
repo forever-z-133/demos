@@ -8,6 +8,7 @@
 * 2017.07.06 [魔塔(PC游戏)(转)](https://foreverz133.github.io/demos/works/mota/)
 * 2017.07.12 [点击打鼓](https://foreverz133.github.io/demos/single/left-and-right.html)
 * 2017.07.13 [SVG 转 base64](https://foreverz133.github.io/demos/single/svg-to-base64.html)
+* 2017.07.21 [PIXI 做的飞机](https://foreverz133.github.io/demos/single/pixi.fly.html)
 
 -------------
 
