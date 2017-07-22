@@ -9,6 +9,7 @@
 * 2017.07.12 [点击打鼓](https://foreverz133.github.io/demos/single/left-and-right.html)
 * 2017.07.13 [SVG 转 base64](https://foreverz133.github.io/demos/single/svg-to-base64.html)
 * 2017.07.21 [PIXI 做的飞机](https://foreverz133.github.io/demos/single/pixi.fly.html)
+* 2017.07.22 [PIXI 的官方案例改写](https://foreverz133.github.io/demos/single/pixi-get-box.html)
 
 -------------
 
