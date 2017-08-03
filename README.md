@@ -2,6 +2,12 @@
 
 ## 2017年
 ==================
+### 2017 年 8 月
+* 2017.08.03 [摇一摇车前进](https://foreverz133.github.io/demos/works/sw_begin/)
+
+-------------
+
+==================
 ### 2017 年 7 月
 * 2017.07.04 [图灵聊天机器人](https://foreverz133.github.io/demos/single/ai-robot.html)
 * 2017.07.05 [鬼畜跳舞小人(转)](https://foreverz133.github.io/demos/single/canvas-member.html)
@@ -10,6 +16,7 @@
 * 2017.07.13 [SVG 转 base64](https://foreverz133.github.io/demos/single/svg-to-base64.html)
 * 2017.07.21 [PIXI 做的飞机](https://foreverz133.github.io/demos/single/pixi.fly.html)
 * 2017.07.22 [PIXI 的官方案例改写](https://foreverz133.github.io/demos/single/pixi-get-box.html)
+* 2017.07.24 [运动的边框](https://foreverz133.github.io/demos/single/movingBorder.html)
 
 -------------
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+/*.box {
+	width: 150px;
+	height: 150px;
+	padding: 1rem;
+}*/
+@keyframes ani {to {background-position:100%}}
+body{
+	background:white;
+}
+div{
+    margin: 100px auto;
+    width: 200px;
+    height: 200px;
+    color: #c00;
+    padding: 1em;
+    border: 1px solid transparent;
+    background: linear-gradient(white,white) padding-box,
+            repeating-linear-gradient(-45deg,black 0,black 12.5%,white 0,white 25%,black 25%,black 37.5%,white 0,white 50%);
+    background-size: 100%,40px 40px;
+    animation: ani 12s linear infinite;
+}
+
+</style>
+</head>
+
+<body>
+<div class="box border">
+	文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+</script>
+</body>
+</html>
