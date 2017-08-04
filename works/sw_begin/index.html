@@ -77,7 +77,7 @@ img {
 <body>
 <div class="page game">
   <div class="road">
-    <div class="road-wrap" v-bind:style="'transform: translate3d(0,' + z + 'px,0)'"><img src="img/road.png"></div>
+    <div class="road-wrap" v-bind:style="'transform: translate3d(0,' + z + 'px,0)'"><img src="img/road.jpg"></div>
   </div>
   <div class="car" v-bind:class="'speed'+speed" v-bind:style="'filter: blur(' + (speed-1) + 'px)'"><img src="img/car.png"></div>
   <div class="tip" v-show="tipShow">摇一摇</div>
@@ -88,7 +88,7 @@ img {
 
 var img = new Image();
 img.onload = start;
-img.src = 'img/road.png'
+img.src = 'img/road.jpg'
 
 var speed = 0;
 var last = new Date();
