@@ -83,36 +83,47 @@ img {
   <div class="tip" v-show="tipShow">摇一摇</div>
   <div class="end" v-show="end" @click="restart">到达了，点击重来</div>
 </div>
-<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
 <script>
-var winH = window.innerHeight;
-var imgH = $('.road-wrap').height();
-var pos = -1 * (imgH - winH)
-var app = new Vue({
-  el: '.page',
-  data: {
-    speed: 1,
-    z: pos,
-    end: false,
-    tipShow: true,
-  },
-  methods: {
-    restart: function(){
-      app.speed = 1;
-      app.tipShow = true;
-      app.end = false;
-      app.z = pos;
-      run();
-    }
-  }
-});
 
-// app.speed = 4;
+var img = new Image();
+img.onload = start;
+img.src = 'img/road.png'
+
 var speed = 0;
 var last = new Date();
 var Timer = null;
-Shake(function(time){
+var app = null;
+
+function start() {
+var winH = window.innerHeight;
+  var imgH = document.querySelector('.road-wrap').clientHeight;
+  console.log(imgH)
+  var pos = -1 * (imgH - winH)
+  app = new Vue({
+    el: '.page',
+    data: {
+      speed: 1,
+      z: pos,
+      end: false,
+      tipShow: true,
+    },
+    methods: {
+      restart: function(){
+        app.speed = 1;
+        app.tipShow = true;
+        app.end = false;
+        app.z = pos;
+        run();
+      }
+    }
+  });
+  Shake(one);
+  document.querySelector('.game').addEventListener('click', one);
+  requestAnimationFrame(run);
+}
+
+function one() {
   // if (app.end) return;
   clearInterval(Timer);
   app.speed = 4;
@@ -123,9 +134,8 @@ Shake(function(time){
     speed = Math.max(0, speed - 2);
     app.speed = Math.max(1, --app.speed);
   }, 100);
-});
+}
 
-requestAnimationFrame(run);
 function run() {
   if (speed <=1 ) app.tipShow = true;
   if (app.z >= 0) {
@@ -141,7 +151,7 @@ function run() {
 function Shake(fn) {
   var lastTime = new Date();
   var lastX = null, lastY = null, lastZ = null;
-  var sensitive = 30;
+  var sensitive = 50;
   window.addEventListener('devicemotion', function (res) {
     // var acceleration =eventData.accelerationIncludingGravity;
     // var curTime = new Date().getTime();
