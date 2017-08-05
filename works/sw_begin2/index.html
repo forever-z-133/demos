@@ -29,7 +29,7 @@
     <script type="text/javascript" src="js/index.js" ></script> -->
     <style>
         .hide {display: none}
-        #page_2 {display: block; opacity: 1}
+        /*#page_2 {display: block; opacity: 1}*/
         #page_2 > .content {overflow: hidden; position: static; height: auto; transition: .1s linear}
         #page_2 > .content > .bg {position: static;}
     </style>
@@ -242,6 +242,7 @@ preloadImage(imgs, function(percent){
 
 function Start() {
     $('#loading').fadeOut();
+    $('#page_2').fadeIn().animate({'opacity': 1});
     Shake(one);
     requestAnimationFrame(run);
     window.addEventListener('click', one);
