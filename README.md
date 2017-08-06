@@ -5,6 +5,7 @@
 ### 2017 年 8 月
 * 2017.08.03 [摇一摇车前进](https://foreverz133.github.io/demos/works/sw_begin/)
 * 2017.08.05 [摇一摇车前进 vol.2](https://foreverz133.github.io/demos/works/sw_begin2/)
+* 2017.08.06 [摇一摇车前进 vol.3](https://foreverz133.github.io/demos/works/sw_begin3/)
 
 -------------
 

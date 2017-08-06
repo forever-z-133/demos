@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=750,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+html, body {
+  width: 750px;
+  margin: 0 auto;
+  overflow: hidden;
+  font-size: 30px;
+}
+img {
+  width: 100%;
+  display: block;
+}
+.game {
+  position: fixed;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+}
+.bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.bg > img {
+  width: 100%; height: 100%;
+}
+.progress {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 200px; height: 3px;
+  background: grey;
+  transform: translate(-50%,-50%);
+}
+.progress-bar {
+  max-width: 0px;
+  height: 100%;
+  background: red;
+  transition: .1s;
+}
+.page {
+  display: none;
+  opacity: 0;
+}
+</style>
+</head>
+
+<body>
+<div id="loading" class="loading">
+  <div class="progress"><div class="progress-bar"></div></div>
+</div>
+<div class="page game">
+  <canvas id="bg"></canvas>
+  <!-- <div class="bg"><img src="" id="main-bg"></div> -->
+  <audio src="train.wav" loop id="bgm"></audio>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var baseUrl = 'img/';
+
+var imgs = ['0_0.jpg', '0_1.jpg', '1_0.jpg', '1_1.jpg'];
+var $progress = $('.progress-bar')
+preloadImage(imgs, function(percent){
+  $progress.css('max-width', percent + '%')
+}, Start);
+
+var cv, ctx, bgm;
+var $page, winW, winH;
+var resource = [];
+
+function Start(imgs) {
+  console.log(imgs)
+  resource = imgs
+  $('#loading').fadeOut();
+  $('.game').fadeIn().animate({'opacity': 1});
+
+  $page = document.querySelector('.game')
+  winW = $page.clientWidth, winH = $page.clientHeight;
+  console.log(winW)
+
+  bgm = document.querySelector('#bgm');
+  window.addEventListener('WeixinJSBridgeReady', function(){
+    bgm.volume = 0.0;
+    bgm.play();
+  });
+  bgm.volume = 0.3;
+  bgm.play();
+
+  cv = document.querySelector('#bg');
+  cv.width = winW, cv.height = winH;
+  ctx = cv.getContext('2d');
+
+  Shake(one);
+  requestAnimationFrame(run);
+  window.addEventListener('touchstart', one);
+  window.addEventListener('touchend', function(){
+    speed = 0;
+    bgm.volume = 0.3;
+    // Timer = setInterval(function(){
+    //   bgm.volume = Math.max(0.3, bgm.volume-0.1);
+    //   // speed = Math.max(0, speed - 1);
+    // }, 100);
+  });
+}
+
+window.addEventListener('touchstart', function(e){
+  e.preventDefault();
+})
+
+
+var speed = 0
+var Timer = null;
+var $bg = $('#main-bg');
+function one() {
+  clearInterval(Timer);
+  speed = Math.min(++speed, 1);
+  bgm.volume = 0.8;
+  Timer = setInterval(function(){
+    speed = 0;
+    bgm.volume = 0.3;
+    // speed = Math.max(0, speed - 1);
+  }, 400);
+}
+
+var now = 0;
+var set = 0;
+function run() {
+  if (++set > 3) {
+    if (++now > 1) now = 0;
+    ctx.clearRect(0, 0, winW, winH);
+    ctx.drawImage(resource[speed][now],0 ,0 ,winW, winH)
+    // $bg.prop('src', 'img/' + speed + '/0 (' + (1+now) + ').jpg');
+    set = 0;
+  }
+  requestAnimationFrame(run);
+}
+      
+function preloadImage(imgArr, fn, callback) {
+  var result = [], total = 4, count = 0;
+  for (var i=0; i<=1; i++) {
+    result[i] = [];
+    for (var j=0; j<=1; j++) {
+      var img = new Image();
+      img.parent = i;
+      img.index = j;
+      img.onload = function() {
+        count++;
+        result[this.parent][this.index] = this;
+        if (count >= total) callback && callback(result);
+        else fn & fn(count/total*100);
+      }
+      img.onerror = function() {
+        fn & fn(++count/total*100);
+      }
+      img.src = 'img/' + i + '/0 (' + (j+1) + ').jpg';
+    }
+  }
+  // var count = 0, len = imgArr.length;
+  // for(var i=0; i<len; i++) {
+  //   var img = new Image();
+  //   img.onload = function() {
+  //     count++;
+  //     if (fn) fn(count/len*100);
+  //     if (count === len) {
+  //       if (callback) callback();
+  //     }
+  //   };
+  //   img.src = (baseUrl || '') + imgArr[i];
+  // }
+}
+
+function Shake(fn) {
+  var lastTime = new Date();
+  var lastX = null, lastY = null, lastZ = null;
+  var sensitive = 80;
+  window.addEventListener('devicemotion', function (res) {
+    // var acceleration =eventData.accelerationIncludingGravity;
+    // var curTime = new Date().getTime();
+    // if ((curTime-last_update)> 10) {
+    //     var diffTime = curTime -last_update;
+    //     last_update = curTime;
+    //     x = acceleration.x;
+    //     y = acceleration.y;
+    //     z = acceleration.z;
+    //     var speed = Math.abs(x +y + z - last_x - last_y - last_z) / diffTime * 10000;
+    //     if (speed > SHAKE_THRESHOLD) {
+    //         alert("你中奖啦！");  // Do something
+    //     }
+    //     last_x = x;
+    //     last_y = y;
+    //     last_z = z;
+    // }
+    res = res.accelerationIncludingGravity
+    var currentTime;
+    var timeDifference;
+    var deltaX = 0, deltaY = 0, deltaZ = 0;
+    if ((lastX === null) && (lastY === null) && (lastZ === null)) {
+      lastX = res.x; lastY = res.y; lastZ = res.z; return;
+    }
+    deltaX = Math.abs(lastX - res.x) * 100;
+    deltaY = Math.abs(lastY - res.y) * 100;
+    deltaZ = Math.abs(lastZ - res.z) * 100;
+    if (((deltaX > sensitive) && (deltaY > sensitive)) ||
+      ((deltaX > sensitive) && (deltaZ > sensitive)) ||
+      ((deltaY > sensitive) && (deltaZ > sensitive))) {
+      currentTime = new Date();
+      timeDifference = currentTime.getTime() - lastTime.getTime();
+
+      if (timeDifference > 200) {
+        fn && fn(timeDifference);
+        lastTime = new Date();
+      }
+    }
+    lastX = res.x; lastY = res.y; lastZ = res.z;
+  })
+}
+</script>
+</body>
+</html>
