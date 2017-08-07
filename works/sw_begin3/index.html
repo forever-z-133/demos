@@ -54,6 +54,10 @@ img {
   display: none;
   opacity: 0;
 }
+span {
+  position: fixed;
+  bottom: 0; right: 0;
+}
 </style>
 </head>
 
@@ -64,9 +68,11 @@ img {
 <div class="page game">
   <canvas id="bg"></canvas>
   <!-- <div class="bg"><img src="" id="main-bg"></div> -->
-  <audio src="train.wav" loop id="bgm"></audio>
+  <audio src="train.wav" loop id="bgm" preload></audio>
+  <span>切换到长按模式</span>
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
 
 var baseUrl = 'img/';
@@ -89,11 +95,20 @@ function Start(imgs) {
 
   $page = document.querySelector('.game')
   winW = $page.clientWidth, winH = $page.clientHeight;
-  console.log(winW)
 
   bgm = document.querySelector('#bgm');
+  $.getJSON('http://sum.kdcer.com/api/applet/WeixinConfig', {
+    Url: window.location.href
+  }, function(r){
+    console.log(r);
+    wx.config(r);
+    wx.ready(function () {
+      bgm.volume = 0.3;
+      bgm.play();
+    })
+  });
   window.addEventListener('WeixinJSBridgeReady', function(){
-    bgm.volume = 0.0;
+    bgm.volume = 0.3;
     bgm.play();
   });
   bgm.volume = 0.3;
@@ -105,7 +120,8 @@ function Start(imgs) {
 
   Shake(one);
   requestAnimationFrame(run);
-  window.addEventListener('touchstart', one);
+  // window.addEventListener('click', one);
+  window.addEventListener('touchstart', function(){one('touch')});
   window.addEventListener('touchend', function(){
     speed = 0;
     bgm.volume = 0.3;
@@ -124,13 +140,18 @@ window.addEventListener('touchstart', function(e){
 var speed = 0
 var Timer = null;
 var $bg = $('#main-bg');
-function one() {
+var isTouching = false;
+function one(isLongTap) {
   clearInterval(Timer);
   speed = Math.min(++speed, 1);
   bgm.volume = 0.8;
+  isTouching = false;
+  if (isLongTap == 'touch') { isTouching = true; return; }
+  isTouching = true;
   Timer = setInterval(function(){
     speed = 0;
     bgm.volume = 0.3;
+    isTouching = false;
     // speed = Math.max(0, speed - 1);
   }, 400);
 }
@@ -138,21 +159,22 @@ function one() {
 var now = 0;
 var set = 0;
 function run() {
-  if (++set > 3) {
-    if (++now > 1) now = 0;
+  if (++set > (isTouching ? 3 : 7))  {
+    if (++now > 25) now = 0;
     ctx.clearRect(0, 0, winW, winH);
     ctx.drawImage(resource[speed][now],0 ,0 ,winW, winH)
     // $bg.prop('src', 'img/' + speed + '/0 (' + (1+now) + ').jpg');
     set = 0;
   }
+  // console.log(speed)
   requestAnimationFrame(run);
 }
       
 function preloadImage(imgArr, fn, callback) {
-  var result = [], total = 4, count = 0;
+  var result = [], total = 52, count = 0;
   for (var i=0; i<=1; i++) {
     result[i] = [];
-    for (var j=0; j<=1; j++) {
+    for (var j=0; j<=25; j++) {
       var img = new Image();
       img.parent = i;
       img.index = j;
