@@ -57,6 +57,7 @@ img {
 span {
   position: fixed;
   bottom: 0; right: 0;
+  color: pink;
 }
 </style>
 </head>
@@ -74,10 +75,30 @@ span {
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
+var lastTime = 0;
+var vendors = ['webkit', 'moz'];
+for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+}
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback, element) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+    };
+}
+if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+        clearTimeout(id);
+    };
+}
 
 var baseUrl = 'img/';
 
-var imgs = ['0_0.jpg', '0_1.jpg', '1_0.jpg', '1_1.jpg'];
+var imgs = [];
 var $progress = $('.progress-bar')
 preloadImage(imgs, function(percent){
   $progress.css('max-width', percent + '%')
@@ -86,6 +107,7 @@ preloadImage(imgs, function(percent){
 var cv, ctx, bgm;
 var $page, winW, winH;
 var resource = [];
+var isEnd = false;
 
 function Start(imgs) {
   console.log(imgs)
@@ -100,7 +122,7 @@ function Start(imgs) {
   $.getJSON('http://sum.kdcer.com/api/applet/WeixinConfig', {
     Url: window.location.href
   }, function(r){
-    console.log(r);
+    // console.log(r);
     wx.config(r);
     wx.ready(function () {
       bgm.volume = 0.3;
@@ -136,20 +158,27 @@ window.addEventListener('touchstart', function(e){
   e.preventDefault();
 })
 
+// setTimeout(function(){
+//   isEnd = true;
+// }, 3000)
 
 var speed = 0
 var Timer = null;
 var $bg = $('#main-bg');
 var isTouching = false;
+var shakeCount = 0;
 function one(isLongTap) {
   clearInterval(Timer);
-  speed = Math.min(++speed, 1);
+  speed = Math.min(++speed, 2);
   bgm.volume = 0.8;
   isTouching = false;
+  if (++shakeCount > 10) {
+    isEnd = true;
+  }
   if (isLongTap == 'touch') { isTouching = true; return; }
   isTouching = true;
   Timer = setInterval(function(){
-    speed = 0;
+    speed = Math.max(0, --speed);
     bgm.volume = 0.3;
     isTouching = false;
     // speed = Math.max(0, speed - 1);
@@ -158,34 +187,78 @@ function one(isLongTap) {
 
 var now = 0;
 var set = 0;
+var tick = null;
 function run() {
-  if (++set > (isTouching ? 3 : 7))  {
-    if (++now > 25) now = 0;
+  if (++set > 5)  {
     ctx.clearRect(0, 0, winW, winH);
-    ctx.drawImage(resource[speed][now],0 ,0 ,winW, winH)
+    if (isEnd) {
+      // console.log(now, set, isEnd)
+      end(now);
+      cancelAnimationFrame(tick)
+      return;
+    } else {
+      if (++now > 24) now = 0;
+      $('span').text(speed + '  ' + now);
+      ctx.drawImage(resource[speed][now],0 ,0 ,winW, winH)
+    }
     // $bg.prop('src', 'img/' + speed + '/0 (' + (1+now) + ').jpg');
     set = 0;
   }
   // console.log(speed)
-  requestAnimationFrame(run);
+  tick = requestAnimationFrame(run);
+}
+
+var tick2 = null
+function end(rest) {
+  set = 0
+  now = -1;
+  ctx.drawImage(resource[speed][rest],0 ,0 ,winW, winH)
+  requestAnimationFrame(endFn);
+  function endFn() {
+    if (++set > 5) {
+      ctx.clearRect(0, 0, winW, winH);
+      if (rest < 25) {
+        rest++;
+        ctx.drawImage(resource[speed][rest],0 ,0 ,winW, winH)
+      } else {
+        if (++now > 25) {
+          alert('完了');
+          bgm.pause();
+          cancelAnimationFrame(tick2);
+          return;
+        }
+        // console.log(now);
+        ctx.drawImage(resource[3][now],0 ,0 ,winW, winH)
+      }
+      // console.log(rest)
+      set = 0;
+    }
+    tick2 = requestAnimationFrame(endFn);
+  }
 }
       
 function preloadImage(imgArr, fn, callback) {
-  var result = [], total = 52, count = 0;
-  for (var i=0; i<=1; i++) {
+  var result = [], total = 104, count = 0;
+  for (var i=0; i<=3; i++) {
     result[i] = [];
     for (var j=0; j<=25; j++) {
       var img = new Image();
       img.parent = i;
       img.index = j;
       img.onload = function() {
-        count++;
         result[this.parent][this.index] = this;
-        if (count >= total) callback && callback(result);
-        else fn & fn(count/total*100);
+        if (++count < total) {
+          fn & fn(count/total*100);
+        } else {
+          callback && callback(result);
+        }
       }
       img.onerror = function() {
-        fn & fn(++count/total*100);
+        if (++count < total) {
+          fn & fn(count/total*100);
+        } else {
+          callback && callback(result);
+        }
       }
       img.src = 'img/' + i + '/0 (' + (j+1) + ').jpg';
     }
