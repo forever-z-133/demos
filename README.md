@@ -6,6 +6,7 @@
 * 2017.08.03 [摇一摇车前进](https://foreverz133.github.io/demos/works/sw_begin/)
 * 2017.08.05 [摇一摇车前进 vol.2](https://foreverz133.github.io/demos/works/sw_begin2/)
 * 2017.08.06 [摇一摇车前进 vol.3](https://foreverz133.github.io/demos/works/sw_begin3/)
+* 2017.08.11 [摇一摇车前进最终版](http://sum.kdcer.com/test/sw_begin5/)
 
 -------------
 
