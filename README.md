@@ -1,14 +1,13 @@
 # 永恒君的案例库
 
 ## 2017年
-==================
+
 ### 2017 年 9 月
 * 2017.09.06 [上海购物节宣传H5(业务)](https://foreverz133.github.io/demos/works/fm-video/)
 * 2017.09.13 [圆盘式抽奖](https://foreverz133.github.io/demos/works/prize/prize3.html)
 
 -------------
 
-==================
 ### 2017 年 8 月
 * 2017.08.03 [摇一摇车前进](https://foreverz133.github.io/demos/works/sw_begin/)
 * 2017.08.05 [摇一摇车前进 vol.2](https://foreverz133.github.io/demos/works/sw_begin2/)
@@ -22,7 +21,6 @@
 
 -------------
 
-==================
 ### 2017 年 7 月
 * 2017.07.04 [图灵聊天机器人](https://foreverz133.github.io/demos/single/ai-robot.html)
 * 2017.07.05 [鬼畜跳舞小人(转)](https://foreverz133.github.io/demos/single/canvas-member.html)
@@ -35,7 +33,6 @@
 
 -------------
 
-==================
 ### 2017 年 6 月
 * 2017.06.01 [touch事件模拟手机滑动](https://foreverz133.github.io/demos/single/transitScroll.html)
 * 2017.06.02 [纯 CSS 弧形菜单](https://foreverz133.github.io/demos/single/circleMenu.html)
@@ -50,7 +47,6 @@
 
 -------------
 
-==================
 ### 2017 年 5 月
 * 2017.05.02 [LazyMan 的实现](https://foreverz133.github.io/demos/single/lazyman.html)
 * 2017.05.02 [Promise 红绿灯的实现](https://foreverz133.github.io/demos/single/redgreenlight.html)
@@ -69,7 +65,6 @@
 
 -------------
 
-==================
 ### 2017 年 4 月
 * 2017.04.01 [多行文本溢出省略的三种办法](https://foreverz133.github.io/demos/single/ellipsis.html)
 * 2017.04.05 [拓展 dropload 插件](https://foreverz133.github.io/demos/single/dropload.html)
@@ -91,7 +86,6 @@
 
 -------------
 
-==================
 ### 2017 年 3 月
 * 2017.03.03 [封装 requestAnimationFrame](https://foreverz133.github.io/demos/single/smooth.html)
 * 2017.03.03 [canvas 的更多学习](https://foreverz133.github.io/demos/single/canvas.html)
