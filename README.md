@@ -3,7 +3,7 @@
 ## 2017年
 ==================
 ### 2017 年 9 月
-* 2017.09.06 [上海购物节宣传H5(业务)](#)（整理中）
+* 2017.09.06 [上海购物节宣传H5(业务)](https://foreverz133.github.io/demos/works/fm-video/)
 
 -------------
 
@@ -15,9 +15,9 @@
 * 2017.08.11 <del>[摇一摇车前进 vol.5](http://sum.kdcer.com/test/sw_begin5/)</del>（废弃）
 * 2017.08.11 [摇一摇车前进线上版](#)（整理中）
 * 2017.08.20 [简单 SVG 文字效果](https://foreverz133.github.io/demos/single/moving-svg-word.html)
-* 2017.08.26 [环球港寻宝H5(业务)](#)（整理中）
-* 2017.08.28 [青浦品牌消费之旅(业务)](#)（整理中）
-* 2017.08.30 [普陀报纸H5(业务)](#)（整理中）
+* 2017.08.26 [环球港寻宝H5(业务)](https://foreverz133.github.io/demos/works/qpal-treasure/)
+* 2017.08.28 [青浦品牌消费之旅(业务)](https://foreverz133.github.io/demos/works/qpal-travel/)
+* 2017.08.30 [普陀报纸H5(业务)](https://foreverz133.github.io/demos/works/pt-paper/)
 
 -------------
 

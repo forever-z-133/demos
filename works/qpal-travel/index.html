@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html class="mobile">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="viewport" content="width=640,user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>优购青浦品牌之旅</title>
+    <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+    <link rel="stylesheet" href="libs/common.css">
+    <link rel="stylesheet" href="libs/style.css">
+    <style>
+        .rotate-info {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: #fff;
+            display: -webkit-box;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="rotate-info hide" id="info">请竖着屏幕浏览本页唷</div>
+    <div class="body" id="main">
+        <!-- loading 页 -->
+        <div class="main-load" id="main-load">
+            <div class="load-img"><img src="img/loading.gif"></div>
+            <div class="load-text"><span id="load-text">0</span>% 加载中</div>
+        </div>
+        <!-- 首页 -->
+        <div class="page welcome" id="welcome">
+            <div class="bg"><img src="img/main-bg.jpg"></div>
+            <div class="cover welcome-cover"></div>
+            <div class="logo"><img src="data:image/png;base64,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"></div>
+            <div class="map"><img src="img/map.png"></div>
+            <div class="modudu"><img src="data:image/png;base64,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"></div>
+            <!--<div class="title1"><img src="img/title1.png"></div>
+            <div class="title2"><img src="img/title2.png"></div>-->
+            <div class="title3"></div>
+            <a href="#" class="btn btn-rule"><span>活动规则</span></a>
+            <div class="button-box welcome-btns gap-mb">
+                <a href="#" class="btn btn-scan"><span>扫码抽奖</span></a>
+                <a href="#" class="btn btn-prize disabled"><span>我的奖品</span></a>
+            </div>
+        </div>
+        <!-- 音效 -->
+        <div class="other">
+            <a href="#" class="btn-music">
+                <div class="icon-music"></div>
+                <div class="music-func"></div>
+            </a>
+            <audio src="media/bgm.mp3" id="bgm" preload autoplay loop></audio>
+        </div>
+        <!-- 规则弹窗 -->
+        <div class="modal rule" id="rule">
+            <div class="bg modal-bg cancel"></div>
+            <div class="modal-box zyh-box">
+                <div class="this-box">
+                    <div class="text">玩转规则</div>
+                    <div class="time"><span>活动时间</span><span class="t">2017年9月11日- 9月17日（第一周）</span></div>
+                    <ul class="list gap-mb">
+                        <li>活动期间，前往品牌地图上指定活动地的用户，<br>现场扫描活动标贴上的二维码，<br>完成签到即可参与抽奖；</li>
+                        <li>活动期间,每个用户仅有1次中奖机会，<br>签到次数越多，中奖机会越大。</li>
+                    </ul>
+                    <div class="text2">奖品设置</div>
+                    <div class="prize-good">iphone7、购物节定制版帆布购物袋等</div>
+                    <a href="#" class="btn btn-ok cancel">确认</a>
+                    <div class="copyright">最终解释权归青浦区经济委员会所有</div>
+                </div>
+            </div>
+        </div>
+        <!-- 抽奖过渡页 -->
+        <div class="modal prize" id="prize">
+            <div class="bg modal-bg"></div>
+            <div class="modal-box zyh-box">
+                <div class="word"></div>
+                <div class="modudu-dance imgRadio"></div>
+            </div>
+        </div>
+        <!-- 中奖 -->
+        <div class="modal good" id="good">
+            <div class="bg modal-bg cancel"></div>
+            <div class="light"><img src="img/light.png"></div>
+            <div class="boom"><img src="img/boom.png"></div>
+            <div class="modal-box zyh-box">
+                <div class="word">手气逆天啦~<br>恭喜你获得<span id="prize-name">奖品奖品奖品奖品奖品奖品</span></div>
+                <img src="data:image/png;base64,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" class="modudu-good">
+                <div class="this-box">
+                    <div class="qrcode imgRadio">
+                        <img src="img/qrcode.png" id="qrcode">
+                        <img src="img/disable.png" class="cover exchange hide">
+                    </div>
+                    <div class="word2">
+                        请于<span id="time">0000.00.00-0000.00.00</span>，至<span id="address">地点地点地点地点地点地点地点地点地点地点地点</span>领取大奖吧！
+                    </div>
+                    <div class="word3">以上活动信息由该企业自行提供，<br />最终解释权归该企业所有！</div>
+                </div>
+                <a href="#" class="btn-close cancel"></a>
+            </div>
+        </div>
+        <!-- 未中奖 -->
+        <div class="modal bad" id="bad">
+            <div class="bg modal-bg cancel"></div>
+            <div class="modal-box zyh-box">
+                <div class="word">今天运气不在线~<br>没有中奖哦！</div>
+                <div class="this-box">
+                    <img src="img/modudu-bad.png" class="modudu-bad">
+                    <div class="word2">非常期待小伙伴们<br>在其他品牌活动地的表现哟~</div>
+                </div>
+                <a href="#" class="btn-close cancel"></a>
+            </div>
+        </div>
+    </div>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/common.js"></script>
+    <script>
+        var debug = true;
+        if (debug) $('<div style="position:fixed;left:0;bottom:0;padding:.2em 1em;background:#fff">预览版</div>').appendTo('body');
+
+        // ---------------- 转发数据
+        var shareJson = {
+            title: '优购青浦品牌之旅，签到抽豪礼！',
+            link: 'http://sum.kdcer.com/Event?EventId=50',
+            imgUrl: 'http://sum.kdcer.com/qpal-travel/img/icon.jpg',
+            desc: '快动动手指，扫码有惊喜！',
+        }
+        // ---------------- 公共方法
+        // 关闭弹窗
+        $('.modal').on('click', '.cancel', function () {
+            $(this).parents('.modal').removeClass('in');
+        });
+        // 开启音乐
+        var audio = {
+            bgm: $('#bgm')[0],
+        }
+        WeChat(shareJson.title, shareJson.desc, shareJson.imgUrl, shareJson.link);
+        //WxReady(function () {
+        //    audio.bgm && audio.bgm.play();
+        //    WxShare(shareJson);
+        //}, 'scanQRCode');
+        // 音乐开关
+        $('body').on('click', '.btn-music', function () {
+            var $this = $(this).closest('.btn-music');
+            $this.toggleClass('off');
+            if ($this.is('.off')) audio.bgm.pause();
+            else audio.bgm.play();
+        });
+
+        // ---------------- 图片预加载
+        var imgs = ['img/loading.gif', 'img/boom.png', 'img/disable.png', 'img/light.png', 'img/loading.gif', 'img/main-bg.jpg', 'img/map.png', 'img/modudu-bad.png', 'img/modudu-dance.png', 'img/qrcode.png', 'img/title1.png', 'img/title2.png'];
+        var $load_text = $('#load-text');
+        preloadImage(imgs, function (per) {
+            $load_text.text(parseInt(per, 10));
+        }, Start);
+
+        // ---------------- 首页
+        var sign = false;
+        function Start() {
+            if (debug) {
+                $('#main-load').fadeOut('fast');
+                $('#welcome').fadeIn(function () {
+                    this.className += ' anim';
+                });
+                return false;
+            }
+
+            $.post('/Event/JourneyEnter', {
+                eventId: 50,
+                //Type: '1',  // 以后要改
+            }, function (r) {
+                console.log('入口', r);
+
+                $('#main-load').fadeOut('fast');
+                $('#welcome').fadeIn(function () {
+                    this.className += ' anim';
+                });
+
+                // 已核销
+                if (r.Take) {
+                    $('.exchange').removeClass('hide');
+                }
+
+                // 已中奖
+                if (r.BonusState) {
+                    tool.showTips({
+                        text: '您已经中过奖啦',
+                    });
+                    Good();
+                    //setPrize(r.BonusState);
+                    $('#prize-name').text(r.Des || '默认奖品');
+                    $('#time').text(r.Time || '');
+                    $('#qrcode').prop('src', r.BonusState || '');
+                    $('#address').text(r.Address || '地址地址地址地址');
+                    $('.btn-prize').removeClass('disabled');
+                }
+
+                // 需要签到
+                if (r.Sign && r.State) {
+                    getSign(GetQueryString('shareCustomer'));
+                }
+
+                // 是否合法
+                if (r.ErrorMessage) {
+                    tool.alert({
+                        title: '系统错误',
+                        text: r.ErrorMessage,
+                    });
+                }
+                //if (!r.State) {
+                    //$('.btn-scan').addClass('disabled');
+                    //tool.alert({
+                    //    title: '操作错误',
+                    //    text: '非法访问哟~',
+                    //});
+                //}
+            }).fail(function (err) {
+                console.log(err);
+                alert('入口接口出了问题');
+            });
+        }
+        $('.btn-rule').on('click', function () {
+            $('#rule').addClass('in');
+        });
+        $('.btn-prize').on('click', function () {
+            Good();
+            //$('#prize').addClass('in');
+        });
+        $('.btn-scan').on('click', function () {
+            if (debug && $('.btn-prize.disabled').length < 1) {
+                alert('您已经中过奖咯，不要太贪心啦'); return;
+            }
+            if (typeof wx == 'undefined' || !app.isWX) {
+                if (!debug) {
+                    alert('无法使用微信扫一扫'); return;
+                } else {
+                    alert('预览版，就当作你可以扫吧。'); getSign(); return;
+                }
+            }
+            wx.scanQRCode({
+                needResult: 1,
+                success: function (res) {
+                    var result = res.resultStr;
+                    getSign(GetQueryString('shareCustomer', result));
+                    //alert(result);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        });
+
+        // ---------------- 签到
+        function getSign(sign) {
+            tool.showToast({
+                text: '签到...',
+            });
+
+            if (debug) {
+                setTimeout(function() {
+                    tool.hideToast();
+                    getPrize();
+                }, 500);
+                return false;
+            }
+
+            $.post('/Event/JourneySign', {
+                eventId: 50,
+                Sign: sign,
+            }, function (r) {
+                console.log('签到', r);
+                tool.hideToast();
+
+                // 已中奖
+                if (r.BonusState) {
+                    tool.showTips({
+                        text: '您已签过到',
+                    });
+                    $('#prize-name').text(r.Des || '默认奖品');
+                    $('#time').text(r.Time || '');
+                    $('#qrcode').prop('src', r.BonusState || '');
+                    $('#address').text(r.Address || '地址地址地址地址');
+                    $('.btn-prize').removeClass('disabled');
+                    Good();
+                    return;
+                }
+
+                if (r.State) {
+                    getPrize(r.Sign);
+                    tool.showTips({
+                        text: '签到成功',
+                    });
+                } else if (r.ErrorMessage) {
+                    tool.alert({
+                        title: '签到失败',
+                        text: r.ErrorMessage,
+                    });
+                } else {
+                    tool.alert({
+                        title: '未知错误',
+                        text: JSON.stringify(r),
+                    });
+                }
+            }).fail(function (err) {
+                console.log(err);
+                tool.hideToast();
+                alert('签到接口出了问题');
+            });
+        }
+        // ---------------- 抽奖
+        function getPrize(Sign) {
+            $('#prize').addClass('in');
+
+            if (debug) {
+                setTimeout(function(){
+                    $('#prize').removeClass('in');
+                    Good();
+                    $('.btn-prize').removeClass('disabled');
+                }, 1800)
+                return false;
+            }
+
+            $.post('/Event/JourneyLotteryBehavior', {
+                eventId: 50,
+                Sign: Sign,
+            }, function (r) {
+                console.log('抽奖', r);
+                setTimeout(function () {
+                    $('#prize').removeClass('in');
+                    if (r.State) {
+                        Good();
+                        setPrize(r.Bonuses[0]);
+                        $('.btn-prize').removeClass('disabled');
+                    } else if (r.ErrorMessage) {
+                        tool.showTips({
+                            text: r.ErrorMessage
+                        });
+                        Bad();
+                    } else {
+                        tool.alert({
+                            title: '未知错误',
+                            text: JSON.stringify(r),
+                        });
+                    }
+                }, 1500);
+            }).fail(function (err) {
+                console.log(err);
+                $('#prize').removeClass('in');
+                alert('抽奖接口出了问题')
+            });
+        }
+        // ---------------- 中奖未中奖
+        function Good() {
+            $('#good').addClass('in');
+            setTimeout(function () {
+                $('#good').addClass(' anim');
+            }, 500);
+        }
+
+        function Bad() {
+            $('#bad').addClass('in');
+        }
+
+        function setPrize(bonus) {
+            $('#prize-name').text(bonus.Name || '默认奖品');
+            $('#time').text(bonus.Time || '');
+            $('#qrcode').prop('src', (typeof bonus == 'string' ? bonus : bonus.QRCode) || '');
+            $('#address').text(bonus.Address || '');
+        }
+
+        // ---------------- 坐标位置
+        // 第一周
+        var pos = [
+          {
+              color: 'red',
+              name: '东隆',
+              pos: [29, 18],
+          }, {
+              color: 'blue',
+              name: '阿特泥',
+              pos: [71, 13],
+          }, {
+              color: 'blue',
+              name: '富米家纺',
+              pos: [47, 32],
+          }, {
+              color: 'blue',
+              name: '法诗图',
+              pos: [33, 57],
+          }, {
+              color: 'green',
+              name: '荣泰',
+              pos: [67, 44],
+          },
+        ];
+
+        var nextTime = new Date(2017, 8, 18, 0, 0, 0);
+        if (new Date() > nextTime) {
+            pos[4].name = '西郊·乐缤纷';
+            pos[1].name = '宏钜汇文创';
+            pos[2].name = '米格天地';
+            pos[3].name = '吉盛伟邦';
+            pos[0].name = '东方商厦<br>（青浦店）';
+            $('.time .t').text('2017年9月18日 - 9月24日（第二周）');
+        }
+
+        setMapItem(pos);
+        function setMapItem(itemArr) {
+            var _html = '';
+            itemArr.forEach(function (a) {
+                _html += '<div class="mark ' + a.color + '" style="top:' + a.pos[1] + '%;left:' + a.pos[0] + '%"><span>' + a.name + '</span></div>';
+            });
+            $(_html).appendTo('.map')
+            $('.welcome').on('click', '.mark', function () {
+                window.location.href = 'list.html';
+            });
+        }
+    </script>
+</body>
+</html>

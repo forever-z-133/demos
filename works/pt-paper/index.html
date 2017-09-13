@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html class="mobile">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html" />
+    <meta name="viewport" content="width=640,user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>上海购物节普陀专场邀请函</title>
+    <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+    <link rel="stylesheet" href="libs/common.css">
+    <link rel="stylesheet" href="libs/style.css">
+    <style>
+        .rotate-info {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: #fff;
+            display: -webkit-box;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="rotate-info hide" id="info">请竖着屏幕浏览本页唷</div>
+    <div class="body" id="main">
+        <!-- 等待接听 -->
+        <div class="page wait" id="wait">
+            <div class="bg"><img src="img/phone-wait.jpg"></div>
+            <div class="modudu"></div>
+            <div class="word">魔嘟嘟</div>
+            <div class="word2">上海</div>
+        </div>
+        <!-- 接听中 -->
+        <div class="page phone" id="phone">
+            <div class="bg"><img src="img/phone-on.jpg"></div>
+            <div class="modudu"></div>
+            <div class="word">魔嘟嘟</div>
+            <div class="word2" id="time">00:00</div>
+            <a href="#" class="over">跳过</a>
+        </div>
+        <!-- app -->
+        <div class="page app" id="app">
+            <div class="bg"><img src="img/phone-back.jpg"></div>
+            <div class="icon">普陀STYLE</div>
+            <div class="finger"></div>
+        </div>
+        <!-- paper -->
+        <div class="page paper" id="paper">
+            <div class="bg scroller">
+                <div class="wrap">
+                    <img src="img/paper.jpg">
+                    <div class="box box1">
+                        <div class="toy toy1"></div>
+                        <div class="comb">
+                            <div class="word">吃货的世界，我来啦！</div>
+                            <div class="word">哇哦</div>
+                            <div class="word">吃货睁大眼睛</div>
+                            <div class="word">吃货大爱</div>
+                            <div class="word">我要吃喜饼</div>
+                            <div class="word">吃吃吃</div>
+                            <div class="word">哪有吃哪有我</div>
+                            <div class="word">喜饼是什么？</div>
+                            <div class="word">逛吃逛吃逛吃逛吃</div>
+                        </div>
+                    </div>
+                    <div class="box box2">
+                        <div class="toy toy2"></div>
+                        <div class="comb">
+                            <div class="word">成龙馆门票很贵的！</div>
+                            <div class="word">搭积木就没输过</div>
+                            <div class="word">真的假的？！</div>
+                            <div class="word">好多鱼</div>
+                            <div class="word">真好玩</div>
+                            <div class="word">能潜水吗？</div>
+                            <div class="word">儿子最爱积木，带他来</div>
+                            <div class="word">带孩子真是锻炼脑力</div>
+                        </div>
+                    </div>
+                    <div class="box box3">
+                        <div class="toy toy3"></div>
+                        <div class="comb">
+                            <div class="word">我要我要</div>
+                            <div class="word">我想尝试一下比基尼</div>
+                            <div class="word">哇！！！</div>
+                            <div class="word smile"></div>
+                            <div class="word">有没有大翅膀</div>
+                            <div class="word">幻想自己在走维密</div>
+                            <div class="word">百变呀</div>
+                            <div class="word">好高大上</div>
+                        </div>
+                    </div>
+                    <div class="box box4">
+                        <div class="toy toy4"></div>
+                        <div class="comb">
+                            <div class="word">墨镜是我最爱</div>
+                            <div class="word">修整脸型的神器噢！</div>
+                            <div class="word">墨镜好酷</div>
+                            <div class="word">好多活动呀！</div>
+                            <div class="word">时装周离我不远了</div>
+                            <div class="word">想参加</div>
+                            <div class="word">666</div>
+                        </div>
+                    </div>
+                    <div class="btn-share"><span>分享我的style</span></div>
+                </div>
+            </div>
+        </div>
+        <!-- 分享 -->
+        <div class="modal share" id="share">
+            <div class="bg cancel" style="background: rgba(255,255,255,.95)"></div>
+            <div class="modal-box">
+                <img src="data:image/png;base64,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" class="image">
+                <div class="word">分享出去，<br>精彩加倍！</div>
+            </div>
+        </div>
+        <!-- 音效 -->
+        <div class="other">
+            <audio src="media/bgm.mp3" id="bgm" preload loop></audio>
+            <audio src="media/ring.mp3" id="ring" preload autoplay loop></audio>
+            <audio src="media/call.mp3" id="call" preload></audio>
+        </div>
+    </div>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/common.js"></script>
+    <script src="http://alloyteam.github.io/AlloyTouch//transformjs/transform.js"></script>
+    <script src="http://alloyteam.github.io/AlloyTouch//alloy_touch.css.js"></script>
+    <script>
+        // ---------------- 转发数据
+        var shareJson = {
+            title: '这是一个很有价值的来电，请接听',
+            link: 'http://sum.kdcer.com/Channel?EventId=56',
+            imgUrl: 'http://sum.kdcer.com/pt-paper/img/icon.jpg',
+            desc: '嘀铃铃 嘀铃铃 铃儿响不停',
+        }
+        // ---------------- 公共方法
+        // 关闭弹窗
+        $('.modal').on('click', '.cancel', function () {
+            $(this).parents('.modal').removeClass('in');
+        });
+        // 开启音乐
+        var audio = {
+            bgm: $('#bgm')[0],
+            ring: $('#ring')[0],
+            call: $('#call')[0],
+        }
+        WeChat(shareJson.title, shareJson.desc, shareJson.imgUrl, shareJson.link);
+        //WxReady(function () {
+        //    audio.ring && audio.ring.play();
+        //    WxShare(shareJson);
+        //});
+        // 禁止默认事件
+        $(window).on('touchmove', function (e) { e.preventDefault(); })
+        // 音乐开关
+        // $('body').on('click', '.btn-music', function () {
+        // 	var $this = $(this).closest('.btn-music');
+        // 	$this.toggleClass('off');
+        // 	if ($this.is('.off')) audio.bgm.pause();
+        // 	else audio.bgm.play();
+        // });
+
+        // ---------------- 图片预加载
+        var imgs = ['img/loading.gif'];
+        var $load_text = $('#load-text');
+        preloadImage(imgs, function (per) {
+            $load_text.text(parseInt(per, 10));
+        });
+        var audioCount = 0, audioTotal = 0;
+        for (var i in audio) {
+            audioTotal++;
+            var a = new Audio();
+            a.oncanplay = function () {
+                if (++audioCount >= audioTotal) {
+                    $('#wait').fadeIn(0);
+                }
+            }
+            a.src = audio[i].src;
+        }
+        // $('#app').fadeIn(0);
+        // $('#paper').fadeIn(0);
+        // ---------------- 等待接听
+        var timeTimer = null;
+        $('#wait').on('click', function () {
+            audio.ring.pause();
+            audio.ring.volume = 0;
+            $('#wait').fadeOut(0);
+            $('#phone').fadeIn(0);
+            audio.call.play();
+            timeTimer = timecount();
+        });
+        // ---------------- 接听中
+        $(audio.call).on('ended', PhoneEnd);
+        $('.over').on('click', PhoneEnd);
+        function PhoneEnd() {
+            audio.ring.pause();
+            audio.ring.volume = 0;
+            audio.call.pause();
+            audio.bgm.play();
+            timeTimer.stop();
+            $('#phone').fadeOut('slow');
+            $('#app').fadeIn();
+        }
+        // ---------------- 获得app
+        $('.icon').on('click', function () {
+            audio.ring.pause();
+            audio.ring.volume = 0;
+            $(this).addAnim('anim-app');
+            $('#paper').fadeIn(0, function () {
+                app.isMobile && $(this).find('.scroller').css('overflow', 'hidden');
+                $(this).addAnim('anim', function () {
+                    $('#app').fadeOut(0);
+                    touch.min = -1 * target.offsetHeight + window.innerHeight;
+                    touch.change();
+                });
+            });
+        });
+        // ---------------- 滚动报纸
+        var target = $('.wrap')[0];
+        var topArr = [];
+        var $boxes = $('#paper .box');
+        Transform(target, true);
+        var touch = new AlloyTouch({
+            touch: ".scroller",
+            target: target,
+            property: "translateY",
+            initialValue: 0,
+            min: -1,
+            max: 0,
+            //change: scrolling,
+        });
+        $('.scroller').on('scroll', function () {
+            var top = $(this).scrollTop();
+            scrolling(-1 * top);
+        });
+        function scrolling(pos) {
+            if (pos < 1) {
+                $boxes.eq(0).addClass('inView');
+            }
+            if (pos < -700) {
+                $boxes.eq(0).removeClass('inView');
+            }
+
+            if (pos < -50) {
+                $boxes.eq(1).addClass('inView');
+            }
+            if (pos < -1200) {
+                $boxes.eq(1).removeClass('inView');
+            }
+
+            if (pos < -800) {
+                $boxes.eq(2).addClass('inView');
+            }
+            if (pos < -2100) {
+                $boxes.eq(2).removeClass('inView');
+            }
+
+            if (pos < -1300) {
+                $boxes.eq(3).addClass('inView');
+            }
+            if (pos < -2500) {
+                $boxes.eq(3).removeClass('inView');
+            }
+        }
+        // ---------------- 滚动报纸
+        $('.btn-share').on('click', function () {
+            $('#share').addClass('in');
+        });
+
+        // 计时器 00:01
+        function timecount() {
+            var $time = $('#time'), start = 0;
+            var Timer = setInterval(function () {
+                start += 1;
+                var m = parseInt(start / 60, 10), s = start % 60;
+                $time.text(addZero(m) + ':' + addZero(s));
+            }, 1000);
+            return {
+                stop: function () {
+                    clearInterval(Timer);
+                },
+            }
+        }
+        // 两位数自动补零
+        function addZero(num) {
+            return num.toString().length > 1 ? '' + num : '0' + num;
+        }
+    </script>
+</body>
+</html>
