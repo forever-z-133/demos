@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>圆盘抽奖</title>
+<meta name="keywords" content="坤鼎KDC, SEO关键词" />
+<meta name="description" content="项目简介" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+	box-sizing: border-box;
+}
+body, .body {
+	overflow: hidden;
+}
+.body {
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	background: #f7f7f7;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #dedede;
+	max-width: 768px;
+	margin: auto;
+}
+.main {
+	height: 100%;
+	flex-grow: 1;
+	overflow-x: hidden;
+	overflow-y: auto;
+	transform: translate3d(0,0,0);
+	-webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+	position: relative;
+	z-index: 1;
+	flex-shrink: 0;
+}
+pre {
+	padding: .5rem 1rem;
+	background: #fff;
+	overflow: auto;
+}
+.copyright {
+	background: #fff;
+	padding: .3rem .8rem;
+	font-size: .9em;
+	box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.roll-box {
+	position: relative;
+	width: 300px;
+	height: 300px;
+	margin: 50px auto 0;
+	border-radius: 100%;
+	background: url(img/99.jpg) center / cover;
+}
+.arrow {
+	position: absolute;
+	top: 0; left: 50%;
+	width: 2px; height: 50%;
+	margin-left: -1px;
+	background: #000;
+	transform-origin: center bottom;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+	<header class="header"></header>
+	<main class="main">
+		<div class="roll-box">
+			<div class="arrow"></div>
+		</div>
+	</main>
+	<footer class="footer">
+		<div class="copyright">
+			本案例由张永恒<alias></alias>实现，<br>
+			联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+			<a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+			或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+		</div>
+	</footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+(function(){
+	var $box = $('.roll-box'), $roll = $box;
+	var touched = false, ro = 0
+	var last = {}, center = {
+		width: $box.width(),
+		height: $box.height(),
+		offset: $box.offset(),
+	};
+	center.x = center.offset.left + center.width/2;
+	center.y = center.offset.top + center.height/2;
+	$box.on('touchstart mousedown', function(evt){
+		evt.preventDefault();
+		var e = evt.touches ? evt.touches[0] : evt;
+		touched = true;
+		last.x = e.pageX;
+		last.y = e.pageY;
+	});
+	$(window).on('touchmove mousemove', function(evt){
+		if (!touched) return;
+		var e = evt.touches ? evt.touches[0] : evt;
+		var kx = last.x - center.x;
+		var ky = last.y - center.y;
+
+	  var k = (kx == 0 | ky == 0 ? 0 : ky / kx);
+	  k2 = Math.atan(k) * 180 / Math.PI;
+	  if (kx > 0 && -ky > 0) k2 = k2 + Math.PI/2;
+	  else if (kx > 0 && -ky < 0) k2 = k2 + Math.PI/2;
+	  else if (kx < 0 && -ky < 0) k2 = Math.PI/2*3 + k2;
+	  else if (kx < 0 && -ky > 0) k2 = k2 - Math.PI/2;
+	  // fly.rotation = k2;
+		// if (y == 0) return;
+		// ro = Math.atan(x/y) * 180 / Math.PI;
+		// if (x < 0)
+		// console.log(ro);
+		// console.log(ro * 180 / Math.PI)
+		$roll.css('transform', 'rotate('+k2+'deg)');
+		last.x = e.pageX;
+		last.y = e.pageY;
+	}).on('touchend mouseup', function(e){
+		touched = false;
+	});
+})()
+</script>
+</body>
+</html>
