@@ -4,6 +4,7 @@
 ==================
 ### 2017 年 9 月
 * 2017.09.06 [上海购物节宣传H5(业务)](https://foreverz133.github.io/demos/works/fm-video/)
+* 2017.09.13 [圆盘式抽奖](https://foreverz133.github.io/demos/works/prize/prize3.html)
 
 -------------
 
