@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {box-sizing: border-box;}
+.body, .page, .bg, .cover {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.body {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+}
+.main {
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.bg > img {
+  width: 100%;
+  height: 100%;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+svg {display: block;}
+.page > * {
+  position: absolute;
+}
+.word {
+  top: 10%;
+  left: 10%;
+  width: 80%;
+}
+.text1 {
+  bottom: 10%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.qrcode {
+  bottom: 20%;
+  left: 20%;
+  width: 100px;
+  height: 100px;
+  background: #000;
+}
+.cutdown {
+  opacity: 0.001;
+}
+.cutdown.in {
+  z-index: 1;
+}
+.cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main">
+  	<div class="page result" id="result">
+  		<div class="bg"><img src="img/bg.jpg"></div>
+  		<div class="word"><img src="img/coder.png"></div>
+      <div class="qrcode"></div>
+  		<div class="text1">我觉得我还能再写两个字</div>
+  	</div>
+    <div class="cover">照片生成中...</div>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒<alias></alias>实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+!(function(){
+  // 图片预加载
+  window.preloadImage = function(imgArr, fn, callback) {
+    var count = 0, len = typeof imgArr=='number' ? imgArr : imgArr.length;
+    for(var i=0; i<len; i++) {
+      var img = new Image();
+      img.onload = function() {
+        if (++count >= len) callback && callback();
+        if (fn) fn(count/len*100);
+      };
+      img.src = imgArr[i];
+    }
+  }
+
+  // 图片元素转 base64
+  window.img2base64 = function(img) {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var winW = img.width, winH = img.height;
+    canvas.width = winW; canvas.height = winH;
+    context.clearRect(0, 0, winW, winH);
+    context.drawImage(img, 0, 0, winW, winH);
+    return canvas.toDataURL('image/png', .1);
+  }
+
+  // dom 元素转 base64
+  window.dom2base64 = function(dom, cb) {
+    // 拷贝一份元素
+    var cloneDom = dom.cloneNode(true);
+    cloneDom.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+
+    // 内部的图片转为 base64
+    var imgs = cloneDom.querySelectorAll('img');
+    for (var i=0; i<imgs.length; i++) {
+      imgs[i].crossOrigin = 'Anonymous';
+      imgs[i].src = img2base64(imgs[i]);
+    }
+
+    // 用 svg 的 foreignObject 将其包裹
+    var str = '<svg xmlns="http://www.w3.org/2000/svg" width="' + dom.offsetWidth + '" height="' + dom.offsetHeight + '"><foreignObject x="0" y="0" width="100%" height="100%">'+ new XMLSerializer().serializeToString(cloneDom).replace(/#/g, '%23').replace(/\n/g, '%0A') + document.querySelector('style').outerHTML + '</foreignObject></svg>';
+
+    // 将该 svg 转为类 base64 格式
+    str = 'data:image/svg+xml;charset=utf-8,' + str;
+
+    // 最终转为实际能转发的 base64 格式
+    var img = new Image();
+    img.onload = function() {
+      cb && cb(img2base64(this));
+    }
+    img.src = str;
+  }
+})()
+
+var imgs = ['img/bg.jpg', 'img/coder.png'];
+preloadImage(imgs, null, function(){
+  dom2base64($('#result')[0], function(x){
+    $('.cover').remove();
+    $('.qrcode').remove();
+    $('.result').append('<div class="bg cutdown"><img src="'+x+'"></div>');
+  });
+});
+
+// 按住时保持 50ms 为有二维码的
+$('.result').on('touchstart', function(){
+  var $cutdown = $('.cutdown');  // 不能作为全局变量，因为未生成
+  $cutdown.addClass('in');
+  setTimeout(function(){
+    $cutdown.removeClass('in');
+  }, 0);
+});
+
+// // 按住后在显示右键菜单时替换掉（频繁保存失败）
+// $('.result').on('touchstart', function(){
+//   setTimeout(function(){
+//     $('.cutdown').css('z-index', 10);
+//   }, 200);
+// });
+// $(window).on('touchend', function(){
+//   $('.cutdown').removeAttr('style');
+// });
+// $(window).on('blur', function(){
+//   $('.cutdown').removeAttr('style');
+// });
+</script>
+</body>
+</html>
