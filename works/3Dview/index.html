@@ -13,150 +13,178 @@
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 .skyBox {
-    position: absolute;
-    top: 0; bottom: 0;
-    left: 0; right: 0;
-    /*margin: 50px;*/
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	/*margin: 50px;*/
 }
 .tips {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: #fff;
+}
+.one {
+	position: absolute;
+	top: 30%; left: 20%;
+	background: #fff;
+	padding: 2em 3em;
+	animation: tip1 1s infinite;
+}
+@keyframes tip1 {
+	50% {transform: translate(30px,30px);}
 }
 </style>
 </head>
 
 <body>
 <div class="skyBox">
-    <div class="skyBox-wrap">
-        <div class="pan1">front</div>
-        <div class="pan2">right</div>
-        <div class="pan3">back</div>
-        <div class="pan4">left</div>
-        <div class="pan5">top</div>
-        <div class="pan6">bottom</div>
-    </div>
+	<div class="skyBox-wrap">
+		<div class="pan1">
+			<div class="one">
+				asdlfkjasldf
+			</div>
+		</div>
+		<div class="pan2">right</div>
+		<div class="pan3">back</div>
+		<div class="pan4">left</div>
+		<div class="pan5">top</div>
+		<div class="pan6">bottom</div>
+	</div>
 </div>
 <div class="tips"></div>
-<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script src="orienter.min.js"></script>
 <script>
 function skyBox(box, options) {
-    // 操作元素
-    var $box = $(box), 
-        $wrap = $box.children().eq(0), 
-        $child = $box.children();
-    // 可变参数
-    var opt = $.extend({
-        size: window.innerHeight,   // 背景图大小
-        number: 4,                  // 盒面数
-        imgs: ['img/','.jpg'], // 图片前缀与后缀
-    }, options || {});
-    // 内部标量
-    var _z,         // Z 轴偏移量
-        per_angle,  // 每个面的旋转角度
-        timer,      // 计时器
-        last,       // 时间对比
-        now = {     // 现在的旋转角度，x 为左右偏角
-            x: 0, y: 0,
-        },
-        touched = false;    // 已按住
-    var o = new Orienter(); // 陀螺仪校准
+	// 操作元素
+	var $box = $(box), 
+		$wrap = $box.children().eq(0), 
+		$child = $box.children();
+	// 可变参数
+	var opt = $.extend({
+		size: window.innerHeight,   // 背景图大小
+		number: 4,                  // 盒面数
+		imgs: ['img/','.jpg'], // 图片前缀与后缀
+	}, options || {});
+	// 内部标量
+	var _z,         // Z 轴偏移量
+		per_angle,  // 每个面的旋转角度
+		timer,      // 计时器
+		last,       // 时间对比
+		now = {     // 现在的旋转角度，x 为左右偏角
+			x: 0, y: 0,
+		},
+		touched = false;    // 已按住
+	var o = new Orienter(); // 陀螺仪校准
 
-    init();
-    bind();
+	init();
+	bind();
 
-    function translateZ(size, number) {
-        return Math.round(size / (2 * Math.tan(Math.PI / number)));
-    }
-    function init() {
-        _z = translateZ(opt.size, opt.number);
-        per_angle = 360 / opt.number;
-        var _style = '<style id="skyBoxStyle">\n';
-        _style += '.skyBox {overflow:hidden; perspective:'+_z/2+'px;}\n';
-        _style += '.skyBox-wrap {position:absolute; z-index:1; top:50%; left:50%; transform-style:preserve-3d; will-change:transform;';
-        _style += 'width:'+opt.size+'px; height:'+opt.size+'px; margin-top:'+-opt.size/2+'px; margin-left:'+-opt.size/2+'px;}\n';
-        _style += '.skyBox-wrap > div {position:absolute; top: 0; bottom: 0; left: 0; right: 0; background-size: 100% 100%; background-position: center;}\n';
-        for(var i=0,len=opt.number; i<len; i++) {
-            _style += '.skyBox-wrap > :nth-child('+(i+1)+') {transform: rotateY('+-(i*per_angle)+'deg) translateZ(-'+(_z-5)+'px);';
-            _style += 'background-image: url('+opt.imgs[0]+i+opt.imgs[1]+');}\n';
-        }
-        for (var j=1; j<=2; j++) {
-            _style += '.skyBox-wrap > :nth-child('+(opt.number+j)+') {transform: rotateX('+(j==1?-90:90)+'deg) translateZ(-'+(_z-5)+'px);';
-            _style += 'background-image: url('+opt.imgs[0]+(opt.number+j-1)+opt.imgs[1]+');}\n';
-        }
-        $('#skyBoxStyle').remove();
-        $('head').append(_style);
-        start();
-    }
-    function bind() {
-        var pos = {             // 事件数据
-            x: 0, y: 0,
-            rx: 0, ry: 0,
-            xx: 0, yy: 30,
-        };
-        $box.off().on('mousedown touchstart', function(e){
-            e.preventDefault();
-            e = e.touches ? e.touches[0] : e;
-            pos.x = e.clientX;
-            pos.y = e.clientY;
-            pos.rx = now.x;
-            pos.ry = now.y;
-            touched = true;
-        }).on('mousemove touchmove', function(e){
-            if (!touched) return;
-            e = e.touches ? e.touches[0] : e;
-            var xx = e.clientX - pos.x;
-            var yy = e.clientY - pos.y;
-            now.x = 180 / Math.PI * Math.atan((yy) / (Math.sqrt(Math.pow(opt.size / 2, 2) + Math.pow(_z, 2))*1.5)) + pos.rx;
-            now.y = 180 / Math.PI * (Math.atan((xx) / _z)) + pos.ry;
-        }).on('mouseup touchend', function(){
-            touched = false;
-        });
-        o.init();
-        o.onOrient = function(obj) {
-            if (obj.lon > 180) obj.lon -= 360;
-            var xx = obj.lat - pos.xx;
-            var yy = obj.lon - pos.yy;
-            now.x += xx / 3; now.y += yy;
-            pos.xx = obj.lat; pos.yy = obj.lon;
-        }
-    }
-    function start() {
-        last = new Date().getTime();
-        cancelAnimationFrame(timer);
-        timer = requestAnimationFrame(loop);
-    }
-    function loop() {
-        draw();
-        timer = requestAnimationFrame(loop);
-    }
-    var $tips = $('.tips');
-    function draw() {
-        now.x = Math.max(Math.min(now.x, 30), -30);
-        $wrap.css('transform', 'rotateX('+now.x+'deg) rotateY('+now.y+'deg) rotateZ(0)');
-        $tips.text(parseInt(now.x) + ' ' + parseInt(now.y));
-    }
-    // 节流
-    function throttle(fn, delta, context) {
-        var safe = true;
-        return function() {
-            if (!safe) return;
-            safe = false;
-            fn.call(context, arguments);
-            setTimeout(function(){
-                safe = true;
-            }, delta);
-        };
-    }
+	function translateZ(size, number) {
+		return Math.round(size / (2 * Math.tan(Math.PI / number)));
+	}
+	function init() {
+		_z = translateZ(opt.size, opt.number);
+		per_angle = 360 / opt.number;
+		var _style = '<style id="skyBoxStyle">\n';
+		_style += '.skyBox {overflow:hidden; perspective:'+(_z-2)+'px;}\n';
+		_style += '.skyBox-wrap {position:absolute; z-index:1; top:50%; left:50%; transform-style:preserve-3d; will-change:transform;';
+		_style += 'width:'+opt.size+'px; height:'+opt.size+'px; margin-top:'+-opt.size/2+'px; margin-left:'+-opt.size/2+'px;}\n';
+		_style += '.skyBox-wrap > div {position:absolute; top: 0; bottom: 0; left: 0; right: 0; background-size: 100% 100%; background-position: center;}\n';
+		for(var i=0,len=opt.number; i<len; i++) {
+			_style += '.skyBox-wrap > :nth-child('+(i+1)+') {transform: rotateY('+-(i*per_angle)+'deg) translateZ(-'+(_z-1)+'px);';
+			_style += 'background-image: url('+opt.imgs[0]+i+opt.imgs[1]+');}\n';
+		}
+		for (var j=1; j<=2; j++) {
+			_style += '.skyBox-wrap > :nth-child('+(opt.number+j)+') {transform: rotateX('+(j==1?-90:90)+'deg) translateZ(-'+(_z-1)+'px);';
+			_style += 'background-image: url('+opt.imgs[0]+(opt.number+j-1)+opt.imgs[1]+');}\n';
+		}
+		$('#skyBoxStyle').remove();
+		$('head').append(_style);
+		start();
+	}
+	function bind() {
+		var pos = {             // 事件数据
+			x: 0, y: 0,
+			rx: 0, ry: 0,
+			xx: 0, yy: 30,
+		};
+		$wrap.off().on('mousedown touchstart', function(e){
+			e.preventDefault();
+			touched = true;
+			e = e.touches ? e.touches[0] : e;
+			pos.x = e.clientX;
+			pos.y = e.clientY;
+			pos.rx = now.x;
+			pos.ry = now.y;
+		})
+		$(window).on('mousemove touchmove', function(e){
+			e.preventDefault();
+			if (!touched) return;
+			e = e.touches ? e.touches[0] : e;
+			var xx = e.clientX - pos.x;
+			var yy = e.clientY - pos.y;
+			now.x = 180 / Math.PI * Math.atan((yy) / (Math.sqrt(Math.pow(opt.size / 2, 2) + Math.pow(_z, 2))*1.5)) + pos.rx;
+			now.y = 180 / Math.PI * (Math.atan((xx) / _z)) + pos.ry;
+		}).on('mouseup touchend', function(){
+			touched = false;
+		});
+		o.init();
+		o.onOrient = function(obj) {
+			if (obj.lon > 180) obj.lon -= 360;
+			var xx = obj.lat - pos.xx;
+			var yy = obj.lon - pos.yy;
+			now.x += xx / 3; now.y += yy;
+			pos.xx = obj.lat; pos.yy = obj.lon;
+		}
+	}
+	function start() {
+		last = new Date().getTime();
+		cancelAnimationFrame(timer);
+		timer = requestAnimationFrame(loop);
+	}
+	function loop() {
+		draw();
+		timer = requestAnimationFrame(loop);
+	}
+	var $tips = $('.tips');
+	function draw() {
+		now.x = Math.max(Math.min(now.x, 30), -30);
+		$wrap.css('transform', 'rotateX('+now.x+'deg) rotateY('+now.y+'deg) rotateZ(0)');
+		$tips.text(parseInt(now.x) + ' ' + parseInt(now.y));
+	}
+	// 节流
+	function throttle(fn, delta, context) {
+		var safe = true;
+		return function() {
+			if (!safe) return;
+			safe = false;
+			fn.call(context, arguments);
+			setTimeout(function(){
+				safe = true;
+			}, delta);
+		};
+	}
 }
 
 skyBox('.skyBox', {
-    size: window.innerHeight*1.5,
-    imgs: ['img/bg_o_','.jpg'],
+	size: window.innerHeight*1.5,
+	imgs: ['img/bg_o_','.jpg'],
 });
+$('.one').on('touchstart', function(e){
+	// e.preventDefault();
+	// e.stopPropagation();
+	$(this).one('touchend', function(){
+		alert('点了我，你就要嫁给我')
+	});
+});
+// $('.one').on('click', function(e){
+// 	e.preventDefault();
+// 	e.stopPropagation();
+// 	alert('点了我，你就要嫁给我')
+// });
 </script>
 </body>
 </html>
