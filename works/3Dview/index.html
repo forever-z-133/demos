@@ -126,6 +126,7 @@ function skyBox(box, options) {
 			e = e.touches ? e.touches[0] : e;
 			var xx = e.clientX - pos.x;
 			var yy = e.clientY - pos.y;
+			if (Math.abs(xx + yy) < 5) return;
 			now.x = 180 / Math.PI * Math.atan((yy) / (Math.sqrt(Math.pow(opt.size / 2, 2) + Math.pow(_z, 2))*1.5)) + pos.rx;
 			now.y = 180 / Math.PI * (Math.atan((xx) / _z)) + pos.ry;
 		}).on('mouseup touchend', function(){
@@ -173,18 +174,16 @@ skyBox('.skyBox', {
 	size: window.innerHeight*1.5,
 	imgs: ['img/bg_o_','.jpg'],
 });
+// 移动端有效，但有问题
 $('.one').on('touchstart', function(e){
-	// e.preventDefault();
-	// e.stopPropagation();
 	$(this).one('touchend', function(){
 		alert('点了我，你就要嫁给我')
 	});
 });
-// $('.one').on('click', function(e){
-// 	e.preventDefault();
-// 	e.stopPropagation();
-// 	alert('点了我，你就要嫁给我')
-// });
+// PC 端有效，移动端无效
+$('.one').on('click', function(e){
+	alert('点了我，你就要嫁给我')
+});
 </script>
 </body>
 </html>
