@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!-- <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" /> -->
+<meta name="viewport" content="width=640, target-densitydpi=device-dpi, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {box-sizing: border-box;}
+.body, .page, .bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.body {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+}
+.main {
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.cube {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  overflow: hidden;
+  perspective: 986px;
+  transform-style: flat;
+  transform-origin: 50% 50% 0px;
+}
+.scale {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50% 0px;
+  transform: translate3d(0,0,-150px);
+}
+.wrap {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100px;
+  height: 714px;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50% 0px;
+}
+.item {
+  position: absolute;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform-origin: 50% 50% 0px;
+  background-size: 100% auto;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main">
+    <div class="cube" id="three">
+      <div class="scale">
+        <div class="wrap"></div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒<alias></alias>实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+var $box = $('.cube');
+var $scale = $box.find('.scale');
+var $wrap = $box.find('.wrap');
+var width = $wrap.width();
+
+var _z = 1000;
+$box.css('perspective', _z);
+$scale.css('transform', 'translate3d(0,0,-'+(_z/3)+'px)');
+function _rotate(degX, degY) {
+  return 'translate3d(-50%, -50%, '+(_z)+'px) rotateX('+(degX||0)+'deg) rotateY('+(degY||0)+'deg)';
+}
+$wrap.css('transform', _rotate(0));
+
+var _html = '';
+for (var i=0,l=10; i<l; i++) {
+  var _transform = ' rotate3d(0,'+i+',0,-'+i/l*360+'deg) translate3d(0,0,-'+(153)+'px) scale3d(1, 1, 1);'
+  _html += '<div class="item" style="background-image:url(img/'+i+'.jpg);transform:'+_transform+'"></div>';
+}
+$(_html).appendTo($wrap);
+var $item = $wrap.find('.item');
+
+var $wrap = $('.wrap');
+var touched = false;
+$(window).on('touchstart mousedown', function(evt){
+  evt.preventDefault();
+  touched = true;
+  var e = evt.touches ? evt.touches[0] : evt;
+});
+$(window).on('touchmove mousemove', function(evt){
+  if (!touched) return;
+  var e = evt.touches ? evt.touches[0] : evt;
+  $wrap.css('transform', _rotate(Math.max(-60,Math.min(60,(e.pageY-500)/10)), e.pageX))
+}).on('touchend mouseup', function(){
+  if (!touched) return;
+  touched = false;
+
+});
+</script>
+</body>
+</html>
