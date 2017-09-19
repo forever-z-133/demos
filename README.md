@@ -7,7 +7,7 @@
 * 2017.09.13 [圆盘式抽奖](https://foreverz133.github.io/demos/works/prize/prize3.html)
 * 2017.09.14 [变化的 SVG 图形](https://foreverz133.github.io/demos/single/moving-svg.html)
 * 2017.09.14 [拉霸式抽奖](https://foreverz133.github.io/demos/works/prize/prize1.html)
-* 2017.09.15 [Service Worker 初体验](https://foreverz133.github.io/demos/works/cache)
+* 2017.09.15 [Service Worker 初体验](https://foreverz133.github.io/demos/works/cache/start.html)
 * 2017.09.15 [HTML 转 图片](https://foreverz133.github.io/demos/works/dom2img)
 
 -------------
