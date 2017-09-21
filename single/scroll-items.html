@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #dedede;
-  max-width: 768px;
+  max-width: 540px;
   overflow: hidden;
   margin: auto;
 }
@@ -55,7 +55,7 @@ pre {
 }
 p {text-align: center;}
 .items:nth-of-type(1) {background: pink; height: 200px;}
-.items:nth-of-type(2) {background: grey; height: 500px;}
+.items:nth-of-type(2) {background: grey; height: 600px;}
 .items:nth-of-type(3) {background: purple; height: 300px;}
 .items:nth-of-type(4) {background: red; height: 100px;}
 .items:nth-of-type(5) {background: green; height: 100px;}
@@ -64,7 +64,7 @@ p {text-align: center;}
 
 <body>
 <div class="body">
-  <header class="header"><p>判断屏幕中为哪个版块：<span id="result">0</span></p></header>
+  <header class="header"><p>判断屏幕中为哪个版块：<b id="result">0</b><br>何种状态属于有效态有待讨论</p></header>
   <main class="main">
     
     <div class="items">1</div>
@@ -102,7 +102,7 @@ $scroller.on('scroll', function(){
   if (direction > 0) {
     // 向下滑，下一个元素从底部进入视野就 ++
     // 不考虑本元素从顶部退出视野的状况，比如第一个元素很长，所以并不应该 ++
-    if (topArr[index+1] < top + winH - 50) index++;
+    if (topArr[index+1] < top + winH - 80) index++;
   } else {
     // 向上滑，本元素从底部退出视野，或上一个元素从顶部进入视野就 --
     if (topArr[index] > top + winH - 100 || topArr[index-1] > top - 50) index--;
