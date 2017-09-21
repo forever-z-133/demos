@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {box-sizing: border-box;}
+.body, .page, .bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.body {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+}
+.main {
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+p {text-align: center;}
+.items:nth-of-type(1) {background: pink; height: 200px;}
+.items:nth-of-type(2) {background: grey; height: 500px;}
+.items:nth-of-type(3) {background: purple; height: 300px;}
+.items:nth-of-type(4) {background: red; height: 100px;}
+.items:nth-of-type(5) {background: green; height: 100px;}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"><p>判断屏幕中为哪个版块：<span id="result">0</span></p></header>
+  <main class="main">
+    
+    <div class="items">1</div>
+    <div class="items">2</div>
+    <div class="items">3</div>
+    <div class="items">4</div>
+    <div class="items">5</div>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒<alias></alias>实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+// 定义标量
+var $scroller = $('.main'), $li = $('.items'), $result = $('#result');
+var winH = $scroller.height(), index = 0, direction = 1, lastTop = 0, topArr = [];
+
+// 存储每个 item 对应距离顶部的位置
+$li.each(function(i){ topArr[i] = $(this).offset().top - $scroller.offset().top });
+
+// 绑定滚动事件
+$scroller.on('scroll', function(){
+  var top = $scroller.scrollTop();
+  // 方向判断
+  direction = lastTop > top ? -1 : 1;
+  lastTop = top;
+
+  // 更新索引
+  if (direction > 0) {
+    // 向下滑，下一个元素从底部进入视野就 ++
+    // 不考虑本元素从顶部退出视野的状况，比如第一个元素很长，所以并不应该 ++
+    if (topArr[index+1] < top + winH - 50) index++;
+  } else {
+    // 向上滑，本元素从底部退出视野，或上一个元素从顶部进入视野就 --
+    if (topArr[index] > top + winH - 100 || topArr[index-1] > top - 50) index--;
+  }
+
+  // 回调操作
+  $result.text(index+1);
+});
+</script>
+</body>
+</html>

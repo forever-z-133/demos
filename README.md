@@ -11,7 +11,8 @@
 * 2017.09.15 [HTML 转 图片](https://foreverz133.github.io/demos/works/dom2img)
 * 2017.09.19 [桶型 CSS 全景](https://foreverz133.github.io/demos/works/3Dview2/)
 * 2017.09.19 [水果机式抽奖](https://foreverz133.github.io/demos/works/prize/prize2.html)
-* 2017.09.20 [iPhoneX 刘海交互](https://foreverz133.github.io/demos/works/prize/iphonex-nav2.html)
+* 2017.09.20 [iPhoneX 刘海交互](https://foreverz133.github.io/demos/single/iphonex-nav2.html)
+* 2017.09.21 [滑动到了什么位置](https://foreverz133.github.io/demos/single/scroll-items.html)
 
 -------------
 
