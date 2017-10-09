@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="theme-color" content="#FFFFFF" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {box-sizing: border-box;}
+.body, .page, .bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.body {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+}
+.main {
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.bg > img {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+canvas {display: block;}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main"></main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒<alias></alias>实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var $box = document.querySelector('.main')
+var winW = $box.offsetWidth || window.innerWidth;
+var winH = $box.offsetHeight || window.innerHeight;
+
+var img = new Image();
+img.onload = start;
+img.src = 'img/bg.jpg';
+
+var canvas = document.createElement('canvas');
+canvas.width = winW; canvas.height = winH;
+var ctx = canvas.getContext('2d');
+
+function start(){
+  ctx.drawImage(img, 0, 0, winW, img.height/img.width*winW);
+
+
+  var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  var data = imgData.data, avg = 0, r = g = b = 0;
+  for(var i=0; i<data.length; i+=4 ) {
+    // 全黑
+    // data[i] = data[i+1] = data[i+2] = 0;
+
+    // 透明度
+    // data[i+3] *= 0.8;
+
+    // 蓝通道
+    // avg = ( data[i] + data[i+1] + data[i+2] / 3 );
+    // data[i] = 0;
+    // data[i+1] = 0;
+    // data[i+2] = avg;
+    
+    // 加深
+    // data[i] += 30;
+    // data[i+1] += 30;
+    // data[i+2] += 30;
+
+    // 黑白
+    // avg = ( data[i] + data[i+1] + data[i+2] ) / 3;
+    // data[i] = data[i+1] = data[i+2] = avg;
+    
+    // 反相
+    data[i] = 255 - data[i];
+    data[i+1] = 255 - data[i+1];
+    data[i+2] = 255 - data[i+2];
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  $box.innerHTML = '';
+  $box.appendChild(canvas);
+}
+
+/* 其他知识点
+ctx.createImageData(w, h);
+ctx.createImageData(imgData);
+
+新建 w,h 或与 imgData 等大的 ImageData 对象。
+其他操作与 getImageData 基本类似。
+********************************/
+</script>
+</body>
+</html>
