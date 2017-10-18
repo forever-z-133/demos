@@ -3,6 +3,7 @@
 ## 2017年
 ### 2017 年 10 月
 * 2017.10.01 [国庆与你同行H5](https://foreverz133.github.io/demos/works/kdc-10-1/)
+* 2017.10.18 [图片遮罩的实践](https://foreverz133.github.io/demos/works/mask/)
 
 ### 2017 年 9 月
 * 2017.09.06 [上海购物节宣传H5(业务)](https://foreverz133.github.io/demos/works/fm-video/)
