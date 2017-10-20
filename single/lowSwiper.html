@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="theme-color" content="#FFFFFF" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {box-sizing: border-box;}
+.body, .page, .bg {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.body {
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+}
+.main {
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.bg > img, img.bg {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+.main {
+  display: flex;
+  align-items: flex-start;
+}
+.swiper {
+  position: relative;
+  overflow: hidden;
+}
+.inner {
+  display: flex;
+  align-items: flex-start;
+  transform: translate3d(0,0,0);
+}
+.slider {
+  flex-shrink: 0;
+}
+a {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mySwiper {
+  background: #ccc;
+}
+.mySwiper .inner {
+  margin: .2em .2em;
+}
+.mySwiper .slider {
+  margin: .2em .2em;
+}
+.mySwiper .slider > a {
+  /*width: 50vw;*/
+  display: inline-block;
+  padding: 0 .8em;
+  line-height: 30px;
+  background: #fff;
+  border: 1px solid pink;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main">
+    <div class="swiper mySwiper">
+      <div class="inner">
+        <div class="slider"><a href="#">首页</a></div>
+        <div class="slider"><a href="#">新闻报道</a></div>
+        <div class="slider"><a href="#">产品</a></div>
+        <div class="slider"><a href="#">分类</a></div>
+        <div class="slider"><a href="#">首页2</a></div>
+        <div class="slider"><a href="#">新闻报道2</a></div>
+        <div class="slider"><a href="#">产品2</a></div>
+        <div class="slider"><a href="#">分类2</a></div>
+        <div class="slider"><a href="#">首页2</a></div>
+        <div class="slider"><a href="#">新闻报道2</a></div>
+        <div class="slider"><a href="#">产品2</a></div>
+        <div class="slider"><a href="#">分类2</a></div>
+        <div class="slider"><a href="#">首页2</a></div>
+        <div class="slider"><a href="#">新闻报道2</a></div>
+        <div class="slider"><a href="#">产品2</a></div>
+        <div class="slider"><a href="#">分类2</a></div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+function lowSwiper(dom, options) {
+  var $box = $(dom);
+  var opt = $.extend({
+    inner: '.inner',
+    slider: '.slider',
+    autoplay: false,
+    init: function(){},
+    touchmove: function(){},
+    change: function(){},
+  }, options || {});
+
+  var $inner = $box.find(opt.inner), $slider = $box.find(opt.slider);
+  var winW = $box.width();    // 最外层盒宽度
+  var allW = 0;               // 所有子元素宽度
+  var length = $slider.length;// 子元素数量
+  var pos = {
+    now: 0,     // inner 初始位置
+    last: null, // 拖拽时鼠标的位置
+    items: [],  // 每个 slider 对应位置
+    target: 0,  // 自动动画要移动的距离
+    anim: 0,    // 自动动画时每次移动多少
+    direction: 1, // 拖拽的方向，1 为向左拖，-1 向右拖
+  }
+  var click = false;    // 用于记录是否已点击
+  var disable = false;  // 是否禁用本插件
+  var animimg = false;  // 是否正在自动动画
+  var currentIndex = 0; // 当前索引
+
+  this.x = 0;
+
+  _init();
+
+  function _init() {
+    length = $slider.length;
+    var $last = $slider.eq(length-1);
+    var boxOffset = $box.offset().left;
+    allW = $last.offset().left + $last.width() + parseInt($last.css('margin-right')) - boxOffset;
+    pos.now = _getPos();
+    $slider.each(function(i){
+      var $this = $(this);
+      var x = parseInt($this.offset().left - boxOffset);
+      i == 0 && (x = 0);
+      console.log(x)
+      pos.items.push(-1 * x);
+    });
+    opt.init(this);
+    _slideTo(currentIndex);
+  }
+
+  // 获取 $inner 已偏移的距离
+  function _getPos() {
+    var matrix = $inner.css('transform');
+    if (matrix == 'none') return 0;
+    matrix = matrix.split(')')[0].split(', ');
+    return +(matrix[12] || matrix[4]);
+  }
+
+  // 设置 $inner 的位置
+  function draw() {
+    pos.now += pos.anim;
+    if ((pos.anim > 0 && pos.now > pos.target) || (pos.anim < 0 && pos.now < pos.target)) {
+      animimg = false; pos.now = pos.target; pos.target = 0; pos.anim = 0;// return;
+    }
+    $inner.css('transform', 'translate3d('+pos.now+'px,0,0)');
+  }
+
+  // 滑动到索引所在的元素的居左位置，需要居中的话修改 pos.items 的获取
+  function _slideTo(index) {
+    animimg = true;
+    pos.target = pos.items[index];
+    pos.target = Math.min(0, Math.max(winW - allW, pos.target));
+    var speed = (pos.target - pos.now) / 20; // 运行 20 次移动
+    pos.anim = pos.target > 0 ? -speed : speed;
+    currentIndex = index;
+  }
+
+  var startPos = 0, startTime = 0, acc = 0;
+  $box.find('a').on('dragstart', function(e){
+    e.preventDefault();
+  })
+  $box.on('touchstart mousedown', function(evt){
+    var e = evt.touches ? evt.touches[0] : evt;
+    // 重置每次拖拽
+    pos.last = null;
+    // 标记已经点击
+    click = true;
+    // 开启动画
+    animimg = true;
+    // 用来计算加速度
+    startPos = e.pageX;
+    startTime = Date.now();
+  })
+  $(window).on('touchmove.swiper mousemove.swiper', function(evt){
+    if (!click) return;
+    var e = evt.touches ? evt.touches[0] : evt;
+    if (pos.last == undefined) pos.last = e.pageX;
+    // 计算此次拖拽偏移
+    var offset = e.pageX - pos.last;
+    // 偏移过小则不考虑，为了与 click 区别
+    if (Math.abs(offset) < 5) return;
+    // 设置 $inner 应该所在的位置，实际赋值由 requestAnimationFrame 完成
+    pos.now += offset;
+    pos.direction = offset >= 0 ? 1 : -1;
+    // 记录鼠标最终的位置
+    pos.last = e.pageX;
+  }).on('touchend.swiper mouseup.swiper', function(){
+    if (!click) return;
+    click = false;
+    animimg = false;
+    // 【废弃】计算加速度，pos.anim 应该递减，还是算了
+    // acc = (pos.last - startPos) / (Date.now() - startTime);
+    // pos.target = pos.now + acc * 50;
+    // pos.anim = acc > 0 ? 1 : -1;
+    // animimg = true;
+    // 超出判断
+    if (pos.now > 0) { _slideTo(0); return; }
+    if (pos.now < winW - allW) { _slideTo(length-1); return; }
+    // 计算改变当前索引
+    // 觉得不需要可以不要
+    // for (var i in pos.items) {
+    //   console.log(pos.direction, pos.now, pos.items[i], allW)
+    //   if ((pos.direction < 0 && pos.now > pos.items[i]) || (pos.direction > 0 && pos.now > pos.items[i] - $slider.eq(i).width())) {
+    //     _slideTo(i); break;
+    //   }
+    // }
+  });
+
+  // 无限运行中，当 animing 激活时运行 draw
+  (function loop(){
+    if (!disable && animimg) draw();
+    requestAnimationFrame(loop);
+  })()
+}
+
+
+/*
+ * 以下为自己的代码
+ ***************************/
+$('body').on('click', '[href="#"]', function(e) {e.preventDefault();});
+var x = new lowSwiper('.mySwiper');
+$('.slider').on('click', function(){
+	alert($(this).text());
+});
+</script>
+</body>
+</html>
