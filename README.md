@@ -3,6 +3,7 @@
 ## 2017年
 ### 2017 年 11 月
 * 2017.11.02 [简单的评星效果](https://foreverz133.github.io/demos/single/star.html)
+* 2017.11.02 [简陋的 MVVM 框架(转)](https://foreverz133.github.io/demos/single/mvvm.html)
 
 ### 2017 年 10 月
 * 2017.10.01 [国庆与你同行H5](https://foreverz133.github.io/demos/works/kdc-10-1/)
