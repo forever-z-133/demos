@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+  box-sizing: border-box;
+}
+body, .body {
+  overflow: hidden;
+}
+.body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  margin: auto;
+}
+.main {
+  height: 100%;
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.cover {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.star-result-box {
+  position: relative;
+  width: 300px;
+  height: 30px;
+  background: #000;
+}
+.star-result-cover {
+  background-size: auto 100%;
+  background-position: 0 0;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAAG8TRt3AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAbUExURUxpcczMzMzMzMzMzMzMzP///8zMzNzc3O/v79WEt8UAAAAFdFJOUwBYncYgn9daXwAABEJJREFUWMPtWD1v2zAQpWXFyeiiqLN6aNyMLpAEGY0WTTu6KCRqlO2I8pgUldyxcCrlb5eiRIqfZ8VJEQQIF/Pw9MinO94dZRTUY46sk7BoJvMvfHLAJptNfLjZ0Mkc0fGugmKEDtkzGKH6YYqd1JOjmwM2uQmCepLQtV2btrvzydyYjJNqgjcbVMu4qWQUFUR/D/jugTqZnqCETQ6D8ADanQ9uR5o91+xhotghOlLsOeoJO0ZiJAz/0VgD/nw0q8zzlj+tH+Y2de+gekduzyts6gl7xUh/k8aOLO/z1Ham2USz+6qNUaD5K9P8da7YN/XbCjumB62xN9WgDmG/1MYz4V6PPR9K7mZ8HoBv3D9j4f56/RCp/g5mHG7iw/BAe74Q9neEzmT+H0qOpXjFfsFPCBKHZ9vuX28Vczssap8VTxCv/wlHCQiHpyB8OwDh2E8AmEbgEoB/8vDZYXog/MwJs+heOuGtODsyvHrTjPo0cmtU8CMzRuZI28WjhQ72E2XvXEUnujQ8bcHe2qL8mqODzPZiokp5NhgP5aQy4Lt274EFZmunzAVeYcDV2v2scUFiwKF42VxaXcBx+7J4KlbnMB7JcV4mGhyqZ658hiR6uXAEw2EBwxkIb+HaEu+AjyE4moKlJ5zBMOplAHwnZ4gJ/4Jhmikf3HA0Beta1QkBOFTSz4Dv1OTW4VsYZil+qsEbMRg8EGbG4GjByySrHD63LngftNVMdJXxvXML6rVd2CypTcVtlIdTHR0V8ouVM2tBFu+9tC0tlZ5Yqdd6ZQrKobR0Zjp1JVB/bavIYvmrAKznX20wHpv1WoLbK1S/AOGerVlsEdgsJL9cuuArFptjE2Z3Ny/JHa0mrCMRLRXpClwFuWqWPdPnWx7kKvRmJ4pFkJd2mAeZxubY+KAYt0Euh0YfC6UgBysTnsh5vtBv36VSkUq9za3VepbA5T568Y3qlfwwclQ8goyzR5DL9SPIhOxPxotRtje5HHvrvclk5pN9yZi2NFA3RC5p0euv9yQTWhFB3QhWDetGsGpYN0DOWQv3033IuOnvk2wPctncLQDdbnLe3Ax66cPJ0dK4cXQnl+JG5NaNdqmGdNfknBhDuktNTFS+tQX3xHottA+P/NbacP6xK/dtatzZgnI160L1L2xXtgCT97u5n0jm8Ha+3MWdpO5Q3ZMhRO1xTzk+9siZm/uZFDsOSb50+M2fpLtPGLaH3CNZl+MZ5deWr4i06Hi2c8Nt9vNtI0crc+eLoiMZXzs+frqQc4vHvLQb2abarhu5ir3xZZV1Ipetal/6W3fdhSypHqX5AtKN3KpZ5rZZPupywrjqJnNFllt0m2SiZy7PcrKbXKtWMrfJclM3sqrWMrfOclM3sqi2ZC7LcrKLTFXbMpdluaEbGapHqbWxRfnC0K2TyYWzrZUrApMxAe4vBqiR7+Hb+e/XD5TnI/8DbP3d5457rgoAAAAASUVORK5CYII=);
+}
+.star-result {
+  width: 0;
+  height: 100%;
+  background: red;
+  transition: width .2s;
+}
+.main {
+  padding: 50px 10px;
+}
+.box {
+  height: 3000px;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main">
+    <p><input type="number" id="num" step="0.1" min="0" max="10" value="5">输入 0-10 之间的数字</p>
+    <p>也可点击或滑动来修改</p>
+    <p><input type="color" id="color" value="#93ccf4">星星颜色</p>
+    <div class="star-result-box">
+      <div class="star-result" id="star-result"></div>
+      <div class="cover star-result-cover"></div>
+    </div>
+    <div class="box"></div>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+window.addEventListener('touchmove', function(e) { e.preventDefault() }, false);
+var $body = document.querySelector('.body');
+var $box = document.querySelector('.star-result-box');
+var $star = document.querySelector('#star-result');
+var $input = document.querySelector('#num');
+var $color = document.querySelector('#color');
+$star.style.background = $color.value;
+var percent = $input.value/10*100 + '%';
+// 改变星星数量
+$input.addEventListener('input', function(e){
+  var val = parseFloat(e.target.value) || 0;
+  percent = val/10*100 + '%';
+});
+// 改变星星颜色
+$color.addEventListener('change', function(e){
+  $star.style.background = e.target.value;
+});
+
+// 可直接点击或拖拽修改
+$box.addEventListener('touchstart', touchstart, false);
+$box.addEventListener('mousedown', touchstart, false);
+$box.addEventListener('touchmove', touchmove, false);
+$box.addEventListener('mousemove', touchmove, false);
+$box.addEventListener('touchend', touchend, false);
+$box.addEventListener('mouseup', touchend, false);
+var width = $box.clientWidth;
+var temp = $box.offsetLeft + $body.offsetLeft;
+var  transition, touched = false;
+function touchstart(e) {
+  e.preventDefault();
+  e = e.touches ? e.touches[0] : e;
+  touched = true;
+  percent = (e.clientX-temp)/width*100 + '%';
+  transition = window.getComputedStyle($star).transition;
+  $input.value = ((e.clientX-temp)/width*10).toFixed(2);
+}
+function touchmove(e) {
+  if (!touched) return;
+  e = e.touches ? e.touches[0] : e;
+  percent = (e.clientX-temp)/width*100 + '%';
+  $star.style.transition = 'width 0s';
+  $input.value = ((e.clientX-temp)/width*10).toFixed(2);
+}
+function touchend(e) {
+  if (!touched) return;
+  touched = false;
+  $star.style.transition = transition;
+}
+
+(function loop(){
+  $star.style.width = percent;
+  requestAnimationFrame(loop);
+})()
+</script>
+</body>
+</html>

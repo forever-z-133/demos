@@ -51,6 +51,7 @@
   <header class="header">
   </header>
   <main class="main">
+    <p>仅 PC 端能使用 HTML5 的 draggable</p>
     <ul class="list">
         <li class="ele" draggable="true">1</li>
         <li class="ele" draggable="true">2</li>
@@ -64,7 +65,7 @@
 <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
 <script>
 
-window.ontouchmove = function(e) { e.preventDefault(); return }
+// window.ontouchmove = function(e) { e.preventDefault(); return }
 var nodes = document.querySelectorAll(".ele");
 
     var draging = null,
