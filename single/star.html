@@ -121,7 +121,8 @@ $star.style.background = $color.value;
 var percent = $input.value/10*100 + '%';
 // 改变星星数量
 $input.addEventListener('input', function(e){
-  var val = parseFloat(e.target.value) || 0;
+  var val = parseFloat(this.value) || 0;
+  if (val > 10) { val = 10; this.value = 10; }
   percent = val/10*100 + '%';
 });
 // 改变星星颜色
@@ -134,8 +135,8 @@ $box.addEventListener('touchstart', touchstart, false);
 $box.addEventListener('mousedown', touchstart, false);
 $box.addEventListener('touchmove', touchmove, false);
 $box.addEventListener('mousemove', touchmove, false);
-$box.addEventListener('touchend', touchend, false);
-$box.addEventListener('mouseup', touchend, false);
+window.addEventListener('touchend', touchend, false);
+window.addEventListener('mouseup', touchend, false);
 var width = $box.clientWidth;
 var temp = $box.offsetLeft + $body.offsetLeft;
 var  transition, touched = false;
@@ -161,7 +162,8 @@ function touchend(e) {
 }
 
 (function loop(){
-  $star.style.width = percent;
+  percent = Math.min(parseFloat(percent), 100);
+  $star.style.width = percent + '%';
   requestAnimationFrame(loop);
 })()
 </script>
