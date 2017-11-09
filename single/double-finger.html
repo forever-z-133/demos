@@ -14,6 +14,7 @@
 <meta name="keywords" content="张永恒, foreverZ, 案例库" />
 <meta name="description" content="" />
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload=function(){var s=document.createElement("script");s.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js";document.body.appendChild(s);s.onload=function(){eruda.init()}}</script>
 <style>
 *, *:before， *:after {
    box-sizing: border-box;
@@ -104,27 +105,28 @@ function lowDrag(drag, options) {
 		area: $drag.closest('.movable-area'),	// 范围
 		x: 0, y: 0,
 		limit: false,
+		scale: 1,
 		canScale: false,
+		rotate: 0,
 		canRotate: false,
 		onInit: function() {},
 		onDrag: function() {},
 	}, options || {});
-
+	// 元素标量
 	var $win = $(window);
 	var $target = $(opt.target);
-	var $area = $(opt.area);
-
+	var $area = $(opt.area).length ? $(opt.area) : $('body');
+	// 数值标量
 	var pos = {
-		start: {x:0, y:0},
-		last: null,
+		center: {x:0, y:0},
 		offset: {x:0, y:0},
-		scale: 1,
-		rotate: 0,
+		scale: 0,
 	}
 	var x = -opt.x, y = -opt.y;
+	var scale = opt.scale, rotate = opt.rotate;
 	var winW = $area.width(), winH = $area.height();
 	var w = $target.width(), h = $target.height();
-
+	// 限制性状态标量
 	var touched = false;
 	var enable = true;
 	var anim = false;
@@ -149,15 +151,25 @@ function lowDrag(drag, options) {
 		x += pos.offset.x;
 		y += pos.offset.y;
 		pos.offset = {x:0, y:0};
-		$target[0].style.transform = 'translate3d('+x+'px,'+y+'px,0)';
+		scale += pos.scale;
+		$target[0].style.transform = 'translate3d('+x+'px,'+y+'px,0) scale('+scale+')';
 	}
 
 	function convertEvent(e) {
 		if (e.touches && e.touches.length > 1) {
-			return e.touches;
+			return Array.prototype.slice.call(e.touches);
 		} else {
-			return e.touches ? e.touches : [e];
+			return e.touches ? [e.touches[0]] : [e];
 		}
+	}
+
+	function average() {
+		var args = Array.prototype.slice.call(arguments);
+		return args.reduce(function(a, b){return a+b}) / args.length;
+	}
+
+	function distence(a, b) {
+		return Math.sqrt(Math.pow(a,2),Math.pow(b,2));
 	}
 
 	var finger_start = [];
@@ -170,11 +182,21 @@ function lowDrag(drag, options) {
 			e.start = { x: e.pageX, y: e.pageY };
 			e.last = { x: e.pageX, y: e.pageY };
 		});
+		if (finger_start > 1) {
+			var a = finger_start[0], b = finger_start[1];
+			pos.center = {
+				x: average(a.pageX, b.pageX),
+				y: average(a.pageY, b.pageY),
+			}
+		} else {
+			pos.center = { x: 0, y: 0 };
+		}
 		anim = true;
 	}
 	function _touchmove(e) {
 		if (!touched) return;
 		finger_move = convertEvent(e);
+		// console.log(JSON.stringify(finger_move[1]))
 		if (finger_start.length == 1) {	// 单指
 			var s1 = finger_start[0];
 			var e1 = finger_move[0];
@@ -185,12 +207,24 @@ function lowDrag(drag, options) {
 			s1.last = { x: e1.pageX, y: e1.pageY };
 		}
 		if (finger_start.length > 1) {	// 双指
+			if (opt.canScale) {
+				var s1 = finger_start[0], s2 = finger_start[1];
+				var e1 = finger_move[0], e2 = finger_move[1];
+				// console.log(JSON.stringify(s1.start), JSON.stringify(s1.start))
+				pos.scale = ((e2.pageX - e1.pageY) - (s2.start.x - s1.start.x)) / w;
+				// console.log(pos.scale);
+			} else if (opt.canRotate) {
+
+			}
 		}
 	}
 	function _touchend() {
 		if (!touched) return;
 		touched = false;
 		anim = false;
+		if (opt.limit) {	// 区域限制
+
+		}
 	}
 }
 
