@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+  box-sizing: border-box;
+}
+body, .body {
+  overflow: hidden;
+}
+.body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  margin: auto;
+}
+.main {
+  height: 100%;
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.cover {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.sub {
+  max-height: 0;
+  overflow: hidden;
+}
+.item1 .sub {
+  transition: max-height 1s ease-out;
+}
+.item1 a:focus + .sub {
+  max-height: 200px;
+  transition-timing-function: ease-in;
+}
+.item2 .sub {
+  animation: slideUp 1s;
+  animation-fill-mode: backwards;
+}
+.item2 a:focus + .sub {
+  animation: slideDown 1s;
+  animation-fill-mode: forwards;
+}
+@keyframes slideDown {
+  0% {max-height: 0;}
+  100% {max-height: 200px;}
+}
+@keyframes slideUp {
+  0% {max-height: 200px;}
+  100% {max-height: 0;}
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header">纯 CSS 实现 slideDown</header>
+  <main class="main">
+    <ul class="list">
+      <li class="item item1">
+        <a href="#" class="sup">一级菜单</a>
+        <ul class="list sub">
+          <li class="item"><a href="#">二级菜单</a></li>
+          <li class="item"><a href="#">二级菜单</a></li>
+        </ul>
+      </li>
+      <li class="item item2">
+        <a href="#" class="sup">一级菜单</a>
+        <ul class="list sub">
+          <li class="item"><a href="#">二级菜单</a></li>
+          <li class="item"><a href="#">二级菜单</a></li>
+        </ul>
+      </li>
+    </ul>
+    <p>使用 max-height 来实现，弊端也是很明显的。<br>虽然不再考虑元素高度了，但动画还是会直到给定的值才完结，比如你取消选中动画将从600px滑向0px，但我实际高度为100px，那么那500px阶段的效果我们是空白的。<br>而如果我们用animation来实现也是一样的问题，还会再多一个初始会动画的问题。<br>再者用 focus 来制作的话不能有三级菜单，因为点二级时一级就失焦了。</p>
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+</script>
+</body>
+</html>
