@@ -82,7 +82,22 @@ pre {
   padding: 50px 10px;
 }
 .box {
-  height: 3000px;
+  height: 100px;
+}
+
+.star-bar {
+  width: 250px;
+  height: 50px;
+  margin-left: 25px;
+  background-image: url(data:image/png;base64,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);
+  background-size: 50px 100px;
+  background-position: 0 100%;
+}
+.star-bar .star {
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  background-position: 0 0;
 }
 </style>
 </head>
@@ -99,6 +114,8 @@ pre {
       <div class="cover star-result-cover"></div>
     </div>
     <div class="box"></div>
+    <p>另一种半星需求的布局方式：</p>
+    <div class="star-bar"><div class="star"></div></div>
   </main>
   <footer class="footer">
     <div class="copyright">
@@ -130,11 +147,16 @@ $color.addEventListener('change', function(e){
   $star.style.background = e.target.value;
 });
 
+var $box2 = document.querySelector('.star-bar');
+var $star2 = $box2.querySelector('.star');
+
 // 可直接点击或拖拽修改
 $box.addEventListener('touchstart', touchstart, false);
 $box.addEventListener('mousedown', touchstart, false);
-$box.addEventListener('touchmove', touchmove, false);
-$box.addEventListener('mousemove', touchmove, false);
+$box2.addEventListener('touchstart', touchstart, false);
+$box2.addEventListener('mousedown', touchstart, false);
+window.addEventListener('touchmove', touchmove, false);
+window.addEventListener('mousemove', touchmove, false);
 window.addEventListener('touchend', touchend, false);
 window.addEventListener('mouseup', touchend, false);
 var width = $box.clientWidth;
@@ -153,17 +175,20 @@ function touchmove(e) {
   e = e.touches ? e.touches[0] : e;
   percent = (e.clientX-temp)/width*100 + '%';
   $star.style.transition = 'width 0s';
+  $star2.style.transition = 'width 0s';
   $input.value = ((e.clientX-temp)/width*10).toFixed(2);
 }
 function touchend(e) {
   if (!touched) return;
   touched = false;
   $star.style.transition = transition;
+  $star2.style.transition = transition;
 }
 
 (function loop(){
   percent = Math.min(parseFloat(percent), 100);
   $star.style.width = percent + '%';
+  $star2.style.width = percent + '%';
   requestAnimationFrame(loop);
 })()
 </script>
