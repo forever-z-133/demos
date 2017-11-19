@@ -6,6 +6,7 @@
 * 2017.11.02 [简陋的 MVVM 框架(转)](https://foreverz133.github.io/demos/single/mvvm.html)
 * 2017.11.09 [连线解锁效果](https://foreverz133.github.io/demos/single/line-password.html)
 * 2017.11.13 [文本两端对齐](https://foreverz133.github.io/demos/single/justify-text.html)
+* 2017.11.19 [前端路由vol.2](https://foreverz133.github.io/demos/single/router2.html)
 
 -------------
 
