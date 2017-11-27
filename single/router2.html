@@ -74,7 +74,8 @@ Router.prototype.resolve = function(e) {
   // 获取本路径的路径和数据
   var query = this.query();
   this.path = query.hash.slice(1) || '/';
-  this.path = e && e.type == 'load' ? '/' : this.path;
+  // 每次访问都为首页，其实我觉得不必，刷新后还是当前页才对
+  // this.path = e && e.type == 'load' ? '/' : this.path;
   var state = $.extend(query.search, history.state || {});
   JSON.stringify(state) == '{}' && (state = null);
 
@@ -112,6 +113,7 @@ router.route('main', function(state, path, type){
   console.log(path, state);
 });
 
+// 写在全局的 location.hash = 'xx' 可能不触发 hashchange
 setTimeout(function(){
   history.pushState({},'','#main');
   location.replace('#detail');
