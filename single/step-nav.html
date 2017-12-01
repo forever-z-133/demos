@@ -68,7 +68,7 @@ pre {
   width: 80%;
   margin: 50px auto;
   display: flex;
-  font-size: 10px;
+  font-size: 12px;
   justify-content: space-between;
 }
 .nav-bar-list .item {
@@ -94,19 +94,23 @@ pre {
   position: absolute;
   top: 50%; left: 0;
   width: 100%;
-  height: .1em;
-  margin-top: -.05em;
+  height: .2em;
+  margin-top: -.1em;
   background: red;
 }
 .nav-bar-bg { background: grey }
 
-.nav-bar-list i { transition: background .1s .2s; }
+.nav-bar-list i { transition: background .2s .1s; }
 .nav-bar-list .active i { background: red; }
 .nav-bar {  width: 0; transition: width .3s; }
 .nav-bar-list .active ~ .nav-bar { width: 0% }
 .nav-bar-list .active + .active ~ .nav-bar { width: 33.333% }
 .nav-bar-list .active + .active + .active ~ .nav-bar { width: 66.666% }
 .nav-bar-list .active + .active + .active + .active ~ .nav-bar { width: 100% }
+
+.control {
+  padding: 0 1rem 0;
+}
 </style>
 </head>
 
@@ -125,19 +129,17 @@ pre {
         <div class="nav-bar"></div>
       </ul>
     </div>
-    <div>
+    <div class="control">
       <p>当前第几阶段</p>
+      <label><input type="radio" value="0" name="steps" checked>第一阶段</label>
+      <label><input type="radio" value="1" name="steps">第二阶段</label>
+      <label><input type="radio" value="2" name="steps">第三阶段</label>
+      <label><input type="radio" value="3" name="steps">第四阶段</label>
     </div>
-    <label><input type="radio" value="0" name="steps" checked>第一阶段</label>
-    <label><input type="radio" value="1" name="steps">第二阶段</label>
-    <label><input type="radio" value="2" name="steps">第三阶段</label>
-    <label><input type="radio" value="3" name="steps">第四阶段</label>
   </main>
   <footer class="footer">
     <div class="copyright">
-      本案例由张永恒实现，<br>
-      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
-      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133/" target="_blank">github</a><br>
       或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
     </div>
   </footer>
@@ -148,7 +150,9 @@ pre {
 var $setp_nav = $('.nav-bar-list').children('.item');
 $('input').on('change', function(){
   var step = $(this).val();
-  $setp_nav.eq(step).addClass('active').nextAll().removeClass('active');
+  var $item = $setp_nav.eq(step).addClass('active');
+  $item.prevAll().addClass('active');
+  $item.nextAll().removeClass('active');
   console.log(step);
 })
 </script>
