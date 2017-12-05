@@ -12,6 +12,7 @@
 * 2017.11.09 [连线解锁效果](https://foreverz133.github.io/demos/single/line-password.html)
 * 2017.11.13 [文本两端对齐](https://foreverz133.github.io/demos/single/justify-text.html)
 * 2017.11.19 [前端路由vol.2](https://foreverz133.github.io/demos/single/router2.html)
+* 2017.11.20 [创意部官网(业务)](https://foreverz133.github.io/demos/works/V-Creativity/)
 * 2017.11.31 [简单的步骤导航](https://foreverz133.github.io/demos/single/step-nav.html)
 
 -------------
