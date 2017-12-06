@@ -3,6 +3,7 @@
 ## 2017年
 ### 2017 年 12 月
 * 2017.12.05 [试用百度AI人脸识别](https://foreverz133.github.io/demos/works/face-indentify/)
+* 2017.12.06 [简单的滚动数字效果](https://foreverz133.github.io/demos/single/rolling-number.html)
 
 -------------
 
