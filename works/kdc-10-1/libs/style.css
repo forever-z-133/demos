@@ -8,6 +8,14 @@ html, body {
   font-size: 36px;
   color: #573014;
 }
+@media (min-width: 992px) {
+  .body {
+    width: 375px;
+    height: 667px;
+    font-size: 10px;
+    box-shadow: 0 0 1em rgba(0,0,0,.5);
+  }
+}
 .swiper-container {
   margin-left: auto;
   margin-right: auto;

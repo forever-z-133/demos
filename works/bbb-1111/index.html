@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="target-densitydpi=device-api,width=937.5,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>【业务】八佰伴双十一抽符</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<link rel="stylesheet" href="libs/common.css">
+<link rel="stylesheet" href="libs/style.css">
+<style>
+</style>
+</head>
+
+<body>
+<div class="rotate-info hide" id="info">请竖着屏幕浏览本页唷</div>
+<div class="body h5">
+	<div class="bg" id="bg">
+		<div class="bg"><img src="img/bg.jpg" alt=""></div>
+		<div class="bg2"><img src="img/bg-2.png" alt=""></div>
+	</div>
+	<div class="main-load" id="main-load">
+		<div class="load-img"><img src="img/icon.png" alt=""></div>
+		<div class="load-text">Loading...</div>
+		<div class="load-progress">
+			<div class="progress">
+				<div class="progress-bar"><span id="loading">0%</span></div>
+			</div>
+		</div>
+		<div class="logo-top"><img src="img/logo.png" alt=""></div>
+		<a href="#" class="btn-music on"></a>
+	</div>
+	<div class="page welcome" id="welcome">
+		<div class="title"><img src="img/main-title.png" alt=""></div>
+		<a href="#" class="btn-rule">规则</a>
+		<a href="#" class="btn-share">分享</a>
+		<a href="#" class="btn-start">开始游戏</a>
+	</div>
+	<div class="modal rule in" id="rule">
+		<div class="modal-bg bg cancel"></div>
+		<div class="modal-box">
+			<div class="bg"><img src="img/rule-bg.png" alt=""></div>
+			<div class="rule-title">活动规则</div>
+			<div class="rule-list">
+				<p class="rule-item">微信用户每个ID限一人获得</p>
+				<p class="rule-item">微信用户每个ID每天限开宝箱一次</p>
+			</div>
+			<div class="rule-title2">参与方式</div>
+			<div class="rule-list">
+				<p class="rule-item">预约时间：2017年11月1日至2017年11月10日</p>
+				<p class="rule-item">每个微信ID每天可得惊喜卡一张，刮卡随机获取一个字符</p>
+				<p class="rule-item">每个微信ID凑齐“八佰伴”“不伊样”“惊喜屋”任意一组密码，即可打开宝箱，获取“惊喜屋”游戏参与资格</p>
+			</div>
+			<a href="#" class="btn-close cancel">关闭</a>
+		</div>
+	</div>
+</div>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="libs/common.js"></script>
+<script>
+var $load_bar = $('.progress-bar'), $load_text = $('#loading');
+var imgs = ['img/bg.jpg', 'img/bg-2.png'];
+preloadImage(imgs, function(per){
+	$load_bar.css('width', parseInt(per) + '%');
+	$load_text.text(parseInt(per) + '%');
+}, Welcome);
+
+function Welcome() {
+	$('#main-load').fadeOut('fast');
+	$('welcome').fadeIn();
+}
+</script>
+</body>
+</html>
