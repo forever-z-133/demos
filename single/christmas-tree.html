@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+body, .body {
+    overflow: hidden;
+}
+img {
+  width: 100%;
+  display: block;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dedede;
+    max-width: 768px;
+    margin: auto;
+}
+.main {
+    height: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+    -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.ratio {
+  position: relative;
+  width: 100%;
+}
+.ratio:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+
+.main {
+  transform-style: preserve-3d;
+}
+.tree {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  transform: translate3d(-50%,-50%, 0);
+}
+.tree-row-box {
+  margin: 30px auto;
+  transform-style: preserve-3d;
+  transform: translate3d(0,0, -10px);
+}
+.tree-row {
+  width: 120px;
+  margin: 0 auto;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-5deg) rotateY(-5deg);
+}
+.item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #fff;
+  background: red;
+}
+/*.item:nth-child(1) {transform: rotateY(0deg)   translateZ(100px);}
+.item:nth-child(2) {transform: rotateY(72deg)  translateZ(100px);}
+.item:nth-child(3) {transform: rotateY(144deg) translateZ(100px);}
+.item:nth-child(4) {transform: rotateY(216deg) translateZ(100px);}
+.item:nth-child(5) {transform: rotateY(288deg) translateZ(100px);}*/
+</style>
+</head>
+
+<body>
+<div class="body">
+    <header class="header"></header>
+    <main class="main">
+      <div class="tree-row-box box1">
+        <div class="tree"><img src="../img/tree.png"></div>
+        <div class="tree-row ratio rect">
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+        </div>
+        <div class="tree-row ratio rect">
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+        </div>
+        <div class="tree-row ratio rect">
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+          <div class="item"><div class="image"></div></div>
+        </div>
+      </div>
+      <!-- <div class="tree-row-box box2">
+      </div>
+      <div class="tree-row-box box3">
+      </div> -->
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+function TreeRow(dom) {
+  var $box = $(dom);
+  var $wrap = $box.children('.tree-row');
+  var touched = false;
+  var animing = true;
+  var pos = {};
+  var anim = {};
+  var gap = [80, 120, 150];
+  var now = [];
+
+  _init();
+  _bind();
+
+  function _init() {
+    $wrap.each(function(i){
+      var $items = $(this).children('.item');
+      var length = $items.length;
+      var avg = 360 / length;
+      $items.each(function(ii) {
+        var $item = $(this);
+        $item.css({
+          'transform': 'rotateY('+avg*ii+'deg) translateZ('+gap[i]+'px)',
+        });
+      });
+    });
+  }
+
+  pos.offsetX = 0;
+  var boxHeight = $box.height();
+  var boxOffsetY = $box.offset().top;
+  var avgHeight = boxHeight / $wrap.length;
+  var nowIndex = 0;
+  function _bind() {
+    $box.off().on('touchstart mousedown', function(evt){
+      touched = true;
+      // animing = true;
+      var e = evt.touches ? evt.touches[0] : evt;
+      pos.startX = e.clientX;
+      pos.lastX = pos.lastX == undefined ? pos.startX : pos.lastX;
+      nowIndex = parseInt((e.clientY - boxOffsetY) / avgHeight);
+    });
+    $(window).on('touchmove mousemove', function(evt){
+      if (!touched) return;
+      var e = evt.touches ? evt.touches[0] : evt;
+      pos.offsetX = e.clientX - pos.lastX;
+      pos.lastX = e.clientX;
+    }).on('touchend mouseup', function(){
+      if (!touched) return;
+      touched = false;
+      // animing = false;
+      pos.lastX = null;
+    });
+  }
+
+  anim.rotate = -5;
+  var now = new Array($wrap.length+1).join('0').split('').map(function(x){return parseInt(x)});
+  function _update() {
+    for (var i in now) {
+      if (pos.lastX != undefined && i == nowIndex) {
+        now[i] += pos.offsetX;
+      } else {
+        now[i] += -1;
+      }
+      now[i] = now[i] % 360;
+    }
+    pos.offsetX = 0;
+    _draw();
+  }
+
+  function _draw() {
+    $wrap.each(function(i){
+      $(this).css({
+        'transform': 'rotateX(-5deg) rotateY('+now[i]+'deg)',
+      });
+    });
+  }
+
+  (function _loop(){
+    if (animing) _update();
+    requestAnimationFrame(_loop);
+  })();
+}
+
+
+
+TreeRow('.box1');
+
+$('.item').on('click', function(){
+  alert($(this).index())
+})
+</script>
+</body>
+</html>
