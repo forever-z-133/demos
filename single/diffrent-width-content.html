@@ -5,7 +5,10 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="Content-Type" content="text/html" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
-<meta name="viewport" content="width=938,user-scalable=no" />
+<!-- <meta name="viewport" content="width=750,user-scalable=no" /> -->
+<!-- 部分机型需要 937.5 才能使视图 750，很诡异 -->
+<!-- <meta name="viewport" content="width=937.5,user-scalable=no" /> -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no" />
@@ -17,10 +20,10 @@
 <script>window.onload=function(){if(window.innerWidth>768) {return};var s=document.createElement("script");s.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js";document.body.appendChild(s);s.onload=function(){eruda.init()}}</script>
 <link href="https://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">
 <style>
-html, body {
+/*测试固定 device-width 式布局的诡异问题，未果*/
+/*html, body {
   width: 100%;
   margin: 0 auto;
-  /*overflow: hidden;*/
   height: 100%;
   transform: translate3d(0,0,0);
 }
@@ -29,7 +32,7 @@ html, body {
   margin: auto;
   height: 50px;
   background: red;
-}
+}*/
 .overflower {
   height: 1.5em;
   line-height: 1.5em;
@@ -38,12 +41,16 @@ html, body {
   max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
+  /*可水平改变宽度*/
+  resize: horizontal;
+  /*让自己水平布局，且可换行*/
   display: inline-flex;
   flex-wrap: wrap;
-  resize: auto;
 }
 .overflower-short {
   display: none;
+  /*在支持 wrap 的布局中，且被长文本挤占宽度*/
+  /*当长文本换行时，短文本出现*/
   display: block;
   overflow: hidden;
   width: 0;
@@ -52,6 +59,7 @@ html, body {
 }
 .overflower-long {
   display: inline;
+  /*在支持 wrap 的布局中保持全宽*/
   flex-basis: 100%;
 }
 </style>
@@ -61,6 +69,7 @@ html, body {
 <div class="body">
   <span class="overflower">
     <span class="overflower-short">Short text here is.</span>
+    <span class="overflower-short">Short text here is. And some others.</span>
     <span class="overflower-long">Some long text that could become shorter.</span>
   </span>
 </div>
