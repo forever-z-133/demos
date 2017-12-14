@@ -25,10 +25,12 @@ img {
   width: 100%;
   display: block;
 }
-.body {
+.body, .bg {
     position: absolute;
     top: 0; bottom: 0;
     left: 0; right: 0;
+}
+.body {
     background: #f7f7f7;
     display: flex;
     flex-direction: column;
@@ -72,22 +74,23 @@ pre {
 
 .main {
   transform-style: preserve-3d;
+  background: radial-gradient(at 50% 80%, #911968, #17024e 80%)
 }
 .tree {
   position: absolute;
-  top: 50%;
+  top: 70px;
   left: 50%;
-  width: 70%;
-  transform: translate3d(-50%,-50%, 0);
+  width: 60%;
+  transform: translate3d(-50%,0, 0);
 }
 .tree-row-box {
-  margin: 30px auto;
+  margin: 50px auto;
   transform-style: preserve-3d;
   transform: translate3d(0,0, -10px);
 }
 .tree-row {
-  width: 120px;
-  margin: 0 auto;
+  width: 22%;
+  margin: 30px auto;
   position: relative;
   transform-style: preserve-3d;
   transform: rotateX(-5deg) rotateY(-5deg);
@@ -100,7 +103,10 @@ pre {
   height: 100%;
   border-radius: 5px;
   box-shadow: 0px 0px 10px #fff;
-  background: red;
+  background: grey url(../img/bg.jpg) center / cover;
+}
+.list {
+
 }
 /*.item:nth-child(1) {transform: rotateY(0deg)   translateZ(100px);}
 .item:nth-child(2) {transform: rotateY(72deg)  translateZ(100px);}
@@ -114,6 +120,7 @@ pre {
 <div class="body">
     <header class="header"></header>
     <main class="main">
+    	<div class="bg"></div>
       <div class="tree-row-box box1">
         <div class="tree"><img src="../img/tree.png"></div>
         <div class="tree-row ratio rect">
@@ -135,20 +142,23 @@ pre {
           <div class="item"><div class="image"></div></div>
         </div>
       </div>
+      <div class="list">排行榜</div>
       <!-- <div class="tree-row-box box2">
       </div>
       <div class="tree-row-box box3">
       </div> -->
     </main>
     <footer class="footer">
-        <div class="copyright">
+        <!-- <div class="copyright">
             本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
             或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
-        </div>
+        </div> -->
     </footer>
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
+$(window).on('touchmove', function(e) { e.preventDefault() })
+
 function TreeRow(dom) {
   var $box = $(dom);
   var $wrap = $box.children('.tree-row');
@@ -156,7 +166,7 @@ function TreeRow(dom) {
   var animing = true;
   var pos = {};
   var anim = {};
-  var gap = [80, 120, 150];
+  var gap = [70, 100, 130];
   var now = [];
 
   _init();
