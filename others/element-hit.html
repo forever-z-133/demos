@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+</style>
+</head>
+
+<body>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+(function () {
+    window.pngx = {
+        _modules: {},
+        _selfPath: './',
+        $: function () {
+            return document.querySelectorAll.apply(document, arguments);
+        },
+        $new: function () {
+            return document.createElement.apply(document, arguments);
+        },
+        $center: function (element, hor, ver) {
+            element.style.position = 'absolute';
+            if (hor) {
+                element.style.left = '50%';
+                element.style.marginLeft = (-element.width / 2) + 'px';
+            }
+            if (ver) {
+                element.style.top = '50%';
+                element.style.marginTop = (-element.height / 2) + 'px';
+            }
+        },
+        bind: function (obj, method, arg) {
+            return function () {
+                return method.apply(obj, arg || arguments);
+            }
+        },
+        mix: function (target, source) {
+            for (var key in source) {
+                if (source.hasOwnProperty(key)) {
+                    target[key] = source[key];
+                }
+            }
+            return target;
+        },
+        toArray: function (obj) {
+            return Array.prototype.slice.call(obj);
+        },
+        randomInt: function (nMin, nMax) {
+            return Math.floor(Math.random() * (nMax - nMin) + nMin + 0.5);
+        },
+        create: function (constructor) {
+            var emptyFunc = function () {
+            };
+            emptyFunc.prototype = constructor.prototype;
+            var ret = new emptyFunc();
+            ret.constructor = constructor;
+            return ret;
+        },
+        Class: function (base, constructor, prototype, statics) {
+            base = base || Object;
+            constructor = constructor || function () {
+            };
+            constructor.super = base;
+            constructor.prototype = this.create(base);
+            if (prototype) {
+                this.mix(constructor.prototype, prototype);
+                constructor.prototype.constructor = constructor;
+            }
+            statics && this.mix(constructor, statics);
+            return constructor;
+        }
+    };
+})();
+
+(function () {
+    var Timer = pngx.Class(
+        null,
+        function (callback, interval) {
+            this.callback = callback;
+            this.interval = interval;
+        },
+        {
+            _id: null,
+            interval: null,
+            callback: null,
+            start: function () {
+                this._id = setTimeout(
+                    pngx.bind(this, function () {
+                        this.start();
+                        this.callback();
+                    }),
+                    this.interval);
+            },
+            stop: function () {
+                clearTimeout(this._id);
+            }
+        }
+    );
+    return pngx.Timer = Timer;
+})();
+
+(function () {
+    var Stopwatch = pngx.Class(
+        null,
+        function () {
+            this.reset();
+        },
+        {
+            _lastTime: null,
+            getElapsed: function () {
+                var
+                    t1 = (new Date()).valueOf(),
+                    t0 = this._lastTime;
+                this._lastTime = t1;
+                return t1 - t0;
+            },
+            reset: function () {
+                this._lastTime = (new Date()).valueOf();
+            }
+        }
+    );
+    return pngx.Stopwatch = Stopwatch;
+})();
+
+(function () {
+    var Painter = pngx.Class(
+        null,
+        function (canvas) {
+            this.width = canvas.width;
+            this.height = canvas.height;
+            this.context = canvas.getContext('2d');
+        },
+        {
+            width: null,
+            height: null,
+            context: null,
+            transform: function (mat) {
+                var m = mat.m;
+                this.context.transform(m[0], m[1], m[3], m[4], m[6], m[7]);
+                return this;
+            },
+            setTransform: function (mat) {
+                var m = mat.m;
+                this.context.setTransform(m[0], m[1], m[3], m[4], m[6], m[7]);
+                return this;
+            },
+            save: function () {
+                this.context.save();
+                return this;
+            },
+            restore: function () {
+                this.context.restore();
+                return this;
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.width, this.height);
+            },
+            fillAll: function () {
+                this.context.fillRect(0, 0, this.width, this.height);
+                return this;
+            },
+            lineStyle: function (strokeStyle, lineWidth) {
+                this.context.strokeStyle = strokeStyle;
+                lineWidth && (this.context.lineWidth = lineWidth);
+                return this;
+            },
+            fillStyle: function (fillStyle) {
+                this.context.fillStyle = fillStyle;
+                return this;
+            },
+            font: function (font) {
+                this.context.font = font;
+                return this;
+            },
+            write: function (text, x, y) {
+                this.context.fillText(text, x, y);
+                return this;
+            },
+            stroke: function () {
+                this.context.stroke();
+                return this;
+            },
+            fill: function () {
+                this.context.fill();
+                return this;
+            },
+            polygon: function (vertices) {
+                var ctx = this.context;
+                ctx.beginPath();
+                ctx.moveTo(vertices[0].x, vertices[0].y);
+                for(var i = 1, len = vertices.length; i < len; ++i) {
+                    ctx.lineTo(vertices[i].x, vertices[i].y);
+                }
+                ctx.closePath();
+                return this;
+            },
+            circle: function (x, y, radius) {
+                var ctx = this.context;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.closePath();
+                return this;
+            },
+            line: function (x0, y0, x1, y1) {
+                var ctx = this.context;
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x1, y1);
+                ctx.closePath();
+                return this;
+            },
+            arrow: function (x0, y0, x1, y1, size, rad) {
+                size = size || 4;
+                rad = rad || Math.PI / 6;
+
+                var ctx = this.context,
+                    bp,
+                    ep,
+                    v0,
+                    v1,
+                    v2;
+
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.lineTo(x1, y1);
+                ctx.closePath();
+                ctx.stroke();
+                bp = new pngx.Vector2D(x0, y0);
+                ep = new pngx.Vector2D(x1, y1);
+                v0 = bp.sub(ep).norm().mul(size).add(ep);
+                v1 = v0.rotate(ep.x, ep.y, rad);
+                ctx.beginPath();
+                ctx.moveTo(ep.x, ep.y);
+                ctx.lineTo(v1.x, v1.y);
+                ctx.closePath();
+                ctx.stroke();
+                v2 = v0.rotate(ep.x, ep.y, -rad);
+                ctx.beginPath();
+                ctx.moveTo(ep.x, ep.y);
+                ctx.lineTo(v2.x, v2.y);
+                ctx.closePath();
+
+                return this;
+            }
+        },
+        {
+            rgb: function (r, g, b) {
+                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            },
+            rgba: function (r, g, b, a) {
+                return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+            }
+        }
+    );
+    return pngx.Painter = Painter;
+})();
+
+(function () {
+    var Input = pngx.Class(
+        null,
+        function (element, blockMenu) {
+            this.cursor = new pngx.Vector2D();
+            this._element = element;
+            this._keymap = {};
+
+            element.setAttribute('tapindex', '0');
+            element.style.outline = 'none';
+
+            if (blockMenu) {
+                element.addEventListener('contextmenu', function (event) {
+                    event.preventDefault();
+                });
+            }
+
+            var input = this;
+            element.addEventListener('keydown', function (event) {
+                input._keymap[event.keyCode] = true;
+                input.onKeyDown && input.onKeyDown(event.keyCode);
+            }, true);
+
+            element.addEventListener('keyup', function (event) {
+                input._keymap[event.keyCode] = false;
+                input.onKeyUp && input.onKeyUp(event.keyCode);
+            }, true);
+
+            element.addEventListener('mousemove', function (event) {
+                var cursor = input.cursor;
+                cursor.x = event.offsetX;
+                cursor.y = event.offsetY;
+                input.onMouseMove && input.onMouseMove(cursor);
+            }, true);
+
+            element.addEventListener('mousedown', function (event) {
+                var key = -event.button - 1;
+                input._keymap[key] = true;
+                input.onKeyDown && input.onKeyDown(key);
+            }, true);
+
+            element.addEventListener('mouseup', function (event) {
+                var key = -event.button - 1;
+                input._keymap[key] = false;
+                input.onKeyUp && input.onKeyUp(key);
+            }, true);
+        },
+        {
+            _keymap: null,
+            _element: null,
+            cursor: null,
+            isPressed: function (keyCode) {
+                return this._keymap[keyCode] == true;
+            },
+            onKeyDown: null,
+            onKeyUp: null,
+            onMouseMove: null
+        },
+        {
+            KEY: {
+                MOUSE_LEFT: -1,
+                MOUSE_MIDDLE: -2,
+                MOUSE_RIGHT: -3,
+
+                BACKSPACE: 8,
+                TAB: 9,
+                CLEAR: 12,
+                ENTER: 13,
+                SHIFT: 16,
+                CTRL: 17,
+                ALT: 18,
+                CAPS: 20,
+                ESC: 27,
+                SPACE: 32,
+                PAGE_UP: 33,
+                PAGE_DOWN: 34,
+                END: 35,
+                HOME: 36,
+                LEFT: 37,
+                UP: 38,
+                RIGHT: 39,
+                DOWN: 40,
+                INS: 45,
+                DEL: 46,
+                NUM_MUL: 106,
+                NUM_ADD: 107,
+                NUM_SUB: 109,
+                NUM_DEC: 110,
+                NUM_DIV: 111,
+                NUMLOCK: 144,
+                SEMI: 186,
+                EQUAL: 187,
+                COMMA: 188,
+                MINUS: 189,
+                PERIOD: 190,
+                SLASH: 191,
+                BACKTICK: 192,
+                LEFT_BRACKET: 219,
+                BACKSLASH: 220,
+                RIGHT_BRACKET: 221,
+                QUOTES: 222
+            }
+        }
+    );
+    var i;
+    for (i = 65; i < 65 + 26; ++i) {
+        Input.KEY[String.fromCharCode(i)] = i;
+    }
+    for (i = 0; i < 10; ++i) {
+        Input.KEY['_' + i] = i + 48;
+    }
+    for (i = 0; i < 10; ++i) {
+        Input.KEY['NUM_' + i] = i + 96;
+    }
+    for (i = 1; i < 13; ++i) {
+        Input.KEY['F' + i] = i + 111;
+    }
+    return pngx.Input = Input;
+})();
+
+(function () {
+    var Bounds2D = pngx.Class(
+        null,
+        function (left, bottom, right, top) {
+            this.bottomLeft = new pngx.Vector2D(left, bottom);
+            this.topRight = new pngx.Vector2D(right, top);
+        },
+        {
+            bottomLeft: null,
+            topRight: null,
+            isIntersect: function (bounds) {
+                return !(
+                    this.topRight.x < bounds.bottomLeft.x
+                    || bounds.topRight.x < this.bottomLeft.x
+                    || this.bottomLeft.y > bounds.topRight.y
+                    || bounds.bottomLeft.y > this.topRight.y
+                    );
+            },
+            transform: function (mat) {
+                var bottomLeft = mat.transform(this.bottomLeft),
+                    topRight = mat.transform(this.topRight);
+                return new Bounds2D(bottomLeft.x, bottomLeft.y, topRight.x, topRight.y);
+            }
+        }
+    );
+    return pngx.Bounds2D = Bounds2D;
+})();
+
+(function () {
+    var Vector2D = pngx.Class(
+        null,
+        function (x, y) {
+            this.x = x || 0;
+            this.y = y || 0;
+        },
+        {
+            x: null,
+            y: null,
+            len: function () {
+                return Math.sqrt(this.x * this.x + this.y * this.y);
+            },
+            sqLen: function () {
+                return this.x * this.x + this.y * this.y;
+            },
+            norm: function () {
+                var inv;
+                inv = 1 / this.len();
+                return new Vector2D(this.x * inv, this.y * inv);
+            },
+            negate: function () {
+                return new Vector2D(-this.x, -this.y);
+            },
+            add: function (vec) {
+                return new Vector2D(this.x + vec.x, this.y + vec.y);
+            },
+            sub: function (vec) {
+                return new Vector2D(this.x - vec.x, this.y - vec.y);
+            },
+            mul: function (num) {
+                return new Vector2D(this.x * num, this.y * num);
+            },
+            div: function (num) {
+                var inv = 1 / num;
+                return new Vector2D(this.x * inv, this.y * inv);
+            },
+            dot: function (vec) {
+                return this.x * vec.x + this.y * vec.y;
+            },
+            cross: function (vec) {
+                return this.x * vec.y - vec.x * this.y;
+            },
+            scalarCross: function (num) {
+                return new Vector2D(-num * this.y, num * this.x);
+            },
+            rotate: function (x, y, rad) {
+                var cos = Math.cos(rad),
+                    sin = Math.sin(rad),
+                    detX = this.x - x,
+                    detY = this.y - y;
+                return new Vector2D(detX * cos - detY * sin + x, detX * sin + detY * cos + y);
+            },
+            vertical: function () {
+                return new Vector2D(this.y, -this.x);
+            },
+            transform: function (mat) {
+                return mat.transform(this);
+            },
+            isZero: function (tolerance) {
+                tolerance = tolerance || 0.0005;
+                return Math.abs(this.x) < tolerance && Math.abs(this.y) < tolerance;
+            },
+            clone: function () {
+                return new Vector2D(this.x, this.y);
+            },
+            toString: function () {
+                return '(' + (((this.x * 100) | 0) / 100) + ', ' + (((this.y * 100) | 0) / 100) + ')';
+            }
+        },
+        {
+            tripleProduct: function (v1, v2, v3) {
+                return new Vector2D(-(v1.x * v2.y - v1.y * v2.x) * v3.y, (v1.x * v2.y - v1.y * v2.x) * v3.x);
+            }
+        }
+    );
+    Vector2D.ORIGIN = new Vector2D(0, 0);
+    return pngx.Vector2D = Vector2D;
+})();
+
+(function () {
+    var Line2D = pngx.Class(
+        null,
+        function (x0, y0, x1, y1) {
+            this.a = new pngx.Vector2D(x0, y0);
+            this.b = new pngx.Vector2D(x1, y1);
+        },
+        {
+            a: null,
+            b: null,
+            transform: function (mat) {
+                var ret = new Line2D();
+                ret.a = mat.transform(this.a);
+                ret.b = mat.transform(this.b);
+                return ret;
+            },
+            toVector: function () {
+                return this.b.sub(this.a);
+            },
+            getMidpoint: function () {
+                return this.a.add(this.b).mul(0.5);
+            },
+            isPoint: function (tolerance) {
+                return this.a.sub(this.b).isZero(tolerance)
+            }
+        }
+    );
+    return pngx.Line2D = Line2D;
+})();
+
+(function () {
+    var Matrix2D = pngx.Class(
+        null,
+        function () {
+            var m = new Float64Array(9);
+            m[0] = m[4] = m[8] = 1;
+            this.m = m;
+        },
+        {
+            m: null,
+            det: function () {
+                var m = this.m,
+                    m0 = m[0],
+                    m1 = m[1],
+                    m2 = m[2],
+                    m3 = m[3],
+                    m4 = m[4],
+                    m5 = m[5],
+                    m6 = m[6],
+                    m7 = m[7],
+                    m8 = m[8];
+                return m0 * m4 * m8 - m0 * m7 * m5 - m1 * m3 * m8 + m1 * m6 * m5 + m2 * m3 * m7 - m2 * m6 * m4;
+            },
+            inv: function () {
+                var m = this.m,
+                    m0 = m[0],
+                    m1 = m[1],
+                    m2 = m[2],
+                    m3 = m[3],
+                    m4 = m[4],
+                    m5 = m[5],
+                    m6 = m[6],
+                    m7 = m[7],
+                    m8 = m[8],
+                    invDet = 1 / (m0 * m4 * m8 - m0 * m7 * m5 - m1 * m3 * m8 + m1 * m6 * m5 + m2 * m3 * m7 - m2 * m6 * m4),
+                    ret = new Matrix2D();
+                ret.m[0] = (m4 * m8 - m7 * m5) * invDet;
+                ret.m[1] = -(m1 * m8 - m7 * m2) * invDet;
+                ret.m[2] = (m1 * m5 - m4 * m2) * invDet;
+                ret.m[3] = -(m3 * m8 - m6 * m5) * invDet;
+                ret.m[4] = (m0 * m8 - m6 * m2) * invDet;
+                ret.m[5] = -(m0 * m5 - m3 * m2) * invDet;
+                ret.m[6] = (m3 * m7 - m6 * m4) * invDet;
+                ret.m[7] = -(m0 * m7 - m6 * m1) * invDet;
+                ret.m[8] = (m0 * m4 - m3 * m1) * invDet;
+                return ret;
+            },
+            mul: function (mat) {
+                var lf = this.m,
+                    rt = mat.m,
+                    lf0 = lf[0],
+                    lf1 = lf[1],
+                    lf2 = lf[2],
+                    lf3 = lf[3],
+                    lf4 = lf[4],
+                    lf5 = lf[5],
+                    lf6 = lf[6],
+                    lf7 = lf[7],
+                    lf8 = lf[8],
+                    rt0 = rt[0],
+                    rt1 = rt[1],
+                    rt2 = rt[2],
+                    rt3 = rt[3],
+                    rt4 = rt[4],
+                    rt5 = rt[5],
+                    rt6 = rt[6],
+                    rt7 = rt[7],
+                    rt8 = rt[8],
+                    ret = new Matrix2D();
+                ret[0] = lf0 * rt0 + lf3 * rt1 + lf6 * rt2;
+                ret[1] = lf1 * rt0 + lf4 * rt1 + lf7 * rt2;
+                ret[2] = lf2 * rt0 + lf5 * rt1 + lf8 * rt2;
+                ret[3] = lf0 * rt3 + lf3 * rt4 + lf6 * rt5;
+                ret[4] = lf1 * rt3 + lf4 * rt4 + lf7 * rt5;
+                ret[5] = lf2 * rt3 + lf5 * rt4 + lf8 * rt5;
+                ret[6] = lf0 * rt6 + lf3 * rt7 + lf6 * rt8;
+                ret[7] = lf1 * rt6 + lf4 * rt7 + lf7 * rt8;
+                ret[8] = lf2 * rt6 + lf5 * rt7 + lf8 * rt8;
+                return ret;
+            },
+            append: function (mat) {
+                var rt = this.m,
+                    lf = mat.m,
+                    rt0 = rt[0],
+                    rt1 = rt[1],
+                    rt2 = rt[2],
+                    rt3 = rt[3],
+                    rt4 = rt[4],
+                    rt5 = rt[5],
+                    rt6 = rt[6],
+                    rt7 = rt[7],
+                    rt8 = rt[8],
+                    lf0 = lf[0],
+                    lf1 = lf[1],
+                    lf2 = lf[2],
+                    lf3 = lf[3],
+                    lf4 = lf[4],
+                    lf5 = lf[5],
+                    lf6 = lf[6],
+                    lf7 = lf[7],
+                    lf8 = lf[8];
+                rt[0] = lf0 * rt0 + lf3 * rt1 + lf6 * rt2;
+                rt[1] = lf1 * rt0 + lf4 * rt1 + lf7 * rt2;
+                rt[2] = lf2 * rt0 + lf5 * rt1 + lf8 * rt2;
+                rt[3] = lf0 * rt3 + lf3 * rt4 + lf6 * rt5;
+                rt[4] = lf1 * rt3 + lf4 * rt4 + lf7 * rt5;
+                rt[5] = lf2 * rt3 + lf5 * rt4 + lf8 * rt5;
+                rt[6] = lf0 * rt6 + lf3 * rt7 + lf6 * rt8;
+                rt[7] = lf1 * rt6 + lf4 * rt7 + lf7 * rt8;
+                rt[8] = lf2 * rt6 + lf5 * rt7 + lf8 * rt8;
+                return this;
+            },
+            appendTranslate: function (dx, dy) {
+                var m = this.m,
+                    m0 = m[0],
+                    m1 = m[1],
+                    m2 = m[2],
+                    m3 = m[3],
+                    m4 = m[4],
+                    m5 = m[5],
+                    m6 = m[6],
+                    m7 = m[7],
+                    m8 = m[8];
+                m[0] = m0 + dx * m2;
+                m[1] = m1 + dy * m2;
+                m[3] = m3 + dx * m5;
+                m[4] = m4 + dy * m5;
+                m[6] = m6 + dx * m8;
+                m[7] = m7 + dy * m8;
+                return this
+            },
+            appendRotate: function (rad) {
+                var m = this.m,
+                    m0 = m[0],
+                    m1 = m[1],
+                    m3 = m[3],
+                    m4 = m[4],
+                    m6 = m[6],
+                    m7 = m[7],
+                    cos = Math.cos(rad),
+                    sin = Math.sin(rad);
+                m[0] = cos * m0 + sin * m1;
+                m[1] = -sin * m0 + cos * m1;
+                m[3] = cos * m3 + sin * m4;
+                m[4] = -sin * m3 + cos * m4;
+                m[6] = cos * m6 + sin * m7;
+                m[7] = -sin * m6 + cos * m7;
+                return this;
+            },
+            appendScale: function (sx, sy) {
+                var m = this.m;
+                m[0] = m[0] * sx;
+                m[1] = m[1] * sy;
+                m[3] = m[3] * sx;
+                m[4] = m[4] * sy;
+                m[6] = m[6] * sx;
+                m[7] = m[7] * sy;
+                return this;
+            },
+            transform: function (vec) {
+                var m = this.m;
+                return new pngx.Vector2D(m[0] * vec.x + m[3] * vec.y + m[6], m[1] * vec.x + m[4] * vec.y + m[7]);
+            }
+        },
+        {
+            createTranslate: function (dx, dy) {
+                var ret = new Matrix2D(),
+                    m = ret.m;
+                m[0] = 1;
+                m[4] = 1;
+                m[8] = 1;
+                m[6] = dx;
+                m[7] = dy;
+                return ret;
+            },
+            createRotate: function (rad) {
+                var cos = Math.cos(rad),
+                    sin = Math.sin(rad),
+                    ret = new Matrix2D(),
+                    m = ret.m;
+                m[0] = cos;
+                m[1] = -sin;
+                m[3] = sin;
+                m[4] = cos;
+                m[8] = 1;
+                return ret;
+            },
+            createScale: function (sx, sy) {
+                var ret = new Matrix2D(),
+                    m = ret.m;
+                m[0] = sx;
+                m[4] = sy;
+                m[8] = 1;
+                return ret;
+            }
+        }
+    );
+    return pngx.Matrix2D = Matrix2D;
+})();
+
+(function () {
+    var Graph2D = pngx.Class(
+        null,
+        function () {
+            this.position = new pngx.Vector2D();
+            this.direction = 0;
+            this.scaleX = 1;
+            this.scaleY = 1;
+        },
+        {
+            position: null,
+            direction: null,
+            scaleX: null,
+            scaleY: null,
+            getBounds: null,
+            isPointIn: null,
+            getArea: null,
+            getFarthestPoint: null,
+            getFarthestFeature: null,
+            getMatrix: function () {
+                var ret = new pngx.Matrix2D();
+                return ret.appendScale(this.scaleX, this.scaleY)
+                    .appendRotate(this.direction)
+                    .appendTranslate(this.position.x, this.position.y);
+            },
+            translate: function (dx, dy) {
+                this.position.x += dx;
+                this.position.y += dy;
+                return this;
+            },
+            rotate: function (rad) {
+                this.direction += rad;
+                return this;
+            },
+            scale: function (sx, sy) {
+                this.scaleX *= sx;
+                this.scaleY *= sy;
+                return this;
+            }
+        }
+    );
+    return pngx.Graph2D = Graph2D;
+})();
+
+(function () {
+    var Circle = pngx.Class(
+        pngx.Graph2D,
+        function (radius) {
+            Circle.super.call(this);
+            this.radius = radius;
+        },
+        {
+            radius: null,
+            isPointIn: function (x, y) {
+                var r = this.radius;
+                return x * x + y * y <= r * r;
+            },
+            getArea: function () {
+                var r = this.radius;
+                return Math.PI * r * r;
+            },
+            getBounds: function () {
+                var r = this.radius,
+                    pos = this.position,
+                    x = pos.x,
+                    y = pos.y;
+                return new pngx.Bounds2D(x - r, y - r, x + r, y + r);
+            },
+            getFarthestPoint: function (dir, mat, invMat) {
+                dir = invMat.transform(dir).sub(invMat.transform(pngx.Vector2D.ORIGIN)).norm();
+                return mat.transform(dir.mul(this.radius));
+            },
+            getFarthestFeature: function (dir, mat, invMat) {
+                return [this.getFarthestPoint(dir, mat, invMat)];
+            }
+        }
+    );
+    return pngx.Circle = Circle;
+})();
+
+(function () {
+    var Polygon = pngx.Class(
+        pngx.Graph2D,
+        function (vertices) {
+            Polygon.super.call(this);
+            this.vertices = [];
+            for (var i = 0, len = vertices.length; i < len; ++i) {
+                this.vertices.push(vertices[i].clone());
+            }
+        },
+        {
+            vertices: null,
+            isConvex: function () {
+                var vertices = this.vertices,
+                    len = vertices.length,
+                    v0 = vertices[0],
+                    v1 = vertices[1],
+                    v2 = vertices[2],
+                    v01 = v1.sub(v0),
+                    v12 = v2.sub(v1),
+                    sign = v01.cross(v12);
+                for (var i = 1; i < len; ++i) {
+                    v0 = vertices[i];
+                    v1 = vertices[(i + 1) % len];
+                    v2 = vertices[(i + 2) % len];
+                    v01 = v1.sub(v0);
+                    v12 = v2.sub(v1);
+                    if (v01.cross(v12) * sign < 0) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            isPointIn: function (x, y) {
+                var vertices = this.vertices,
+                    len = vertices.length,
+                    v0,
+                    v1,
+                    odd = false;
+                for (var i = 0, j; i < len; ++i) {
+                    j = (i + 1) % len;
+                    v0 = vertices[i];
+                    v1 = vertices[j];
+                    if (
+                        (v0.y < y && v1.y >= y || v1.y < y && v0.y >= y)
+                        && (v0.x <= x || v1.x <= x)
+                        && (v0.x + (y - v0.y) / (v1.y - v0.y) * (v1.x - v0.x) < x)
+                        ) {
+                        odd = !odd;
+                    }
+                }
+                return odd;
+            },
+            getArea: function () {
+                var vertices = this.vertices,
+                    last = vertices.length - 1,
+                    v0 = vertices[0],
+                    area = 0;
+                for (var i = 1; i < last; ++i) {
+                    var triangle = pngx.Triangle2D.createFromPoints(v0, vertices[i], vertices[i + 1]);
+                    area += triangle.getArea();
+                }
+                return area;
+            },
+            getGravity: function () {
+                var vertices = this.vertices,
+                    last = vertices.length - 1,
+                    v0 = vertices[0],
+                    v1,
+                    v2,
+                    areaSum = 0,
+                    area,
+                    gravity = new pngx.Vector2D();
+                for (var i = 1; i < last; ++i) {
+                    v1 = vertices[i];
+                    v2 = vertices[i + 1];
+                    var triangle = pngx.Triangle2D.createFromPoints(v0, v1, v2);
+                    area = triangle.getArea();
+                    areaSum += area;
+                    gravity = gravity.add(v0.add(v1).add(v2).mul(area / 3));
+                }
+                return gravity.div(areaSum);
+            },
+            getBounds: function (mat) {
+                var
+                    vertices = this.vertices,
+                    v = mat.transform(vertices[0]),
+                    left = v.x,
+                    bottom = v.y,
+                    right = v.x,
+                    top = v.y;
+                for (var i = 1, len = vertices.length; i < len; ++i) {
+                    v = mat.transform(vertices[i]);
+                    left = left > v.x ? v.x : left;
+                    bottom = bottom > v.y ? v.y : bottom;
+                    right = right < v.x ? v.x : right;
+                    top = top < v.y ? v.y : top;
+                }
+                return new pngx.Bounds2D(left, bottom, right, top);
+            },
+            getFarthestPoint: function (dir, mat, invMat) {
+                dir = invMat.transform(dir).sub(invMat.transform(pngx.Vector2D.ORIGIN));
+                var vertices = this.vertices,
+                    len = this.vertices.length,
+                    bestPoint = this.vertices[0],
+                    bestProj = bestPoint.dot(dir);
+                for (var i = 1; i < len; ++i) {
+                    var curr = vertices[i],
+                        proj = curr.dot(dir);
+                    if (proj > bestProj) {
+                        bestPoint = curr;
+                        bestProj = proj;
+                    }
+                }
+                return mat.transform(bestPoint);
+            },
+            getFarthestFeature: function (dir, mat, invMat) {
+                dir = invMat.transform(dir).sub(invMat.transform(pngx.Vector2D.ORIGIN));
+                var vertices = this.vertices,
+                    len = this.vertices.length,
+                    bestIndex = 0,
+                    bestProj = this.vertices[0].dot(dir);
+                for (var i = 1; i < len; ++i) {
+                    var curr = vertices[i],
+                        proj = curr.dot(dir);
+                    if (proj > bestProj) {
+                        bestIndex = i;
+                        bestProj = proj;
+                    }
+                }
+
+                var a = vertices[(bestIndex + len - 1) % len],
+                    b = vertices[(bestIndex + 1) % len],
+                    m = vertices[bestIndex],
+                    am = m.sub(a),
+                    bm = m.sub(b),
+                    amProj = Math.abs(am.dot(dir)),
+                    bmProj = Math.abs(bm.dot(dir));
+                if (amProj < bmProj) {
+                    return [mat.transform(a), mat.transform(m)];
+                } else {
+                    return [mat.transform(m), mat.transform(b)];
+                }
+            }
+        },
+        {
+            createFromList: function (list) {
+                var ret = pngx.create(Polygon);
+                ret.vertices = [];
+                for (var i = 0, len = list.length; i < len; i += 2) {
+                    ret.vertices.push(new pngx.Vector2D(list[i], list[i + 1]));
+                }
+                Polygon.super.call(ret);
+                return ret;
+            },
+            createRect: function (width, height) {
+                width *= 0.5;
+                height *= 0.5;
+                var vertices = [
+                    new pngx.Vector2D(-width, -height),
+                    new pngx.Vector2D(-width, height),
+                    new pngx.Vector2D(width, height),
+                    new pngx.Vector2D(width, -height)
+                ];
+                return new Polygon(vertices);
+            },
+            createRegular: function (radius, num) {
+                var vertices = [],
+                    rad = -Math.PI * 2 / num,
+                    cos = Math.cos(rad),
+                    sin = Math.sin(rad),
+                    x = 0,
+                    y = radius;
+                for (var i = num; i--;) {
+                    var dx = x * cos - y * sin,
+                        dy = x * sin + y * cos;
+                    x = dx;
+                    y = dy;
+                    vertices.push(new pngx.Vector2D(x, y));
+                }
+
+                return new Polygon(vertices);
+            }
+        }
+    );
+    return pngx.Polygon = Polygon;
+})();
+
+(function () {
+    var Triangle2D = pngx.Class(
+        null,
+        function (x0, y0, x1, y1, x2, y2) {
+            this.a = new pngx.Vector2D(x0, y0);
+            this.b = new pngx.Vector2D(x1, y1);
+            this.c = new pngx.Vector2D(x2, y2);
+        },
+        {
+            a: null,
+            b: null,
+            c: null,
+            getArea: function () {
+                return Math.abs(
+                        (this.b.x - this.a.x) * (this.c.y - this.a.y) - (this.c.x - this.a.x) * (this.b.y - this.a.y)
+                ) * 0.5;
+            },
+            getGravity: function () {
+                return this.a.add(this.b).add(this.c).div(3);
+            },
+            isPointIn: function (x, y) {
+                var point = new pngx.Vector2D(x, y),
+                    c = this.c,
+                    v0 = c.sub(this.a),
+                    v1 = c.sub(this.b),
+                    v2 = c.sub(point),
+                    d00 = v0.dot(v0),
+                    d01 = v0.dot(v1),
+                    d02 = v0.dot(v2),
+                    d11 = v1.dot(v1),
+                    d12 = v1.dot(v2),
+                    inv = 1 / (d00 * d11 - d01 * d01),
+                    u = (d11 * d02 - d01 * d12) * inv,
+                    v = (d00 * d12 - d01 * d02) * inv;
+                if (u < 0 || u > 1 || v < 0 || v > 1) {
+                    return false;
+                }
+                return u + v <= 1;
+            }
+        },
+        {
+            createFromPoints: function (v1, v2, v3) {
+                var ret = pngx.create(Triangle2D);
+                ret.a = v1;
+                ret.b = v2;
+                ret.c = v3;
+                return ret;
+            }
+        }
+    );
+    return pngx.Triangle2D = Triangle2D;
+})();
+
+(function () {
+    var Sprite = pngx.Class(
+        null,
+        null,
+        {
+            visible: null,
+            update: null,
+            render: null
+        }
+    );
+    return pngx.Sprite = Sprite;
+})();
+
+(function () {
+    var Sprite2D = pngx.Class(
+        pngx.Sprite,
+        function (graph) {
+            this.graph = graph;
+            this.visible = true;
+            Sprite2D.prototype.update.call(this);
+        },
+        {
+            graph: null,
+            bounds: null,
+            matrix: null,
+            invMatrix: null,
+            update: function () {
+                var graph = this.graph,
+                    matrix = graph.getMatrix();
+                this.matrix = matrix;
+                this.invMatrix = matrix.inv();
+                this.bounds = graph.getBounds(matrix);
+            },
+            render: function () {
+                void 0;
+            }
+        }
+    );
+    return pngx.Sprite2D = Sprite2D;
+})();
+
+(function () {
+    var SpriteManager = pngx.Class(
+        null,
+        function (painter, maxInterval) {
+            this.painter = painter;
+            this.maxInterval = maxInterval || 25;
+            this.list = [];
+            this.disposableList = [];
+        },
+        {
+            list: null,
+            disposableList: null,
+            maxInterval: null,
+            painter: null,
+            append: function (sprite) {
+                this.list.push(sprite);
+            },
+            appendDisposable: function (sprite) {
+                this.disposableList.push(sprite);
+            },
+            update: function (interval) {
+                interval = interval < this.maxInterval ? interval : this.maxInterval;
+                for(var i = 0, len = this.list.length; i < len; ++i) {
+                    this.list[i].update(interval);
+                }
+            },
+            render: function () {
+                var painter = this.painter;
+                var i, len;
+                for(i = 0, len = this.list.length; i < len; ++i) {
+                    this.list[i].render(painter);
+                }
+                for(i = 0, len = this.disposableList.length; i < len; ++i) {
+                    this.disposableList[i].render(painter);
+                }
+                this.disposableList = [];
+            }
+        }
+    );
+    return pngx.SpriteManager = SpriteManager;
+})();
+
+(function () {
+    var Rigid = pngx.Class(
+        pngx.Sprite2D,
+        function (graph, centroid, density, mass, inertia, friction, restitution) {
+            var scaleTolerance = 0.01;
+            if (Math.abs(1 - graph.scaleX) > scaleTolerance || Math.abs(1 - graph.scaleY) > scaleTolerance) {
+                throw new Error('Scaled graph are not supported');
+            }
+
+            Rigid.super.call(this, graph);
+
+            this.density = density;
+            this.friction = friction;
+            this.restitution = restitution;
+
+            this.movable = true;
+            this.group = 0;
+            this.velocity = new pngx.Vector2D();
+            this.angularVelocity = 0;
+            this.netImpulse = new pngx.Vector2D();
+            this.netTorque = 0;
+
+            this.centroid = centroid.clone();
+            this.mass = mass;
+            this.invMass = 1 / mass;
+            this.inertia = inertia;
+            this.invInertia = 1 / inertia;
+        },
+        {
+            density: null,
+            friction: null,
+            restitution: null,
+            centroid: null,
+            mass: null,
+            invMass: null,
+            inertia: null,
+            invInertia: null,
+            velocity: null,
+            angularVelocity: null,
+            netImpulse: null,
+            netTorque: null,
+            movable: null,
+            group: null,
+            update: function (interval) {
+                if (!this.movable) {
+                    return;
+                }
+
+                this.graph.position = this.graph.position.add(this.velocity.mul(interval));
+                this.graph.direction += this.angularVelocity * interval;
+                pngx.Sprite2D.prototype.update.call(this);
+
+                this.velocity = this.velocity.add(this.netImpulse.mul(this.invMass));
+                this.angularVelocity += this.netTorque * this.invInertia;
+
+                this.netImpulse.x = 0;
+                this.netImpulse.y = 0;
+                this.netTorque = 0;
+            },
+            addImpulse: function (impulse, position) {
+                this.netImpulse = this.netImpulse.add(impulse);
+                position && (this.netTorque +=
+                    position.sub(this.matrix.transform(this.centroid)).cross(impulse));
+            }
+        },
+        {
+            createFromCircle: function (circle, density, friction, restitution) {
+                var centroid = new pngx.Vector2D(0, 0),
+                    mass = circle.getArea() * density,
+                    inertia = Rigid.getCircleInertia(circle, mass);
+                return new Rigid(circle, centroid, density, mass, inertia, friction, restitution);
+            },
+            createFromPolygon: function (polygon, density, friction, restitution) {
+                if (!polygon.isConvex()) {
+                    throw new Error('Polygon must be convex');
+                }
+                var centroid = polygon.getGravity(),
+                    mass = polygon.getArea() * density,
+                    inertia = Rigid.getPolygonInertia(polygon, centroid, mass);
+                return new Rigid(polygon, centroid, density, mass, inertia, friction, restitution);
+            },
+            getCircleInertia: function (circle, mass) {
+                var r = circle.radius;
+                return mass * r * r / 2;
+            },
+            getPolygonInertia: function (polygon, centroid, mass) {
+                var vertices = polygon.vertices,
+                    len = vertices.length,
+                    sum1 = 0,
+                    sum2 = 0;
+                for (var i = 0; i < len; ++i) {
+                    var p1 = vertices[i].sub(centroid),
+                        p2 = vertices[(i + 1) % len].sub(centroid),
+                        cross = p1.cross(p2);
+                    sum1 += cross * (p1.dot(p1) + p1.dot(p2) + p2.dot(p2));
+                    sum2 += cross;
+                }
+                return mass / 6 * sum1 / sum2;
+            }
+        }
+    );
+    return pngx.Rigid = Rigid;
+})();
+
+(function () {
+    var Contact = pngx.Class(
+        null,
+        function (rigidA, rigidB, maxIterations) {
+            this.maxIterations = maxIterations || 25;
+            this.rigidA = rigidA;
+            this.rigidB = rigidB;
+        },
+        {
+            rigidA: null,
+            rigidB: null,
+            maxIterations: null,
+            penetration: null,
+            manifold: null,
+            _simplexA: null,
+            _simplexB: null,
+            _simplexC: null,
+            canCollide: function () {
+                var rA = this.rigidA,
+                    rB = this.rigidB;
+                return ((rA.group & rB.group) == 0)
+                    && (rA.movable || rB.movable)
+                    && rA.bounds.isIntersect(rB.bounds);
+            },
+            getSupportPoint: function (dir) {
+                var rA = this.rigidA,
+                    rB = this.rigidB,
+                    vA = rA.graph.getFarthestPoint(dir, rA.matrix, rA.invMatrix),
+                    vB = rB.graph.getFarthestPoint(dir.negate(), rB.matrix, rB.invMatrix);
+                return vA.sub(vB);
+            },
+            isIntersect: function () {
+                var dir,
+                    simplexA,
+                    simplexB,
+                    simplexC;
+
+                dir = this.rigidA.graph.position.sub(this.rigidB.graph.position);
+                if (dir.isZero()) {
+                    dir = new pngx.Vector2D(0, -1);
+                }
+
+                simplexA = this.getSupportPoint(dir);
+                if (simplexA.dot(dir) <= 0) {
+                    return false;
+                }
+
+                dir = simplexA.negate();
+                simplexB = this.getSupportPoint(dir);
+                if (simplexB.dot(dir) <= 0) {
+                    return false;
+                }
+
+                var ab = simplexB.sub(simplexA);
+                dir = pngx.Vector2D.tripleProduct(ab, simplexA.negate(), ab);
+
+                for (var i = this.maxIterations; i--;) {
+                    if (dir.isZero()) {
+                        this._simplexA = simplexA;
+                        this._simplexB = simplexB;
+                        dir = simplexB.sub(simplexA).vertical();
+                        this._simplexC = this.getSupportPoint(dir);
+                        return true;
+                    }
+                    simplexC = this.getSupportPoint(dir);
+                    if (simplexC.dot(dir) <= 0) {
+                        return false;
+                    }
+
+                    var ba = simplexA.sub(simplexB),
+                        ac = simplexC.sub(simplexA),
+                        bc = simplexC.sub(simplexB),
+                        acPerp = pngx.Vector2D.tripleProduct(ac, ba.negate(), ac),
+                        bcPerp = pngx.Vector2D.tripleProduct(bc, ba, bc);
+
+                    if (acPerp.dot(simplexA) > 0) {
+                        simplexB = simplexC;
+                        dir = acPerp.negate();
+                    } else if (bcPerp.dot(simplexB) > 0) {
+                        simplexA = simplexC;
+                        dir = bcPerp.negate();
+                    } else {
+                        this._simplexA = simplexA;
+                        this._simplexB = simplexB;
+                        this._simplexC = simplexC;
+                        return true;
+                    }
+                }
+                return false;
+            },
+            getPenetration: function (tolerance) {
+                var a = this._simplexA,
+                    b = this._simplexB,
+                    c = this._simplexC,
+                    dir,
+                    da,
+                    db;
+
+                for (var i = this.maxIterations; i--;) {
+                    da = Contact.getClosestPointToOrigin(a, c);
+                    if (da.isZero()) {
+                        return this.penetration = da;
+                    }
+                    db = Contact.getClosestPointToOrigin(b, c);
+                    if (db.isZero()) {
+                        return this.penetration = db;
+                    }
+
+                    if (da.sqLen() > db.sqLen()) {
+                        a = c;
+                        dir = db.norm();
+                    } else {
+                        b = c;
+                        dir = da.norm();
+                    }
+
+                    c = this.getSupportPoint(dir);
+
+                    if (c.sub(a).dot(dir) <= tolerance) {
+                        break;
+                    }
+                }
+
+                return this.penetration = Contact.getClosestPointToOrigin(a, b);
+            },
+            getManifold: function (tolerance) {
+                var penetration = this.penetration || this.getPenetration(tolerance);
+                if (penetration.isZero(0.05)) {
+                    return this.manifold = [];
+                }
+
+                var rA = this.rigidA,
+                    rB = this.rigidB,
+                    featureA = rA.graph.getFarthestFeature(penetration, rA.matrix, rA.invMatrix),
+                    featureB = rB.graph.getFarthestFeature(penetration.negate(), rB.matrix, rB.invMatrix),
+                    isPointA = featureA.length < 2,
+                    isPointB = featureB.length < 2,
+                    manifold;
+
+                if (isPointA) {
+                    if (isPointB) {
+                        manifold = Contact.getPointsManifold(featureA[0], featureB[0]);
+                    } else {
+                        manifold = Contact.getPointLineManifold(featureA[0], featureB);
+                    }
+                } else {
+                    if (isPointB) {
+                        manifold = Contact.getPointLineManifold(featureB[0], featureA);
+                    } else {
+                        manifold = Contact.getLinesManifold(featureA, featureB, penetration);
+                    }
+                }
+
+                return this.manifold = manifold;
+            },
+            solve: function (tolerance) {
+                tolerance = tolerance || 0.5;
+                var manifold = this.manifold || this.getManifold(tolerance);
+                if (manifold.length > 1 && manifold[0].sub(manifold[1]).isZero(tolerance)) {
+                    manifold = manifold[0].add(manifold[1]).mul(0.5);
+                }
+                var minImpulse = 0.0001,
+                    len = manifold.length,
+                    normal = this.penetration.norm().negate(),
+                    rigidA = this.rigidA,
+                    rigidB = this.rigidB,
+                    invMA = rigidA.invMass,
+                    invMB = rigidB.invMass,
+                    invIA = rigidA.invInertia,
+                    invIB = rigidB.invInertia,
+                    restitution = Math.sqrt(rigidA.restitution * rigidB.restitution),
+                    friction = Math.sqrt(rigidA.friction * rigidB.friction),
+                    centroidA = rigidA.matrix.transform(rigidA.centroid),
+                    centroidB = rigidB.matrix.transform(rigidB.centroid),
+                    velocityA = rigidA.velocity,
+                    velocityB = rigidB.velocity,
+                    angularA = rigidA.angularVelocity,
+                    angularB = rigidB.angularVelocity;
+
+                for (var i = 0; i < len; ++i) {
+                    var cp = manifold[i],
+                        rA = cp.sub(centroidA),
+                        rB = cp.sub(centroidB),
+                        vA = velocityA.add(rA.scalarCross(angularA)),
+                        vB = velocityB.add(rB.scalarCross(angularB)),
+                        vr = vA.sub(vB),
+                        rsNA = rA.cross(normal),
+                        rsNB = rB.cross(normal),
+                        kN = invMA + invMB + rsNA * rsNA * invIA + rsNB * rsNB * invIB,
+                        jN = -(1 + restitution) * vr.dot(normal) / kN / len;
+
+                    if (jN >= minImpulse) {
+                        var impulse = normal.mul(jN);
+                        rigidA.addImpulse(impulse, cp);
+                        rigidB.addImpulse(impulse.negate(), cp);
+
+                        var nVelA = velocityA.add(impulse.mul(invMA)),
+                            nAngA = angularA + cp.sub(centroidA).cross(impulse) * invIA,
+                            nVelB = velocityB.add(impulse.mul(invMB)),
+                            nAngB = angularB + cp.sub(centroidB).cross(impulse.negate()) * invIB;
+                        vA = nVelA.add(rA.scalarCross(nAngA));
+                        vB = nVelB.add(rB.scalarCross(nAngB));
+
+                        var tangent = vr.sub(normal.mul(vr.dot(normal))).norm(),
+                            rsTA = rA.cross(tangent),
+                            rsTB = rB.cross(tangent),
+                            kT = invMA + invMB + rsTA * rsTA * invIA + rsTB * rsTB * invIB,
+                            jfMax = vr.dot(tangent) / kT / len,
+                            jT = Math.min(jfMax, Math.abs(jN * friction));
+
+                        if (jT >= minImpulse) {
+                            var tangentImpulse = tangent.mul(jT);
+                            rigidA.addImpulse(tangentImpulse.negate(), cp);
+                            rigidB.addImpulse(tangentImpulse, cp);
+                        }
+                    }
+                }
+            },
+            correctPosition: function () {
+                var maxPenetration = 0.05,
+                    correctPercent = 0.4,
+                    penetration = this.penetration.len(),
+                    normal = this.penetration.norm();
+
+                if (penetration <= maxPenetration) {
+                    return;
+                }
+
+                var rigidA = this.rigidA,
+                    rigidB = this.rigidB,
+                    invMA = rigidA.invMass,
+                    invMB = rigidB.invMass,
+                    correction = normal.mul((penetration - maxPenetration) / (invMA + invMB) * correctPercent),
+                    tA = correction.negate().mul(invMA),
+                    tB = correction.mul(invMB);
+                rigidA.movable && rigidA.graph.translate(tA.x, tA.y);
+                rigidB.movable && rigidB.graph.translate(tB.x, tB.y);
+            }
+        },
+        {
+            getClosestPointToOrigin: function (a, b) {
+                var ab = b.sub(a).norm(),
+                    ao = a.negate();
+                return a.add(ab.mul(ab.dot(ao)));
+            },
+            getPointsManifold: function (p1, p2) {
+                return [p1.add(p2).mul(0.5)];
+            },
+            getPointLineManifold: function (point, line) {
+                var a = line[0],
+                    b = line[1];
+                if (point.sub(a).dot(b.sub(a)) < 0) {
+                    return [a];
+                }
+                if (point.sub(b).dot(a.sub(b)) < 0) {
+                    return [b];
+                }
+                return [point];
+            },
+            getLinesManifold: function (l1, l2, dir) {
+                var refVec,
+                    refEdge,
+                    incEdge,
+                    normal,
+                    v1 = l1[1].sub(l1[0]),
+                    v2 = l2[1].sub(l2[0]),
+                    proj1 = Math.abs(v1.dot(dir)),
+                    proj2 = Math.abs(v2.dot(dir));
+
+                if (proj1 < proj2) {
+                    refEdge = l1;
+                    refVec = v1;
+                    incEdge = [l2[0].clone(), l2[1].clone()];
+                    normal = pngx.Vector2D.tripleProduct(v1, dir.negate(), v1);
+                } else {
+                    refEdge = l2;
+                    refVec = v2;
+                    incEdge = [l1[0].clone(), l1[1].clone()];
+                    normal = pngx.Vector2D.tripleProduct(v2, dir, v2);
+                }
+
+                incEdge = Contact.clipEdge(incEdge, normal, refEdge[0]);
+                if (incEdge.length < 2) {
+                    return incEdge;
+                }
+
+                normal = pngx.Vector2D.tripleProduct(normal, refVec, normal);
+                incEdge = Contact.clipEdge(incEdge, normal, refEdge[0]);
+                if (incEdge.length < 2) {
+                    return incEdge;
+                }
+
+                return Contact.clipEdge(incEdge, normal.negate(), refEdge[1]);
+            },
+            clipEdge: function (edge, dir, start) {
+                var ret = [],
+                    min = start.dot(dir),
+                    a = edge[0],
+                    b = edge[1],
+                    proj1 = a.dot(dir) - min,
+                    proj2 = b.dot(dir) - min;
+                proj1 >= 0 && ret.push(a);
+                proj2 >= 0 && ret.push(b);
+                proj1 * proj2 < 0 && ret.push(b.sub(a).mul(proj1 / (proj1 - proj2)).add(a));
+                return ret;
+            }
+        }
+    );
+    return pngx.Contact = Contact;
+})();
+
+(function () {
+    var World = pngx.Class(
+        pngx.Sprite,
+        function (width, height) {
+            width *= 0.5;
+            height *= 0.5;
+            this.bounds = new pngx.Bounds2D(-width, -height, width, height);
+            this.gravity = new pngx.Vector2D(0, 0);
+
+            this.list = [];
+            this.freezeList = [];
+        },
+        {
+            list: null,
+            freezeList: null,
+            contactList: null,
+            bounds: null,
+            gravity: null,
+            append: function (rigid) {
+                this.list.push(rigid);
+            },
+            update: function (interval) {
+                var contactList = this.contactList = [],
+                    list = this.list,
+                    len = list.length;
+
+
+                for (var j1 = 0; j1 < len; ++j1) {
+                    for (var j2 = j1 + 1; j2 < len; ++j2) {
+                        var contact = new pngx.Contact(list[j1], list[j2]);
+                        if (contact.canCollide() && contact.isIntersect()) {
+                            contact.solve();
+                            contactList.push(contact);
+                        }
+                    }
+                }
+
+                for (var k = 0, contactNum = contactList.length; k < contactNum; ++k) {
+                    contactList[k].correctPosition();
+                }
+
+                var gravity = this.gravity.mul(interval);
+                for (var i = 0; i < len; ++i) {
+                    list[i].addImpulse(gravity.mul(list[i].mass));
+                }
+
+                for (var l = 0; l < len; ++l) {
+                    list[l].update(interval);
+                }
+            },
+            render: function (painter) {
+                var list = this.list,
+                    len = list.length;
+                for (var i = 0; i < len; ++i) {
+                    list[i].render(painter);
+                }
+            }
+        }
+    );
+    return pngx.World = World;
+})();
+
+(function () {
+    var RigidDebugSprite = pngx.Class(
+        pngx.Rigid,
+        function (rigid, color) {
+            switch (rigid.graph.constructor) {
+                case pngx.Polygon:
+                case pngx.Circle:
+                    break;
+                default :
+                    throw new Error('Unsupported graph');
+                    break;
+            }
+            pngx.Rigid.super.call(this, rigid.graph);
+            pngx.mix(this, rigid);
+            this.color = color;
+        },
+        {
+            color: null,
+            render: function (painter) {
+                if (!this.visible) {
+                    return;
+                }
+                painter.lineStyle(this.color);
+                switch (this.graph.constructor) {
+                    case pngx.Polygon:
+                        var v0 = this.graph.vertices[0];
+                        painter
+                            .save()
+                            .transform(this.matrix)
+                            .polygon(this.graph.vertices)
+                            .stroke()
+                            .line(this.centroid.x, this.centroid.y, v0.x, v0.y)
+                            .stroke()
+                            .restore();
+
+                        break;
+                    case pngx.Circle:
+                        painter
+                            .save()
+                            .transform(this.matrix)
+                            .circle(0, 0, this.graph.radius)
+                            .stroke()
+                            .line(0, 0, 0, this.graph.radius)
+                            .stroke()
+                            .restore();
+                        break;
+                }
+            }
+        }
+    );
+    return pngx.RigidDebugSprite = RigidDebugSprite;
+})();
+
+(function () {
+    var ContactDebugSprite = pngx.Class(
+        pngx.Contact,
+        function (rigidA, rigidB, color) {
+            ContactDebugSprite.super.call(this, rigidA, rigidB);
+            this.color = color;
+        },
+        {
+            color: null,
+            render: function (painter) {
+                var manifold = this.manifold;
+                if (manifold.length < 1) {
+                    return;
+                }
+                painter.lineStyle(this.color);
+
+                ContactDebugSprite.drawManifold(painter, this.manifold);
+            },
+            update: function () {
+                void(0);
+            }
+        },
+        {
+            createFromContact: function (contact, color) {
+                var ret = pngx.create(ContactDebugSprite);
+                pngx.mix(ret, contact);
+                ret.color = color;
+                return ret;
+            },
+            drawManifold: function (painter, manifold) {
+                if (manifold.length == 1) {
+                    painter.circle(manifold[0].x, manifold[0].y, 1);
+                } else {
+                    painter.line(manifold[0].x, manifold[0].y, manifold[1].x, manifold[1].y);
+                }
+                painter.stroke();
+            },
+            getManifoldMidpoint: function (manifold) {
+                if (manifold.length == 1) {
+                    return manifold[0];
+                } else {
+                    return manifold[0].add(manifold[1]).mul(0.5);
+                }
+            }
+        }
+    );
+    return pngx.ContactDebugSprite = ContactDebugSprite;
+})();
+
+(function () {
+    var WorldDebugSprite = pngx.Class(
+        pngx.World,
+        function (width, height) {
+            WorldDebugSprite.super.call(this, width, height);
+        },
+        {
+            append: function (rigid, color) {
+                WorldDebugSprite.super.prototype.append.call(
+                    this,
+                    new pngx.RigidDebugSprite(rigid, color)
+                );
+            },
+            render: function (painter) {
+                WorldDebugSprite.super.prototype.render.call(this, painter);
+                var contactList = this.contactList,
+                    len = contactList.length;
+                for (var i = 0; i < len; ++i) {
+                    pngx.ContactDebugSprite.createFromContact(contactList[i], 'red').render(painter);
+                }
+            }
+        }
+    );
+    return pngx.WorldDebugSprite = WorldDebugSprite;
+})();
+
+(function () {
+    var width = 800,
+        height = 600;
+
+    var canvas = pngx.$new('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    pngx.$center(canvas, true, false);
+    document.body.appendChild(canvas);
+
+    var input = new pngx.Input(canvas, true);
+
+    var painter = new pngx.Painter(canvas);
+    painter.font('12px Arial');
+
+    var world = new pngx.WorldDebugSprite(2000, 2000);
+    world.gravity.y = 0.9 / 1000;
+
+    var createWall = function (x, y, width, height) {
+        var graph = pngx.Polygon.createRect(width, height);
+        graph.translate(x + width / 2, y + height / 2);
+        var rigid = pngx.Rigid.createFromPolygon(graph, Infinity, 0.7, 1);
+        rigid.movable = false;
+        return rigid;
+    };
+    var wallWidth = 50;
+    world.append(createWall(0, 0, wallWidth, height), 'grey');
+    world.append(createWall(width - wallWidth, 0, wallWidth, height), 'grey');
+    world.append(createWall(wallWidth, 0, width - wallWidth * 2, wallWidth), 'grey');
+    world.append(createWall(wallWidth, height - wallWidth, width - wallWidth * 2, wallWidth), 'grey');
+
+    var density = 1,
+        friction = 0.1,
+        restitution = 0.2;
+    var createPolyRigid = function (x, y, r, num, vX, vY) {
+        var graph = pngx.Polygon.createRegular(r, num);
+        graph.translate(x, y);
+        var rigid = pngx.Rigid.createFromPolygon(graph, density, friction, restitution);
+        rigid.velocity.x = vX;
+        rigid.velocity.y = vY;
+        return rigid;
+    };
+
+    var createCirRigid = function (x, y, r, vX, vY) {
+        var graph = new pngx.Circle(r);
+        graph.translate(x, y);
+        var rigid = pngx.Rigid.createFromCircle(graph, density, friction, restitution);
+        rigid.velocity.x = vX;
+        rigid.velocity.y = vY;
+        return rigid;
+    };
+
+    var createRandomRigid = function (minVel, maxVel) {
+        var minR = 20,
+            maxR = 50,
+            type = pngx.randomInt(1, 4),
+            x = pngx.randomInt(wallWidth + maxR, width - wallWidth - maxR),
+            y = pngx.randomInt(wallWidth + maxR, height - wallWidth - maxR);
+        if (type == 1) {
+            return createCirRigid(x, y, pngx.randomInt(minR, maxR),
+                    pngx.randomInt(minVel, maxVel) / 1000, pngx.randomInt(minVel, maxVel) / 1000);
+        } else {
+            return createPolyRigid(x, y, pngx.randomInt(minR, maxR), pngx.randomInt(3, 6),
+                    pngx.randomInt(minVel, maxVel) / 1000, pngx.randomInt(minVel, maxVel) / 1000);
+        }
+    };
+
+    var getRandomColor = function () {
+        var arr = ['green', 'teal', 'blue'];
+        return arr[pngx.randomInt(0, arr.length - 1)];
+    };
+
+    for (var num = pngx.randomInt(0, 10); num--;) {
+        var rigid = createRandomRigid(-500, 500);
+        world.append(rigid, getRandomColor());
+    }
+
+    input.onKeyDown = function (key) {
+        switch (key) {
+            case pngx.Input.KEY.MOUSE_LEFT:
+                var r = createRandomRigid(0, 0);
+                r.graph.position = input.cursor.clone();
+                world.append(r, getRandomColor());
+                break;
+            case pngx.Input.KEY.MOUSE_RIGHT:
+                var list = world.list;
+                for (var i = 0, len = list.length; i < len; ++i) {
+                    var curr = list[i],
+                        p = curr.invMatrix.transform(input.cursor);
+                    if (curr.movable && curr.graph.isPointIn(p.x, p.y)) {
+                        world.list.splice(i, 1);
+                        break;
+                    }
+                }
+                break;
+        }
+    };
+
+    var stopwatch = new pngx.Stopwatch();
+    var timer = new pngx.Timer();
+    timer.interval = 1000 / 64;
+    timer.callback = function () {
+        var interval = stopwatch.getElapsed(),
+            fps = (1000 / interval) | 0;
+        painter.fillStyle('white').fillAll();
+
+        world.update(Math.min(interval, 50));
+        world.render(painter);
+
+        painter.fillStyle('black').write('fps: ' + fps, 6, 16);
+    };
+    stopwatch.reset();
+    timer.start();
+})();
+</script>
+</body>
+</html>
