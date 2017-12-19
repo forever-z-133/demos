@@ -6,6 +6,7 @@
 * 2017.12.06 [简单的滚动数字效果](https://foreverz133.github.io/demos/single/rolling-number.html)
 * 2017.12.11 [不同宽度显示不同文字](https://foreverz133.github.io/demos/single/diffrent-width-content.html)
 * 2017.12.12 [围绕圣诞树的挂牌](https://foreverz133.github.io/demos/single/christmas-tree.html)
+* 2017.12.19 [纯 CSS 无法实现 slideDown](https://foreverz133.github.io/demos/single/css-slideDown.html)
 
 -------------
 
