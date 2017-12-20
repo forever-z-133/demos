@@ -7,6 +7,7 @@
 * 2017.12.11 [不同宽度显示不同文字](https://foreverz133.github.io/demos/single/diffrent-width-content.html)
 * 2017.12.12 [围绕圣诞树的挂牌](https://foreverz133.github.io/demos/single/christmas-tree.html)
 * 2017.12.19 [纯 CSS 无法实现 slideDown](https://foreverz133.github.io/demos/single/css-slideDown.html)
+* 2017.12.20 [再次尝试调试摄像头](https://sum.kdcer.com/test/spar.js/)
 
 -------------
 
