@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>(function () { if (!/test=1/.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } })();</script>
+<link href="https://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: "liga", "kern";
+    -webkit-overflow-scrolling: touch;
+}
+body, .body {
+    overflow: hidden;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dedede;
+    max-width: 768px;
+    margin: auto;
+}
+.main {
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+}
+.header, .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.list-box {
+    display: flex;
+}
+.wrap {
+    height: 1000px;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <header class="header"></header>
+    <main class="main scroller">
+<pre><code class="language-js">
+// 单例模式
+// 只产生一个实例
+var singleton = function( fn ){
+    var result;
+    return function(){
+        return result || ( result = fn .apply( this, arguments ) );
+    }
+}
+// 例子
+var num = 0
+var createScript = singleton(function(){
+    var $d = document.createElement('script');
+    $d.className = 'x' + ++num;
+    return document.body.appendChild($d);
+});
+var s1 = createScript();
+var s2 = createScript();
+console.log('单例模式', s1, s2); // 都是 .x1 的 div，没有 .x2 的
+
+// ------------------------------------------------------------
+// 简单工厂模式
+// 由一个方法来决定到底要创建哪个类的实例,
+// 而这些实例经常都拥有相同的接口。
+// 最常见的就是，传入不同参数获得不同的结果。
+var ObjectFactory = function() { // 本例类似 new 的实现
+    var obj = {},
+    Constructor = Array.prototype.shift.call( arguments );
+    obj.__proto__ =  typeof Constructor.prototype === 'number'  ? Object.prototype : Constructor.prototype;
+    var ret = Constructor.apply( obj, arguments );
+    return typeof ret === 'object' ? ret : obj; 
+}
+// 例子
+function People(name) { this.name = name; }
+People.prototype.say = function() { console.log(this.name) }
+var y = ObjectFactory(People, 'y');
+var z = ObjectFactory(People, 'z');
+console.log('简单工厂模式', y, z);
+
+
+// ------------------------------------------------------------
+// 观察者模式
+// on 绑定回调，trigger 触发回调
+var Events = function() { 
+    var listen, log, obj, one, remove, trigger, __this;
+    var obj = {}, __this = this;
+    listen = function( key, eventfn ) {
+        var stack, _ref;
+        stack = ( _ref = obj[key] ) != null ? _ref : obj[ key ] = [];
+        return stack.push( eventfn );
+    };
+    one = function( key, eventfn ) {
+        remove( key );
+        return listen( key, eventfn );
+    };
+    remove = function( key ) {
+        var _ref;
+        return ( _ref = obj[key] ) != null ? _ref.length = 0 : void 0;
+    };
+    trigger = function() {  //面试官打电话通知面试者
+        var fn, stack, _i, _len, _ref, key;
+        key = Array.prototype.shift.call( arguments );
+        stack = ( _ref = obj[ key ] ) != null ? _ref : obj[ key ] = [];
+        for ( _i = 0, _len = stack.length; _i < _len; _i++ ) {
+            fn = stack[ _i ];
+            if ( fn.apply( __this,  arguments ) === false)
+            return false;
+        }
+    }
+
+    return {
+        on: listen,
+        one: one,
+        remove: remove,
+        trigger: trigger
+    }
+}
+// 例子
+var eee = new Events;
+eee.on('end', function(){ console.log('观察者模式', '1s 后被触发') });
+setTimeout(function(){ eee.trigger('end'); }, 1000);
+
+// ------------------------------------------------------------
+// 代理模式
+// 把对一个对象的访问, 交给另一个代理对象来操作。
+// 它的意思就是单一职责原则：比如一个用来加减，一个用来缓存
+var plus = function () {
+    var args = [].slice.call(arguments, 0);
+    return args.reduce((x, y) => x + y);
+}
+var proxy = function (fn) {
+    var cache = {};
+    return function(){
+        var args = Array.prototype.join.call(arguments, "-");
+        if( args in cache ){ // 判断是否被计算过
+            console.log( "从缓存中拿取" );
+            return cache[args];
+        }
+        return cache[args] = fn.apply(null, arguments);
+    }
+}
+var add = proxy(plus);
+console.group('代理模式');
+console.log(add(1, 2, 3, 4)); // 10
+console.log(add(1, 2, 3, 4)); // 从缓存中拿取 10
+console.groupEnd('代理模式');
+
+
+// ------------------------------------------------------------
+// 适配器模式
+// 类似于USB转接口，加个中间步骤，让两端适配能跑通
+// 例子1：适配函数参数
+var Ajax = function (url, data, callback) {
+    // var xhr = new XMLHttpRequest();
+    callback && callback('进行了请求')
+}
+var ajax = function (url, data, callback) {
+    return adapter(url, data, callback)
+}
+var adapter = function(url, data, callback) { // 这就是适配器
+    if (typeof data == 'function') { // 可以不传 data
+        callback = data;
+        data = null;
+    }
+    return Ajax(url, data, callback)
+}
+ajax('/', function(r){ console.log('适配器模式1', r) });
+// 例子2：适配数据
+var adapter2 = function(num) {
+    return Math.max(0, Math.min(num, 5));
+}
+console.log('适配器模式2', adapter2(10)); // 5
+
+
+// ------------------------------------------------------------
+// 桥接模式
+// 分离抽象化和实现，比如图形和画图形
+// 它与适配器模式都是让两个东西配合，但却是不同的。
+// 适配器：改变已有的两个接口，让他们相容。
+// 桥接模式：啥都没有，所以才架桥，比如手柄和电视。
+function Rect(x, y, w, h) { return { x:x, y:y, width: w, height: h, color: 'black'} }
+function draw(ctx, type, ...opts) {
+    ctx.save();
+    switch (type) {
+        case 'rect': ctx.fillStyle = opts[4]; ctx.fillRect(opts[0],opts[1],opts[2],opts[3]); break;
+    }
+    ctx.restore();
+}
+function drawRect(ctx, rect) {
+    draw(ctx, 'rect', rect.x, rect.y, rect.width, rect.height, rect.color);
+}
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+var rect = new Rect(0, 0, 100, 50);
+rect.color = 'red';
+drawRect(ctx, rect);
+
+// ------------------------------------------------------------
+// 外观/门面/装饰模式
+// 提供一个简化办法，但并没有改变接口
+var stopEvent = function(e){
+  e.stopPropagation();
+  e.preventDefault();
+}
+</code></pre>
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/prism/9000.0.1/prism.min.js"></script>
+<script>
+// 单例模式
+// 只产生一个实例
+var singleton = function( fn ){
+    var result;
+    return function(){
+        return result || ( result = fn .apply( this, arguments ) );
+    }
+}
+// 例子
+var num = 0
+var createScript = singleton(function(){
+    var $d = document.createElement('script');
+    $d.className = 'x' + ++num;
+    return document.body.appendChild($d);
+});
+var s1 = createScript();
+var s2 = createScript();
+console.log('单例模式', s1, s2); // 都是 .x1 的 div，没有 .x2 的
+
+// ------------------------------------------------------------
+// 简单工厂模式
+// 由一个方法来决定到底要创建哪个类的实例,
+// 而这些实例经常都拥有相同的接口。
+// 最常见的就是，传入不同参数获得不同的结果。
+var ObjectFactory = function() { // 本例类似 new 的实现
+    var obj = {},
+    Constructor = Array.prototype.shift.call( arguments );
+    obj.__proto__ =  typeof Constructor.prototype === 'number'  ? Object.prototype : Constructor.prototype;
+    var ret = Constructor.apply( obj, arguments );
+    return typeof ret === 'object' ? ret : obj; 
+}
+// 例子
+function People(name) { this.name = name; }
+People.prototype.say = function() { console.log(this.name) }
+var y = ObjectFactory(People, 'y');
+var z = ObjectFactory(People, 'z');
+console.log('简单工厂模式', y, z);
+
+
+// ------------------------------------------------------------
+// 观察者模式
+// on 绑定回调，trigger 触发回调
+var Events = function() { 
+    var listen, log, obj, one, remove, trigger, __this;
+    var obj = {}, __this = this;
+    listen = function( key, eventfn ) {
+        var stack, _ref;
+        stack = ( _ref = obj[key] ) != null ? _ref : obj[ key ] = [];
+        return stack.push( eventfn );
+    };
+    one = function( key, eventfn ) {
+        remove( key );
+        return listen( key, eventfn );
+    };
+    remove = function( key ) {
+        var _ref;
+        return ( _ref = obj[key] ) != null ? _ref.length = 0 : void 0;
+    };
+    trigger = function() {  //面试官打电话通知面试者
+        var fn, stack, _i, _len, _ref, key;
+        key = Array.prototype.shift.call( arguments );
+        stack = ( _ref = obj[ key ] ) != null ? _ref : obj[ key ] = [];
+        for ( _i = 0, _len = stack.length; _i < _len; _i++ ) {
+            fn = stack[ _i ];
+            if ( fn.apply( __this,  arguments ) === false)
+            return false;
+        }
+    }
+
+    return {
+        on: listen,
+        one: one,
+        remove: remove,
+        trigger: trigger
+    }
+}
+// 例子
+var eee = new Events;
+eee.on('end', function(){ console.log('观察者模式', '1s 后被触发') });
+setTimeout(function(){ eee.trigger('end'); }, 1000);
+
+// ------------------------------------------------------------
+// 代理模式
+// 把对一个对象的访问, 交给另一个代理对象来操作。
+// 它的意思就是单一职责原则：比如一个用来加减，一个用来缓存
+var plus = function () {
+    var args = [].slice.call(arguments, 0);
+    return args.reduce((x, y) => x + y);
+}
+var proxy = function (fn) {
+    var cache = {};
+    return function(){
+        var args = Array.prototype.join.call(arguments, "-");
+        if( args in cache ){ // 判断是否被计算过
+            console.log( "从缓存中拿取" );
+            return cache[args];
+        }
+        return cache[args] = fn.apply(null, arguments);
+    }
+}
+var add = proxy(plus);
+console.group('代理模式');
+console.log(add(1, 2, 3, 4)); // 10
+console.log(add(1, 2, 3, 4)); // 从缓存中拿取 10
+console.groupEnd('代理模式');
+
+
+// ------------------------------------------------------------
+// 适配器模式
+// 类似于USB转接口，加个中间步骤，让两端适配能跑通
+// 例子1：适配函数参数
+var Ajax = function (url, data, callback) {
+    // var xhr = new XMLHttpRequest();
+    callback && callback('进行了请求')
+}
+var ajax = function (url, data, callback) {
+    return adapter(url, data, callback)
+}
+var adapter = function(url, data, callback) { // 这就是适配器
+    if (typeof data == 'function') { // 可以不传 data
+        callback = data;
+        data = null;
+    }
+    return Ajax(url, data, callback)
+}
+ajax('/', function(r){ console.log('适配器模式1', r) });
+// 例子2：适配数据
+var adapter2 = function(num) {
+    return Math.max(0, Math.min(num, 5));
+}
+console.log('适配器模式2', adapter2(10)); // 5
+
+
+// ------------------------------------------------------------
+// 桥接模式
+// 分离抽象化和实现，比如图形和画图形
+// 它与适配器模式都是让两个东西配合，但却是不同的。
+// 适配器：改变已有的两个接口，让他们相容。
+// 桥接模式：啥都没有，所以才架桥，比如手柄和电视。
+function Rect(x, y, w, h) { return { x:x, y:y, width: w, height: h, color: 'black'} }
+function draw(ctx, type, ...opts) {
+    ctx.save();
+    switch (type) {
+        case 'rect': ctx.fillStyle = opts[4]; ctx.fillRect(opts[0],opts[1],opts[2],opts[3]); break;
+    }
+    ctx.restore();
+}
+function drawRect(ctx, rect) {
+    draw(ctx, 'rect', rect.x, rect.y, rect.width, rect.height, rect.color);
+}
+var canvas = document.createElement('canvas');
+var ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+var rect = new Rect(0, 0, 100, 50);
+rect.color = 'red';
+drawRect(ctx, rect);
+
+// ------------------------------------------------------------
+// 外观/门面/装饰模式
+// 提供一个简化办法，但并没有改变接口
+var stopEvent = function(e){
+  e.stopPropagation();
+  e.preventDefault();
+}
+</script>
+</body>
+</html>
