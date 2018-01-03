@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=750,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>商委圣诞景观投票</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<!-- <link rel="stylesheet" href="libs/common.css">
+<link rel="stylesheet" href="libs/style.css"> -->
+<style>
+.tips {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+}
+</style>
+</head>
+
+<body>
+<div class="tips">仅IOS的Safari和安卓4.3以上能玩，代码来源 <a href="https://bl.qubendt.com/public/mypro/html/ThreeScene.html?openid=o_TO40Z8ljRaNkiJ-J7tXxmrZz5c">奥莱圣诞AR游戏</a>，未完成</div>
+<!-- <div class="rotate-info hide" id="rotate-info">请保持竖屏浏览</div>
+<div class="body mobile" id="main">
+	<div class="main-load" id="main-load"></div>
+	<div class="page welcome" id="welcome"></div>
+	<div class="page rule" id="rule"></div>
+	<a href="#" class="btn btn-music"></a>
+	<div class="toast load" id="load"><div class="toast-wrap"></div></div>
+	<div class="tips bottom" id="tips"></div>
+</div>
+<div class="other">
+	<audio src="img/bgm.mp3" id="bgm"></audio>
+</div> -->
+<!-- <video class="cover" id="video"></video> -->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script src="libs/jquery.min.js"></script> -->
+<!-- <script src="libs/swiper.min.js"></script>
+<script src="libs/common.js"></script> -->
+<script src="three.min.js"></script>
+<!-- <script src="https://bl.qubendt.com/public/mypro/scripts/lib/Projector.js"></script>
+<script src="https://bl.qubendt.com/public/mypro/scripts/lib/stats.min.js"></script>
+<script src="https://bl.qubendt.com/public/mypro/scripts/lib/JDLoader.min.js"></script>
+<script src="https://bl.qubendt.com/public/mypro/scripts/lib/OrbitControls.js"></script> -->
+<script src="Detector.js"></script>
+<script src="spar.js"></script>
+<script>
+var surport = false;
+var videoWidth = window.innerWidth;
+var videoHeight = window.innerHeight;
+var bool_isAndro = false;
+var container = $('body')[0];
+var scene, renderer, camera;
+
+function MyCheckDevice() {
+
+    var device = window.navigator.userAgent;
+    var platform = window.navigator.platform;
+    console.log("platform:" + device);
+    var macplatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+    var windowsplatforms = ["Win32", "Win64", "Windows", "WinCE"];
+    var iosplatforms = ["iPhone", "iPad", "iPod"];
+
+    if (macplatforms.indexOf(platform) !== -1) {
+        os = 'mac';
+    }
+    else if (iosplatforms.indexOf(platform) !== -1) {
+
+        // alert("is  ios");
+        boolisios=true;
+        if (new RegExp("OS 11").test(device)) {
+            surport = true;
+            os = 'ios11';
+            console.log("ios 11");
+        }
+        else {
+            os = 'ios not 11';
+            surport = false;
+            console.log("ios not 11");
+        }
+    }
+    else if (windowsplatforms.indexOf(platform) !== -1) {
+        os = 'win';
+        surport = true;
+    }
+    else if (/Android/.test(device)) {
+        os = 'android';
+        bool_isAndro = true;
+        surport = true;
+    }
+    else if (!os && /Linux/.test(platform)) {
+        os = 'linux';
+    }
+    console.log("os:"+os);
+}
+
+var MyGame = function () {
+	console.log("MyGame()是否支持摄像头:" + surport);
+	videoDevice = new SPAR.VideoDevice({
+		width: window.innerWidth,
+		height: window.innerHeight
+	});
+	var constraint = {
+		audio: true,
+		video: {
+			// width: videoWidth,
+			// height: videoHeight,
+			facingMode: bool_isAndro ? {exact: 'environment'} : 'environment'
+		}
+	};
+	var x = videoDevice.setVideoSource(new SPAR.CameraVideoSource(constraint))
+	x.then(() => {
+		let videoRadio = videoDevice.videoWidth / videoDevice.videoHeight;
+		if (videoDevice.width < videoDevice.height) {
+			videoDevice.width = videoDevice.height * videoRadio;
+		}
+		else {
+			videoDevice.height = videoDevice.width / videoRadio;
+		}
+		alert('调取了摄像头')
+		// alert('xxx')
+		start();
+		$("#loading").hide();
+		$("button#start").show();
+	}).catch(err => {
+		alert(JSON.stringify(err));
+		$("#loading").html("载入失败");
+		console.log(' error', err);
+		// alert(`${err.name} : ${err.message}`);
+
+		$("#notallow").show();
+		return;
+	});
+}
+
+function start() {
+	// try { 
+
+
+	if (!Detector.webgl) Detector.addGetWebGLMessage();
+	// alert('x')
+
+    videoDevice.play();
+    renderer = new SPAR.THREERenderer(videoDevice);
+
+    container.appendChild(renderer.domElement);
+    console.log("containerWidth:"+containerWidth);
+    console.log("containerHeight:"+containerHeight);
+
+    alert("添加video标签");
+
+    // $("video").attr("id", "video");
+    // let videEle = document.getElementById("video");
+    // let widthoffset = (containerWidth - videEle.width) / 2;
+    // let heightoffset = (containerHeight - videEle.height) / 2;
+    // console.log("offset=" + widthoffset + "," + heightoffset);
+
+    // renderer.domElement.style.left = widthoffset + "px";
+    // console.log(renderer.domElement.style.left);
+
+    // scene = renderer.scene;
+    // camera = renderer._camera;
+    // camera.far = 500;//100
+    // camera.near = 0.1;//100
+    // renderer._renderer.antialias=true;
+	// } catch (err) {
+	// 	alert('报错：'+JSON.stringify(err));
+	// }
+}
+
+MyCheckDevice();
+MyGame();
+
+// $(window).on('touchmove', function(e) { e.preventDefault() });
+
+// // 音乐开关
+// var $bgm = $('#bgm')[0]; $bgm && $bgm.play();
+// $('body').on('click', '.btn-music', function () {
+//     var $this = $(this).closest('.btn-music');
+//     $this.toggleClass('off');
+//     if ($this.is('.off')) $bgm.pause();
+//     else $bgm.play();
+// });
+
+// var shareJson = {
+// 	title: '华泾重装新开业，岁末大吉有惊喜！',
+// 	desc: '不仅吉买盛岁末大促，还有华泾店重装开业，双喜临门哦！',
+// 	icon: 'http://sum.kdcer.com/gms-12-19/img/icon.png',
+// 	url: 'http://sum.kdcer.com/channel?EventId=85',
+// }
+// var s = shareJson;
+// WeChat(s.title, s.desc, s.icon, s.url, true);
+</script>
+</body>
+</html>
