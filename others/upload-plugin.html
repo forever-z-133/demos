@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>上传插件</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+  box-sizing: border-box;
+}
+body, .body {
+  overflow: hidden;
+}
+.body {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dedede;
+  max-width: 768px;
+  margin: auto;
+}
+.main {
+  height: 100%;
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translate3d(0,0,0);
+  -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+pre {
+  padding: .5rem 1rem;
+  background: #fff;
+  overflow: auto;
+}
+.copyright {
+  background: #fff;
+  padding: .3rem .8rem;
+  font-size: .9em;
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.cover {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+.star-result-box {
+  position: relative;
+  width: 300px;
+  height: 30px;
+  background: #000;
+}
+.star-result-cover {
+  background-size: auto 100%;
+  background-position: 0 0;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAAG8TRt3AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAbUExURUxpcczMzMzMzMzMzMzMzP///8zMzNzc3O/v79WEt8UAAAAFdFJOUwBYncYgn9daXwAABEJJREFUWMPtWD1v2zAQpWXFyeiiqLN6aNyMLpAEGY0WTTu6KCRqlO2I8pgUldyxcCrlb5eiRIqfZ8VJEQQIF/Pw9MinO94dZRTUY46sk7BoJvMvfHLAJptNfLjZ0Mkc0fGugmKEDtkzGKH6YYqd1JOjmwM2uQmCepLQtV2btrvzydyYjJNqgjcbVMu4qWQUFUR/D/jugTqZnqCETQ6D8ADanQ9uR5o91+xhotghOlLsOeoJO0ZiJAz/0VgD/nw0q8zzlj+tH+Y2de+gekduzyts6gl7xUh/k8aOLO/z1Ham2USz+6qNUaD5K9P8da7YN/XbCjumB62xN9WgDmG/1MYz4V6PPR9K7mZ8HoBv3D9j4f56/RCp/g5mHG7iw/BAe74Q9neEzmT+H0qOpXjFfsFPCBKHZ9vuX28Vczssap8VTxCv/wlHCQiHpyB8OwDh2E8AmEbgEoB/8vDZYXog/MwJs+heOuGtODsyvHrTjPo0cmtU8CMzRuZI28WjhQ72E2XvXEUnujQ8bcHe2qL8mqODzPZiokp5NhgP5aQy4Lt274EFZmunzAVeYcDV2v2scUFiwKF42VxaXcBx+7J4KlbnMB7JcV4mGhyqZ658hiR6uXAEw2EBwxkIb+HaEu+AjyE4moKlJ5zBMOplAHwnZ4gJ/4Jhmikf3HA0Beta1QkBOFTSz4Dv1OTW4VsYZil+qsEbMRg8EGbG4GjByySrHD63LngftNVMdJXxvXML6rVd2CypTcVtlIdTHR0V8ouVM2tBFu+9tC0tlZ5Yqdd6ZQrKobR0Zjp1JVB/bavIYvmrAKznX20wHpv1WoLbK1S/AOGerVlsEdgsJL9cuuArFptjE2Z3Ny/JHa0mrCMRLRXpClwFuWqWPdPnWx7kKvRmJ4pFkJd2mAeZxubY+KAYt0Euh0YfC6UgBysTnsh5vtBv36VSkUq9za3VepbA5T568Y3qlfwwclQ8goyzR5DL9SPIhOxPxotRtje5HHvrvclk5pN9yZi2NFA3RC5p0euv9yQTWhFB3QhWDetGsGpYN0DOWQv3033IuOnvk2wPctncLQDdbnLe3Ax66cPJ0dK4cXQnl+JG5NaNdqmGdNfknBhDuktNTFS+tQX3xHottA+P/NbacP6xK/dtatzZgnI160L1L2xXtgCT97u5n0jm8Ha+3MWdpO5Q3ZMhRO1xTzk+9siZm/uZFDsOSb50+M2fpLtPGLaH3CNZl+MZ5deWr4i06Hi2c8Nt9vNtI0crc+eLoiMZXzs+frqQc4vHvLQb2abarhu5ir3xZZV1Ipetal/6W3fdhSypHqX5AtKN3KpZ5rZZPupywrjqJnNFllt0m2SiZy7PcrKbXKtWMrfJclM3sqrWMrfOclM3sqi2ZC7LcrKLTFXbMpdluaEbGapHqbWxRfnC0K2TyYWzrZUrApMxAe4vBqiR7+Hb+e/XD5TnI/8DbP3d5457rgoAAAAASUVORK5CYII=);
+}
+.star-result {
+  width: 0;
+  height: 100%;
+  background: red;
+  transition: width .2s;
+}
+.main {
+  padding: 50px 10px;
+}
+.box {
+  height: 100px;
+}
+
+.star-bar {
+  width: 250px;
+  height: 50px;
+  margin-left: 25px;
+  background-image: url(data:image/png;base64,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);
+  background-size: 50px 100px;
+  background-position: 0 100%;
+}
+.star-bar .star {
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  background-position: 0 0;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+  <header class="header"></header>
+  <main class="main">
+  </main>
+  <footer class="footer">
+    <div class="copyright">
+      本案例由张永恒实现，<br>
+      联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a> / 
+      <a href="https://home.cnblogs.com/u/foreverZ/" target="_blank">cnblog</a><br>
+      或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+    </div>
+  </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+// input -> 请求 -> 返回 -> 渲染单个
+// button -> 弹层+列表 -> input -> 请求 -> 返回 -> 渲染单个
+// 列表
+function Upload(options) {
+  var opt = $.extend({
+    postUrl: '',
+    defaultData: {},
+    pageSize: 20,
+    listBox: '',
+    afterPost: function(){},
+  }, options);
+  var pageNo = 0, pageSize = opt.pageSize, posting = false;
+  var all = [], customCallback;
+  function dialog(){}
+  // 触发选择事件
+  function change(e){}
+  // 请求接口
+  post();
+  function post(){
+    if (posting) return;
+    posting = true;
+    var data = $.extend({
+      pageNo: ++pageNo,
+      pageSize: pageSize,
+    }, opt.defaultData);
+    $.ajax({
+      url: opt.postUrl,
+      data: data,
+      success: function(r){
+        if (r && r.length) {
+        } else {
+          console.error('图片上传接口返回结果错误', r);
+        }
+      }
+    }).fail(function(err){
+      console.error('图片上传接口报错', err);
+    });
+  }
+  // 请求结束了
+  function _callback(){}
+  function progress(){}
+  function reset(){}
+  function addController(){}
+  return {
+    reset: reset,
+    bind: addController,
+  }
+}
+
+Upload({})
+</script>
+</body>
+</html>
