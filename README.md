@@ -1,5 +1,7 @@
 # 永恒君的案例库
 
+还有些其他不值一提的小实验，可移步 [这里](https://github.com/foreverZ133/demos/tree/master/others/)
+
 ## 2017年
 ### 2018 年 1 月
 * 2018-01-02 [有趣的SVG交互式推文(转)](https://foreverz133.github.io/demos/single/svg-article.html)
