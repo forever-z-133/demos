@@ -123,6 +123,13 @@ h1,h2,h3,h3,h5,h6,p {
     height: 30px;
     margin: auto;
 }
+.demo4 .center-xy-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.demo4 .center-xy-item {
+}
 </style>
 </head>
 
@@ -173,7 +180,7 @@ h1,h2,h3,h3,h5,h6,p {
     vertical-align: middle;
 }
 </code></pre>
-            <p>以上下居中见长，局限和搭配都挺多。如果仅为文字且不考虑背景色，父子两级即可，非常好用。子级不建议多个。</p>
+            <p>要求父级为 display:table。以上下居中见长，局限和搭配都挺多。如果仅为文字且不考虑背景色，父子两级即可，非常好用。子级不建议多个。</p>
             <div class="center-xy-box">
                 <div class="table-center center-xy-item">
                     <p>我是子级</p>
@@ -213,7 +220,20 @@ h1,h2,h3,h3,h5,h6,p {
     margin: auto;
 }
 </code></pre>
-            <p>要求定高。用父级的 :before 撑起一半的高度，然后 margin-bottom 负值拉回到上下居中，所以还需要该父级内没有其他元素</p>
+            <p>要求定高，且需清除浮动。用父级的 :before 撑起一半的高度，然后 margin-bottom 负值拉回到上下居中，所以还需要该父级内没有其他元素</p>
+            <div class="center-xy-box">
+                <div class="center-xy-item">我是子级</div>
+            </div>
+        </div>
+        <div class="demo demo4">
+            <h3>上下左右居中 - flex 法</h3>
+<pre><code>.demo4 .center-xy-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+</code></pre>
+            <p>要求父级为 flex 容器。子级有时宽度会有 BUG，所以推荐最好定宽。</p>
             <div class="center-xy-box">
                 <div class="center-xy-item">我是子级</div>
             </div>
