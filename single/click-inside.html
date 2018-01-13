@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>判断不规则图形范围</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload=function(){if(window.innerWidth>768) {return};var s=document.createElement("script");s.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js";document.body.appendChild(s);s.onload=function(){eruda.init()}}</script>
+<link href="https://cdn.bootcss.com/prism/9000.0.1/themes/prism.min.css" rel="stylesheet">
+<style>
+html, body {
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  padding: 20px;
+  box-sizing: border-box;
+}
+</style>
+</head>
+
+<body>
+<p>判断点击是否在不规则图形内，本来 SVG 可以轻松解决，但现在需求是小程序内，所以不得不用 canvas 来完成了。</p>
+<p>原理：判断每相邻两点为一条线 y=ky+b，最终与 y=ey 有两个交点，再判断点击点与两交点在同一直线上的内外关系，即可。</p>
+<p>但它只适用于直线线段构成的不规则图形，弧形线段的暂时我无能为力。</p>
+<canvas id="rect"></canvas>
+<div id="result"></div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/prism/9000.0.1/prism.min.js"></script>
+<script>
+var canvas = document.querySelector('#rect');
+// canvas.width = window.innerWidth;
+// canvas.height = 100;
+var ctx = canvas.getContext('2d');
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+var point1 = ['10 10','50 10','50 50', '80 80', '70 80', '20 90', '10 60'];
+var point2 = ['100 10','130 60','70 60'];
+var point3 = ['190 10','220x 10x 220 60','190x 80x 160 40'];
+
+function drawShapes(point) {
+  let pp = point.map(p => p.split(' '));
+  ctx.beginPath();
+  pp.forEach(p => {
+    if (_isLine(p)) {
+      ctx.lineTo.apply(ctx, p);
+    } else {
+      p = p.map(o => parseInt(o));
+      ctx.quadraticCurveTo.apply(ctx, p);
+    }
+  });
+  ctx.closePath();
+  ctx.fill();
+}
+drawShapes(point1);
+drawShapes(point2);
+drawShapes(point3);
+
+function _isLine(p) {
+  return !p.some(o => o.indexOf('x') > -1);
+}
+
+// 判断点击是否在不规则图形内
+// 每两点为一条线 y=ky+b 或 y=ax²+bx+c，最终与 y=ey 有两个交点则进一步判断
+// 此时点击与两个交点在同一直线上，判断内外已很明显
+function _hit(point, event) {
+  if (point[point.length-1] != point[0]) point.push(point[0]); // 处理首尾相接
+  let ex = event.clientX, ey = event.clientY;
+  let pp = point.map(p => p.split(' '));
+  let cross = [], inside = false;
+
+  // 找出交点
+  pp.reduce((p1, p2) => {
+    if (_isLine(p2)) { // 两点为直线情况
+      let x1 = p1[0], x2 = p2[0], y1 = p1[1], y2 = p2[1];
+      // 纵轴方向上点击必在两 y 值中间才可能相交
+      if (ey < Math.min(y1, y2) || ey > Math.max(y1, y2)) return p2;
+      // k 不存在，即与 y 轴平行，则肯定有交点
+      if (x2 - x1 == 0) { cross.push(x1); return p2; }
+      // 其他情况，即求 kx + b = ey 中的 x
+      let k = (y2 - y1) / (x2 - x1 || 1);
+      let b = y1 - k * x1;
+      let xx = (ey - b) / k;
+      cross.push(xx);
+    } else {  // 曲线情况
+      temp = p2.slice(0,2).map(o => parseInt(o));
+      let t1 = temp[0], t2 = temp[1];  // 贝塞尔曲线虚拟转折节点
+      p1 = p1.slice(-2); p2 = p2.slice(-2);
+      let x1 = p1[0], x2 = p2[0], y1 = p1[1], y2 = p2[1];
+    }
+    // 让 reduce 继续运行
+    return p2;
+  });
+
+  // 判断点击与两个交点内外关系，即，点击到两点的距离等于两点的距离则为在内部
+  if (cross.length == 2) {
+    let dis1 = Math.abs(cross[1] - cross[0]);
+    let dis2 = Math.abs(ex - cross[0]) + Math.abs(cross[1] - ex);
+    inside = dis2 == dis1 ? true : false;
+  }
+  return inside;
+}
+
+
+/*------------------------------------
+  方案二，像素判断法，有点难搞
+------------------------------------*/
+// let iData = ctx.getImageData(0,0,canvas.width,canvas.height);
+// let _data = iData.data, data = [];
+// for (var i=0,len=_data.length; i<len; i+=4) {
+//   var ii = i/4>>0, col = ii/150>>0, row = ii%150;
+//   var inside = _hit(point1, {clientX: col, clientY: row});
+//   data.push([col, row, inside]);
+// }
+// console.log(data)
+
+
+
+// 节流
+function throttle(fn, delay = 100) {
+  let timer = null, st = Date.now();
+  return function() {
+    let context = this, args = arguments;
+    let ct = Date.now();
+    let re = delay - (ct - st);
+    clearTimeout(timer);
+    if(re <= 0) {
+      fn.apply(context, args);
+      st = Date.now();
+    } else {
+      timer = setTimeout(fn, re, args);
+    }
+  }
+}
+
+var $re = document.querySelector('#result');
+var _move = function(e) {
+  var hit = [];
+  var e = {
+    clientX: e.clientX - canvas.offsetLeft,
+    clientY: e.clientY - canvas.offsetTop,
+  }
+  if (_hit(point1, e)) hit.push(1);
+  if (_hit(point2, e)) hit.push(2);
+  if (_hit(point3, e)) hit.push(3);
+  hit = hit.join(',')
+  $re.innerHTML = hit ? hit + '被触发' : ''
+}
+// _move = throttle(_move, 100);
+canvas.addEventListener('mousemove', _move, false);
+canvas.addEventListener('touchmove', _move, false);
+canvas.addEventListener('click', _move, false);
+</script>
+</body>
+</html>
