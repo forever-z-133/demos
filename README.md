@@ -8,6 +8,7 @@
 * 2018-01-03 [部分设计模式的整理](https://foreverz133.github.io/demos/single/design-pattern.html)
 * 2018-01-10 [类似随机的SVG效果](https://foreverz133.github.io/demos/others/funny/svg-random.html)
 * 2018-01-14 [判断点击在不规则图形内](https://foreverz133.github.io/demos/single/click-inside.html)
+* 2018-01-22 [疯狂点击不能停](https://foreverz133.github.io/demos/single/click-progress.html)
 
 -------------
 
