@@ -3,6 +3,11 @@
 还有些其他不值一提的小实验，可移步 [这里](https://github.com/foreverZ133/demos/tree/master/others/)
 
 ## 2017年
+### 2018 年 2 月
+* 2018.02.06 [兼容的底部对齐布局](https://foreverz133.github.io/demos/single/align-bottom.html)
+
+-------------
+
 ### 2018 年 1 月
 * 2018-01-02 [有趣的SVG交互式推文(转)](https://foreverz133.github.io/demos/single/svg-article.html)
 * 2018-01-03 [部分设计模式的整理](https://foreverz133.github.io/demos/single/design-pattern.html)

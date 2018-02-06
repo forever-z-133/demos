@@ -1,4 +1,5 @@
 
+* [新年画个福](https://foreverz133.github.io/demos/others/funny/draw-fu.html)
 * [简单的 CSS 求婚效果](https://foreverz133.github.io/demos/others/funny/wedding)
 * [CSS 实现旗帜](https://foreverz133.github.io/demos/others/funny/border-radius-flag.html)
 * [CSS 常用布局集锦](https://foreverz133.github.io/demos/others/funny/css-common.html)
