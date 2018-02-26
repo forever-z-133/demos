@@ -65,6 +65,29 @@ pre {
     font-size: .9em;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
+
+.list-item {
+    position: relative;
+    margin: 10px;
+    height: 100px;
+    background: pink;
+    border-radius: 1em;
+}
+.dot {
+    width: 1em;
+    height: 1em;
+    background: blue;
+    border-radius: 100%;
+    display: block;
+}
+.move-dot {
+    position: absolute;
+    z-index: 10;
+}
+.list-item span {
+    float: right;
+    margin: 50px 20px 10px;
+}
 </style>
 </head>
 
@@ -72,6 +95,17 @@ pre {
 <div class="body">
     <header class="header"></header>
     <main class="main">
+        <div class="list">
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+            <div class="list-item"><span class="dot"></span></div>
+        </div>
     </main>
     <footer class="footer">
         <div class="copyright">
@@ -82,7 +116,28 @@ pre {
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
+var $win = $('.body');
 
+$('span').on('click', function(e){
+    var $el = $('<div class="dot move-dot"></div>');
+    var winH = $win.height(), offset = $win.offset();
+    $el.css({
+        left: e.pageX - 10,
+        top: e.pageY - 10,
+    });
+    $el.appendTo('body');
+    // 点击位置不同，所需时间和上弹高度不同
+    var ratio = (winH - e.pageY) / winH;
+    var time = ratio * 0.5 + (1 - ratio) * 0.2;
+    $el[0].offsetTop;  // 强制渲染
+    $el.css({
+        left: offset.left + 50,
+        top: offset.top + winH - 40,
+        transition: 'left ' + time + 's linear, top ' + time + 's cubic-bezier(.16,' + (ratio-1) + ',.66,-0.07)'
+    }).on('webkitTransitionEnd transitionEnd', function(){
+        // $el.remove();
+    });
+});
 </script>
 </body>
 </html>
