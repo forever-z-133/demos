@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+body, .body {
+    overflow: hidden;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dedede;
+    max-width: 768px;
+    margin: auto;
+}
+.main {
+    height: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+    -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+
+a {
+    font: inherit;
+    color: inherit;
+    text-decoration: none;
+    line-height: inherit;
+}
+
+/*modal 组件*/
+.modal, .modal-bg {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+.modal {
+    opacity: 0;
+    z-index: -1;
+    overflow: hidden;
+    transition-property: opacity, z-index;
+    transition-duration: .3s, 0s;
+    transition-delay: 0s, .3s;
+}
+.modal-bg {
+    background: rgba(0,0,0,.8);
+}
+.modal-box {
+    transform: translate3d(0,0,0);
+}
+.modal.in {
+    opacity: 1;
+    z-index: 0;
+    transition-delay: 0s, 0s;
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <header class="header"></header>
+    <main class="main">
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+// 禁用无效链接的点击
+$('body').on('click', '[href="#"]', function(e){e.preventDefault();return})
+// 关闭弹窗的公共方法
+$('body').on('click', '.close', function(e){$(this).closest('.modal').removeClass('in')});
+
+
+function float_number() {
+    // 最长小数位长度，如 [1, 1.1, 1.11] 则得 2
+    function _max_dot_len(arr) {
+        return Math.max.apply(null, arr.map(function(x) {
+            x = x.toString();
+            if (x.indexOf('.') < 0) return 0;
+            return x.split('.')[1].length;
+        }));
+    }
+    // 为解决浮点型精度问题，小数转为整数，如 [1.2, 1.33] 转为 [120, 133]
+    function _to_init(arr, power) {
+        return arr.map(function(a){ return a * Math.pow(10, power) });
+    }
+    // 最后结果转为浮点型
+    function _to_float(num, power) {
+        return num / Math.pow(10, power);
+    }
+    // 加减乘除
+    function _add(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a + b });
+    }
+    function _minus(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a - b });
+    }
+    function _multiply(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a * b });
+    }
+    function _divide(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a / b });
+    }
+    // 给出结果
+    function _result(type, args) {
+        args = [].slice.call(args);
+        var len = _max_dot_len(args);
+        var args2 = _to_init(args, len);
+        var result = 0;
+        switch (type) {
+            case 'minus': result = _minus(args2); break;
+            case 'multiply': result = _multiply(args2); break;
+            case 'divide': result = _divide(args2); break;
+            case 'plus': default: result = _add(args2);
+        }
+        result = _to_float(result, len);
+        return result;
+    }
+    return _result('plus', arguments)
+}
+console.log(float_number(0.7, 0.1))
+</script>
+</body>
+</html>
