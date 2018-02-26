@@ -1,4 +1,8 @@
 
+* [JS 浮点数加减精度问题](https://foreverz133.github.io/demos/others/funny/float.html)
+* [逐个出现的菜单项](https://foreverz133.github.io/demos/others/funny/delay.html)
+* [炫酷的点赞效果](https://foreverz133.github.io/demos/others/funny/click-love.html)
+* [试用 basicScroll](https://foreverz133.github.io/demos/others/funny/basicScroll.html)
 * [新年画个福](https://foreverz133.github.io/demos/others/funny/draw-fu.html)
 * [简单的 CSS 求婚效果](https://foreverz133.github.io/demos/others/funny/wedding)
 * [CSS 实现旗帜](https://foreverz133.github.io/demos/others/funny/border-radius-flag.html)
