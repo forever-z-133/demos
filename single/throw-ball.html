@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>丢球</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+    box-sizing: border-box;
+}
+body, .body {
+    overflow: hidden;
+}
+.body {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dedede;
+    max-width: 768px;
+    margin: auto;
+}
+@media (min-width: 992px) {
+  .body {
+    width: 750px;
+    height: 1334px;
+    font-size: 30px;
+    -webkit-transform: scale(.5);
+            transform: scale(.5);
+  }
+}
+.main {
+    height: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+    -webkit-overflow-scrolling: touch;
+}
+.header, .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+pre {
+    padding: .5rem 1rem;
+    background: #fff;
+    overflow: auto;
+}
+.copyright {
+    background: #fff;
+    padding: .3rem .8rem;
+    font-size: .9em;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+</style>
+</head>
+
+<body>
+<div class="body">
+    <header class="header"></header>
+    <main class="main">
+        <canvas></canvas>
+    </main>
+    <footer class="footer">
+        <div class="copyright">
+            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
+            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var canvas = document.querySelector('canvas');
+var $win = document.querySelector('.body');
+var winW = canvas.width = $win.offsetWidth;
+var winH = canvas.height = $win.offsetHeight;
+</script>
+</body>
+</html>
