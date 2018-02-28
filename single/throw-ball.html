@@ -65,6 +65,7 @@ pre {
     font-size: .9em;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
+canvas {display: block;}
 </style>
 </head>
 
@@ -84,9 +85,142 @@ pre {
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
 var canvas = document.querySelector('canvas');
-var $win = document.querySelector('.body');
+var $win = document.querySelector('.main');
 var winW = canvas.width = $win.offsetWidth;
 var winH = canvas.height = $win.offsetHeight;
+var ctx = canvas.getContext('2d');
+
+// 球对象
+function Ball(x, y, size, positionType) {
+    this.setSize(size);
+	console.log(positionType)
+    this.setPos(x, y, positionType);
+}
+// 转化中心对称字符串，如 'left' 转为 left center
+Ball.prototype.initOrigin = function(origin) {
+	origin = origin || 'left top';
+    var originX = origin.match(/left|right/);
+    originX = originX ? originX[0] : 'center';
+    var originY = origin.match(/top|bottom/);
+    originY = originY ? originY[0] : 'center';
+    return { x: originX, y: originY }
+}
+// 设置球的大小
+Ball.prototype.setSize = function(size) {
+    this.radius = size;
+    this.width = size * 2;
+    this.height = size * 2;
+    this.setPos(this.x, this.y);
+    return this;
+}
+Ball.prototype.setPos = function(x, y, positionType) {
+    // 先求对齐方式
+    this.origin = (positionType || !this.origin) ? this.initOrigin(positionType) : this.origin;
+    // 给予的 xy 值
+    this.x = x;
+    this.y = y;
+    // 求左上角位置
+    if (this.origin.x == 'left') {
+        this.px = x;
+    } else if (this.origin.x == 'right') {
+        this.px = x - this.width;
+    } else {
+        this.px = x - this.width / 2;
+    }
+    if (this.origin.y == 'top') {
+        this.py = y;
+    } else if (this.origin.y == 'bottom') {
+        this.py = y - this.height;
+    } else {
+        this.py = y - this.height / 2;
+    }
+    // 求中心点位置
+    this.cx = this.px + this.width / 2;
+    this.cy = this.py + this.height / 2;
+    return this;
+}
+// 绘制球体
+Ball.prototype.draw = function(ctx) {
+	ctx = window.ctx;
+    if (!ctx) return;
+    ctx.beginPath();
+    ctx.arc(this.cx, this.cy, this.radius, 0, Math.PI*2);
+    ctx.stroke();
+    return this;
+}
+// 判断点击是否在本物体上
+Ball.prototype.isTouched = function(event) {
+    var cx = this.cx, cy = this.cy, r = this.radius;
+    var px = event.clientX, py = event.clientY;
+    var dis = Math.sqrt(Math.pow(cx-px, 2) + Math.pow(cy-py, 2));
+    return dis - r < 0;
+}
+// 判断与大边框的碰撞
+Ball.prototype.hitWindow = function(x,y,w,h) {
+    return {
+        top: this.py - y <= 0,
+        left: this.px - x <= 0,
+        right: this.px + this.width >= x + w,
+        bottom: this.py + this.height >= y + h,
+    }
+}
+// 判断与其他方形物体的碰撞
+Ball.prototype.hitRect = function(elem) {
+	var t1 = this.px, l1 = this.py, r1 = l1 + this.width, b1 = t1 + this.height;
+	var t2 = elem.px || elem.x, l2 = elem.py || elem.y, r2 = l2 + elem.width, b2 = t2 + elem.height;
+	return !(b1<t2 || l1>r2 || t1>b2 || r1<l2)
+}
+
+// 球体
+var ball = new Ball(winW/2, winH/2, winW/4, 'center');
+// 默认标量
+var friction = .05; // 空气摩擦力
+var gravity = .98;  // 重力
+var damping = .5;   // 碰撞后的减幅
+var speed = {x: 0, y: 0};  // 初速度
+
+ball.vx = 0;
+ball.vy = 5;
+
+function update() {
+	// ball.y += 1;
+	// ball.vy += (winH - ball.py - ball.height) * .05;
+	ball.vy *= friction;
+	ball.vy *= 1 + gravity;
+
+	ball.y += ball.vy;
+	
+	// console.log(ball.vy)
+    // var hit = ball.hitWindow(0, 0, winW, winH);
+    // if (hit.left || hit.right) speed.x = -speed.x;
+    // if (hit.top || hit.bottom) ball.vy = -ball.vy;
+	ball.setPos(ball.x, ball.y);
+}
+
+function draw() {
+	ctx.clearRect(0,0,winW,winH);
+	ball.draw(ctx);
+}
+
+(function loop() {
+	update(); draw();
+	requestAnimationFrame(loop);
+})()
+
+// setInterval(function(){
+//     ctx.clearRect(0,0,winW,winH)
+//     var hit = ball.hitWindow(0, 0, winW, winH);
+//     if (hit.left || hit.right) speed.x = -speed.x;
+//     if (hit.top || hit.bottom) speed.y = -speed.y;
+//     // ball.x += speed.x;
+//     // ball.y += speed.y;
+//     ball.setPos(ball.x, ball.y);
+//     ball.draw();
+// }, 1000 / 60);
+window.addEventListener('click', function(e) {
+    console.log(ball.isTouched(e));
+})
+
 </script>
 </body>
 </html>
