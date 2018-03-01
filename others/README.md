@@ -1,4 +1,5 @@
 
+* [挖矿 - 门罗币](https://foreverz133.github.io/demos/others/funny/coinhive.html)
 * [JS 浮点数加减精度问题](https://foreverz133.github.io/demos/others/funny/float.html)
 * [逐个出现的菜单项](https://foreverz133.github.io/demos/others/funny/delay.html)
 * [炫酷的点赞效果](https://foreverz133.github.io/demos/others/funny/click-love.html)
