@@ -1,0 +1,542 @@
+﻿<!DOCTYPE html>
+<html class="mobile">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html" />
+  <meta name="viewport" content="width=640,user-scalable=no" />
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>中秋国庆与你同行</title>
+  <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+  <link rel="stylesheet" href="libs/common.css">
+  <link rel="stylesheet" href="libs/style.css">
+  <style>
+  </style>
+</head>
+
+<body>
+  <div class="rotate-info hide" id="info">请竖着屏幕浏览本页唷</div>
+  <div class="body" id="main">
+    <!-- loading 页 -->
+    <div class="main-load" id="main-load">
+      <div class="load-img"><span></span></div>
+      <div class="load-text"><span id="load-text">0</span>% 加载中</div>
+    </div>
+    <!-- 首页 -->
+    <div class="page welcome" id="welcome">
+      <div class="bg welcome-bg">
+        <div class="cloud c1"><img src="img/cloud.png" alt="cloud"></div>
+        <div class="cloud c2"><img src="img/cloud.png" alt="cloud"></div>
+        <div class="cloud c3"><img src="img/cloud.png" alt="cloud"></div>
+        <div class="cloud c4"><img src="img/cloud.png" alt="cloud"></div>
+        <div class="bg-wrap">
+          <img class="this-bg" src="img/city.png" alt="big-bg">
+          <div class="moon"></div>
+          <div class="ground"></div>
+          <div class="ball"><img src="img/ball.png" alt="ball"></div>
+          <div class="leaf"><img src="img/leaf.png" alt="leaf"></div>
+          <div class="rabbit"><img src="img/rabbit.png" alt="rabbit"></div>
+          <div class="lantern l1"><img src="img/lantern.png" alt="lantern"></div>
+          <div class="lantern l2"><img src="img/lantern.png" alt="lantern"></div>
+          <div class="lantern l3"><img src="img/lantern.png" alt="lantern"></div>
+          <div class="lantern l4"><img src="img/lantern.png" alt="lantern"></div>
+          <div class="bike"><img src="img/bike.png" alt="bike"></div>
+          <div class="bike2"><img src="img/bike2.png" alt="bike2"></div>
+          <div class="bus"><img src="img/bus.png" alt="bus"></div>
+          <div class="train"><img src="img/train.png" alt="train"></div>
+        </div>
+        <div class="fly"><img src="img/fly.png" alt="fly"></div>
+      </div>
+      <div class="title"><img src="img/title.png" alt="title"></div>
+      <div class="main-box">
+        <div class="w1">选择出行方式</div>
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" data-id="3"><div class="type t1"></div></div>
+            <div class="swiper-slide" data-id="4"><div class="type t2"></div></div>
+            <div class="swiper-slide" data-id="2"><div class="type t3"></div></div>
+            <div class="swiper-slide" data-id="6"><div class="type t4"></div></div>
+            <div class="swiper-slide" data-id="5"><div class="type t5"></div></div>
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+        <div class="input-it text" id="start" data-type="start"></div>
+        <div class="input-it text" id="finish" data-type="finish"></div>
+        <div class="btn-start">生成你专属路线</div>
+      </div>
+    </div>
+    <!-- 选择页 -->
+    <div class="modal search" id="search">
+      <div class="bg cancel"></div>
+      <div class="modal-box">
+        <div class="search-box">
+          <input type="text" class="search-input input" placeholder="请输入...">
+        </div>
+        <ul class="list result-list"></ul>
+        <ul class="list others-list">
+          <li class="item" data-id="67"><a href="#" class="link">桃花源</a></li>
+          <li class="item" data-id="68"><a href="#" class="link">月球</a></li>
+          <li class="item" data-id="69"><a href="#" class="link">火星</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- 结果页 -->
+    <div class="page result" id="result">
+      <div class="box cover">
+        <div class="w1">长按图片保存你的路线</div>
+        <div class="tpl-box">
+          <div class="tpl cover">
+            <!-- <div class="bg">
+              <div class="city-pic"><img src="img/default.jpg"><span></span></div>
+            </div>
+            <div class="user">
+              <div class="user-img imgRadio"><img src="img/qrcode.png" id="user-img"></div>
+              <div class="user-name" id="user-name">默认用户</div>
+            </div>
+            <div class="address">
+              <div class="from"><span id="from">出发地</span>出发</div>
+              <div class="to"><span id="to">目的地</span></div>
+            </div>
+            <div class="by-what"></div>
+            <div class="meter">
+              <div class="w1">这一路，<span id="distance">9999</span>KM</div>
+              <div class="w2">共有 <span id="people">无数</span> 人与你同行</div>
+            </div>
+            <div class="qrcode-box">
+              <div class="w1">长按二维码</div>
+              <div class="w2">生成你的专属路线</div>
+              <div class="qrcode"><img src="img/qrcode.png" alt="qrcode"></div>
+            </div> -->
+          </div>
+          <div class="tpl-result cover"></div>
+        </div>
+        <div class="btn-reset">换个路线</div>
+      </div>
+    </div>
+    <!-- 等待页 -->
+    <div class="page wait" id="wait">
+      <div class="box cover">
+        <div class="my-way"></div>
+        <div class="text">海报生成中...</div>
+      </div>
+    </div>
+  </div>
+  <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script src="libs/jquery.min.js"></script>
+  <script src="libs/swiper.min.js"></script>
+  <script src="libs/html2canvas.min.js"></script>
+  <script src="libs/orienter.min.js"></script>
+  <script src="libs/common.js"></script>
+  <script>
+    var debug = true;
+
+    // ---------------- 转发数据
+    var shareJson = {
+      title: '中秋国庆与你同行',
+      link: 'http://sum.kdcer.com/Event?EventId=72',
+      imgUrl: 'http://sum.kdcer.com/kdc-10-1/img/icon.jpg',
+      desc: '祝大家中秋国庆长假快乐幸福安康。',
+    }
+
+    // ---------------- 公共方法
+    // 转发分享
+    WeChat(shareJson.title, shareJson.desc, shareJson.imgUrl, shareJson.link);
+    // 关闭弹窗
+    $('body').on('click', '.cancel', function () {
+      $(this).closest('.modal').removeClass('in');
+    });
+    // 屏蔽微信滑动
+    $(window).on('touchmove', function (e) { e.preventDefault(); });
+
+    // ---------------- 图片预加载
+    var imgs = ['img/city.png', 'img/qrcode.png', 'img/cloud.png', 'img/ball.png', 'img/bike.png', 'img/bike2.png', 'img/bus.png', 'img/city-mask.png', 'img/default.jpg', 'img/fly.png', 'img/lantern.png', 'img/leaf.png', 'img/rabbit.png', 'img/title.png', 'img/train.png', 'img/type/1.png', 'img/type/2.png', 'img/type/3.png', 'img/type/4.png', 'img/type/5.png'];
+    var $load_image = $('.load-img span');
+    var $load_text = $('#load-text');
+    preloadImage(imgs, function (per) {
+      $load_image.css('left', per + '%')
+      $load_text.text(parseInt(per, 10));
+    }, Start);
+
+    !(function () {
+      var orienter = new Orienter();
+      orienter.init();
+      var $move = $('.bg-wrap');
+      var now = { lat: 0, lon: 0 };
+      var last = null;
+      orienter.onOrient = function (obj) {
+        if (obj.lon > 180) obj.lon -= 360;
+        if (!last) {
+          last = {};
+          last.lat = obj.lat;
+          last.lon = obj.lon;
+        }
+        now.lat += obj.lat - last.lat;
+        now.lon += obj.lon - last.lon;
+        last.lat = obj.lat;
+        last.lon = obj.lon;
+        now.lon = Math.max(-60, Math.min(60, now.lon))
+        $move.css('transform', 'translate3d(' + now.lon * 10 + 'px,' + now.lat + 'px,0)');
+      }
+    })()
+
+    var userName = '', userImg = '';
+    function Start() {
+      if (debug) {
+        userName = '默认用户';
+        userImg = 'img/user.png';
+        $('#user-img').prop('src', userImg);
+        $('#user-name').text(userName);
+        Welcome();
+        return;
+      }
+
+      $load_text.text(99);
+      $.post('/Event/NationalEnter', {
+        EventId: 72,
+        //debug: debug,
+      }, function (r) {
+        console.log('入口', r);
+        Welcome();
+        if (r.State) {
+          userName = r.NickName;
+          userImg = r.HeadImg;
+          $('#user-img').prop('src', r.HeadImg);
+          $('#user-name').text(r.NickName);
+        } else {
+          tool.alert({
+            text: '获取身份出了问题耶~'
+          });
+        }
+      }).fail(function (err) {
+        // $('.body').html('系统错误，/Event/NationalEnter 接口报错');
+        $('.body').html('系统错误，/Event/NationalEnter 接口报错');
+      });
+    }
+
+    function Welcome() {
+      $('#main-load').fadeOut('fast');
+      $('#welcome').fadeIn(function () {
+        var mySwiper = new Swiper('.swiper-container', {
+          prevButton: '.swiper-button-prev',
+          nextButton: '.swiper-button-next',
+        });
+      });
+    }
+
+    // 显示搜索界面
+    $('.input-it').on('click', function () {
+      var type = $(this).attr('data-type');
+      var $target = $('#search');
+      $target.addClass('in');
+      $('.search-input').focus();
+      $search.removeClass('empty');
+      if ($target.attr('data-for') != type) {
+        $target.attr('data-for', type);
+        $('.search-input').val('');
+        $('.result-list').empty();
+      }
+    });
+
+    // 获取搜索列表
+    var $search = $('.result-list');
+    var $search_input = $('.search-input')
+    $search_input.on('input', throttle(function () {
+      var value = $search_input.val();
+      if (value == '') return;
+      $search.removeClass('empty');
+      $search.empty().addClass('load');
+      var type = $('#search').attr('data-for') == 'start' ? 1 : 2;
+
+      console.log('输入', value, type);
+
+      if (debug) {
+        $search.removeClass('load');
+        $search.addClass('empty');
+        return;
+      }
+
+      $.post('/Event/NationalCity', {
+        CityMode: type,
+        City: value,
+      }, function (r) {
+        console.log('搜索列表', r)
+        $search.removeClass('load');
+        if (r.ErrorMessage) {
+          tool.alert({ text: "城市搜索接口可能出了问题" }); return;
+        }
+        if (!r.State) {
+          $search.addClass('empty');
+        } else {
+          var r = r.City;
+          if (r.length > 0) {
+            var _html = '';
+            for (var i in r) _html += _createItem(r[i]);
+            $search.empty().append(_html);
+          } else {
+            $search.addClass('empty');
+          }
+        }
+      }).fail(function (err) {
+        $search.removeClass('load');
+        alert('城市搜索接口可能出了问题');
+      });
+    }, 300).bind(this));
+
+    // 创建搜索项
+    function _createItem(data) {
+      return '<li class="item text" data-id="' + data.Id + '">' + (data.AreaName || data.City) + '</li>';
+    }
+
+    // 点击搜索项
+    $('.search').on('click', '.item', function () {
+      var val = $(this).text();
+      var id = $(this).attr('data-id');
+      var $page = $(this).parents('#search');
+      var type = $page.attr('data-for');
+      $('.input-it[data-type="' + type + '"]').text(val).attr('data-id', id);
+      $page.removeClass('in');
+    });
+
+    // 开始生成结果图
+    $('.btn-start').on('click', function () {
+      var $type = $('.swiper-slide-active').html();
+      $('#wait').find('.my-way').empty().prepend($type);
+      var $target = $('.input-it');
+      var $start = $target.eq(0);
+      var $finish = $target.eq(1);
+
+      var start = $start.attr('data-id');
+      if (!start) {
+        tool.alert({ text: '请选择出发地' }); return;
+      }
+      var finish = $finish.attr('data-id');
+      if (!finish) {
+        tool.alert({ text: '请选择目的地' }); return;
+      }
+
+      $('#welcome').fadeOut('fast');
+      $('#wait').fadeIn();
+      var type = $('.swiper-slide-active').attr('data-id');
+      console.log(type, start, finish);
+
+      if (debug) {
+        var $result = $('#result');
+        $('.tpl').show(0);
+
+        $result.fadeIn(function () {
+          $('#wait').fadeOut('fast');
+          var img = 'img/default.jpg';
+          var dis = parseInt(99999990 / 1000);
+          var type = $('.swiper-slide-active').attr('data-id');
+          var typeArr = { '3': 0, '4': 1, '2': 2, '6': 3, '5': 4 };
+          Draw(img, userImg, userName, dis, 23917, $start.text(), $finish.text(), typeArr[type], function (canvas) {
+            var url = canvas.toDataURL('image/jpeg', .8);
+            $('.tpl-result').empty().append('<img class="bg" src="' + url + '" alt="welcome">');
+          });
+        });
+
+        return;
+      }
+
+      $.post('/Event/NationalResult', {
+        eventId: 72,
+        modeId: type,
+        startCityId: start,
+        endCityId: finish,
+        //debug: debug,
+      }, function (r) {
+        console.log('结果', r);
+
+        if (r.ErrorMessage) {
+          tool.alert({ text: '哎呀，操作失败了，我们重来吧' });
+        }
+
+        var $result = $('#result');
+        $('.tpl').show(0);
+        //$result.find('#from').text($start.text());
+        //$result.find('#to').text($finish.text());
+        //$result.find('.by-what').empty().append($type);
+        //$result.find('#distance').text(r.Distance ? (r.Distance / 1000).toFixed(1) : 99999);
+        //$result.find('#people').text(r.Count || '无数');
+        //$result.find('.city-pic img').prop('src', r.ImgUrl ? ('http://sum.kdcer.com' + r.ImgUrl) : 'img/default.jpg');
+
+        $result.fadeIn(function () {
+          $('#wait').fadeOut('fast');
+          var img = r.ImgUrl ? ('http://sum.kdcer.com' + r.ImgUrl) : 'img/default.jpg';
+          var dis = parseInt(r.Distance / 1000);
+          var type = $('.swiper-slide-active').attr('data-id');
+          var typeArr = { '3': 0, '4': 1, '2': 2, '6': 3, '5': 4 };
+          Draw(img, userImg, userName, dis, r.Count, $start.text(), $finish.text(), typeArr[type], function (canvas) {
+            var url = canvas.toDataURL('image/jpeg', .8);
+            // alert(url);
+            $('.tpl-result').empty().append('<img class="bg" src="' + url + '" alt="welcome">');
+          });
+
+          // html2canvas($(".tpl"), {
+          //     onrendered: function (canvas) {
+          //         $('#wait').fadeOut('fast');
+          //         var url = canvas.toDataURL('image/jpeg', .8);
+          //         // alert(canvas + '\n' + canvas.toDataURL);
+          //         // try {
+          //         //     var url = canvas.toDataURL('image/png', .1);
+          //         // } catch (err) {
+          //         //     alert(JSON.stringify(err));
+          //         // }
+          //         // alert(url);
+          //         $('.tpl').hide(0);
+          //         $('.tpl-result').empty().append('<img class="bg" src="' + url + '" alt="welcome">');
+          //     }
+          // });
+        });
+      }).fail(function (err) {
+        alert('系统错误，接口出错');
+        $('#wait').fadeOut('fast');
+      });
+    });
+
+    // 重新开始
+    $('.btn-reset').on('click', function () {
+      $('#result').fadeOut('fast');
+      $('#welcome').fadeIn();
+    });
+
+    // 节流，虽然不断触发，但还是隔 delta 毫秒运行 1 次 fn
+    function throttle(fn, delta, context) {
+      var safe = true;
+      return function () {
+        var args = arguments;
+        if (safe) {
+          fn.call(context, args);
+          safe = false;
+          setTimeout(function () {
+            safe = true;
+          }, delta);
+        }
+      };
+    }
+
+    function Draw(img, userImg, userName, distance, people, startPos, endPos, type, callback) {
+      var $box = $('.tpl');
+      var winW = $box.width(), winH = $box.height();
+      var canvas = document.createElement('canvas');
+      canvas.width = winW; canvas.height = winH;
+      var ctx = canvas.getContext('2d');
+      var typeArr = [
+        ['img/type/1.png', 190, 100], // 火车
+        ['img/type/2.png', 150, 120], // 汽车
+        ['img/type/3.png', 200, 60], // 飞机
+        ['img/type/4.png', 220, 120], // 轮船
+        ['img/type/5.png', 150, 150], // 单车
+      ];
+      // 图片预加载
+      var source = {
+        qrcode: 'img/qrcode.png',
+        mask: 'img/bg-mask2.png',
+        location: 'img/location.png',
+        user: userImg || 'img/user.png',
+        bg: img,
+        type: typeArr[type][0],
+      };
+      var count = 0
+      for (var i in source) {
+        if (typeof source[i] !== 'string') return;
+        var img = new Image();
+        img.from = i;
+        console.log(source[i])
+        img.onload = function () {
+          source[this.from] = this;
+          if (++count >= 6) _cb();
+        }
+        img.onerror = function () {
+          tool.alert({ text: '图片出错鸟，我们得重头来过' });
+        }
+        img.src = source[i];
+      }
+      // 图片已加载完成
+      function _cb() {
+        // 白色背景
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, winW, winH);
+        // 大背景
+        var b = source.bg;
+        b.width = 480; b.height = 573;
+        ctx.drawImage(b, 0, 0, b.width, b.height);
+        // 大背景遮罩
+        var m = source.mask;
+        m.width = 480; m.height = 112;
+        ctx.drawImage(m, 0, 462, m.width, m.height);
+        // 用户头像
+        var u = source.user;
+        u.width = 60; u.height = 60;
+        ctx.drawImage(u, 25, 25, u.width, u.height);
+        // 头像变圆有问题
+        // ctx.save();
+        // ctx.globalCompositeOperation = 'destination-in';
+        // ctx.beginPath();
+        // ctx.arc(60,60,35,0,Math.PI*2,true);
+        // ctx.fill();
+        // ctx.globalCompositeOperation = 'source-over';
+        // ctx.restore();
+        // 用户名称
+        ctx.textBaseline = 'top';
+        ctx.font = '24px Arial';
+        ctx.fillText(userName || '默认用户', 100, 45);
+        // 出发地
+        var s = startPos.split(''); s.push('出', '发');
+        for (var i = 0, l1 = s.length; i < l1; i++) {
+          ctx.fillText(s[i], winW - 110, 100 + (i * 30));
+        }
+        // 目的地
+        var e = endPos.split('');
+        for (var i = 0, l2 = e.length; i < l2; i++) {
+          ctx.font = '40px Arial';
+          ctx.fillText(e[i], winW - 70, 100 + (i * 45));
+        }
+        // 目标地标记
+        var l = source.location;
+        l.width = 19; l.height = 25;
+        var top = 100 + (e.length * 45) + 10;
+        ctx.drawImage(l, winW - 60, top, l.width, l.height);
+        // 选择类型
+        var t = source.type;
+        t.width = typeArr[type][1];
+        t.height = typeArr[type][2];
+        ctx.drawImage(t, winW - 130 - t.width / 2, 570 - t.height / 2, t.width, t.height);
+        // 距离
+        ctx.textBaseline = 'alphabetic';
+        ctx.font = '23px Arial';
+        ctx.fillStyle = '#333';
+        ctx.fillText('这一路，' + distance + 'KM', 25, 625);
+        // 人数
+        ctx.fillText('共有 ', 25, 660);
+        ctx.save();
+        ctx.font = '28px Arial';
+        ctx.fillStyle = '#cf4086';
+        ctx.fillText(people, 80, 660);
+        ctx.restore();
+        var $temp = $('<span style="font:23px Arial">' + people + '</span>').appendTo('body');
+        var left = $temp.width(); //$temp.remove();
+        ctx.fillText(' 人与你同行', 100 + left, 660);
+        // 二维码
+        var q = source.qrcode;
+        q.width = 65; q.height = 65;
+        ctx.drawImage(q, winW - 25 - q.width, winH - 25 - q.height, q.width, q.height);
+        // 二维码提示
+        ctx.font = '18px Arial';
+        ctx.textAlign = "right";
+        ctx.fillStyle = '#777';
+        ctx.fillText('长按二维码', winW - 100, winH - 50);
+        ctx.fillText('生成你的专属路线', winW - 100, winH - 30);
+
+        $box.empty().append(canvas);
+
+        callback && callback(canvas);
+      }
+    }
+  </script>
+</body>
+</html>
