@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="description" content="" />
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+*, *:before， *:after {
+  box-sizing: border-box;
+}
+.bg, .cover {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
+.body {
+	background: #f7f7f7;
+}
+@media (min-width: 768px) {
+	.body {
+		top: 50%; left: 50%;
+		width: 750px; height: 1334px;
+		font-size: 2em;
+		box-shadow: 0 0 1em rgba(0,0,0,.2);
+		transform: translate(-50%,-50%) scale(.5);
+	}
+}
+.ratio {
+	position: relative;
+}
+.ratio:before {
+	content: "";
+	display: block;
+	padding-top: 100%;
+}
+.ratio > img,
+.ratio > .img {
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	display: block;
+}
+
+
+.list-item {
+	position: relative;
+	margin: 15px 15px;
+}
+.hover-list {
+}
+.hover-list .list-image {
+	opacity: 0;
+}
+.hover-list .list-image:before {
+	padding-top: 50%;
+}
+.hover-list .list-content {
+	height: 0;
+	overflow: hidden;
+	font-size: 2.666667rem
+}
+</style>
+</head>
+
+<body>
+<div class="body cover" id="app">
+	<div class="list-box">
+		<div class="list hover-list">
+			<div class="list-item" v-for="(item, index) in list.data">
+				<div class="list-image ratio"><img :src="item.img"></div>
+				<div class="list-content">
+					<div class="list-name">{{item.name}}</div>
+					<div class="list-desc">{{item.desc}}</div>
+				</div>
+				<div class="hover-canvas cover">
+					<canvas></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="list-state" :class="list.state"></div>
+	</div>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+<script>
+var imgUrl = 'img/'
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		list: {
+			data: [
+				// {img: imgUrl + '1.jpg', name: '测试1，测试1', desc: '其他内容'},
+				{img: imgUrl + '2.png', name: 'Test2，Test2', desc: '其他内容'},
+			],
+			state: '',
+		}
+	},
+	mounted: function() {
+		window.addEventListener('load', Init);
+		window.addEventListener('resize', Init);
+	},
+});
+
+function Init() {
+	var data = app.list.data.slice(0);
+	var all_canvas = document.querySelectorAll('.hover-list canvas');
+	[].slice.call(all_canvas).map(function(canvas,i){
+		new HoverCanvas(canvas, data[i], i);
+	});
+}
+
+function HoverCanvas(elem, option, index) {
+	var canvas = elem;
+	var that = this;
+	var $win = canvas.parentNode;
+	var winPos = $win.getBoundingClientRect();
+	var winW = canvas.width = winPos.width;
+	var winH = canvas.height = winPos.height;
+	var ctx = canvas.getContext('2d');
+
+	var img = new Image();
+	img.onload = _init;
+	img.src = option.img;
+
+	function _init() {
+		img.hover = new HoverImage(img, canvas, ctx);
+
+		$win.removeEventListener('mouseenter', _start, false);
+		$win.removeEventListener('mouseleave', _end, false);
+
+		$win.addEventListener('mouseenter', _start, false);
+		$win.addEventListener('mouseleave', _end, false);
+	}
+
+	function _start(e) {
+		img.hover.state = 'enter';
+	}
+
+	function _end() {
+		img.hover.state = 'leave';
+	}
+}
+
+function HoverImage(img, canvas, ctx) {
+	this.img = img;
+	this.canvas = canvas;
+	this.ctx = ctx;
+
+	this._center();
+	this.raw = this._rawData();
+	this.data = this.raw.data.slice(0);
+
+	this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
+	this.raw.data = this._map(function(r,g,b,a,x,y){
+		// this.ctx.fillStyle = 'rgba('+r+','+g+','+b+','+a+')';
+		// if (y==this.canvas.height-1) console.log(x,y)
+		// this.ctx.fillRect(x,y,1,1);
+		// temp.push(r,g,b,a)
+		r = 255
+	}.bind(this));
+	this.ctx.putImageData(this.raw,0,0)
+
+	console.log(this.raw.data)
+
+	this.state = 'end';
+	this._bind_loop();
+}
+HoverImage.prototype._rawData = function(img) {
+	this.ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+	var data = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+	return data;
+}
+HoverImage.prototype._center = function() {
+	var ratio1 = this.img.width / this.img.height;
+	var ratio2 = this.canvas.width / this.canvas.height;
+	if (ratio1 > ratio2) {
+		this.height = this.canvas.height;
+		this.width = this.height / ratio1;
+		this.y = 0;
+		this.x = this.canvas.width/2 - this.width/2;
+	} else {
+		this.width = this.canvas.width;
+		this.height = this.width / ratio1;
+		this.x = 0;
+		this.y = this.canvas.height/2 - this.height/2;
+	}
+}
+HoverImage.prototype.update = function() {
+	console.log(this.state)
+	switch (this.state) {
+		case 'enter': {
+			setTimeout(function(){
+				this.state = 'end'
+			}.bind(this), 1000)
+			break;
+		};
+		case 'leave': {
+			setTimeout(function(){
+				this.state = 'end'
+			}.bind(this), 1000)
+			break;
+		};
+		case 'end': default: {
+
+		}
+	}
+}
+HoverImage.prototype.draw = function() {
+
+}
+HoverImage.prototype._map = function(fn) {
+	for (var i=0,len=this.data.length; i<len; i=i+4) {
+		var r = this.data[i];
+		var g = this.data[i+1];
+		var b = this.data[i+2];
+		var a = this.data[i+3];
+		var x = (i % this.canvas.width) / 1 >> 0;
+		var y = (i / this.canvas.width) / 4 >> 0;
+		// console.log(r,g,b,a,x,y)
+		fn && fn(r,g,b,a,x,y);
+	}
+	return this.data;
+}
+HoverImage.prototype._bind_loop = function() {
+	(function loop(){
+		if (/enter|leave/.test(this.state)) {
+			this.update();
+			this.draw();
+		}
+		requestAnimationFrame(loop.bind(this));
+	}.bind(this))()
+}
+</script>
+</body>
+</html>

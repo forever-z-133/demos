@@ -1,5 +1,4 @@
 
-* [挖矿 - 门罗币](https://foreverz133.github.io/demos/others/funny/coinhive.html)
 * [JS 浮点数加减精度问题](https://foreverz133.github.io/demos/others/funny/float.html)
 * [逐个出现的菜单项](https://foreverz133.github.io/demos/others/funny/delay.html)
 * [炫酷的点赞效果](https://foreverz133.github.io/demos/others/funny/click-love.html)
@@ -10,6 +9,6 @@
 * [CSS 常用布局集锦](https://foreverz133.github.io/demos/others/funny/css-common.html)
 * [不规则物理碰撞(转)](https://foreverz133.github.io/demos/others/funny/element-hit.html)
 * [canvas 图像处理](https://foreverz133.github.io/demos/others/funny/getImageData.html)
-* [图片转字符(转)](https://foreverz133.github.io/demos/others/funny/getImageData.html)
+* [图片转字符(转)](https://foreverz133.github.io/demos/others/funny/image-data-anim.html)
 * [试用 Tween.js](https://foreverz133.github.io/demos/others/funny/tweenjs.html)
 * [试用 Yes or No](https://foreverz133.github.io/demos/others/funny/yesorno.html)
