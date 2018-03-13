@@ -1,4 +1,5 @@
 
+* [同个元素左滑入显示和右滑出消失](https://foreverz133.github.io/demos/others/funny/hover-left-in-right-out.html)
 * [JS 浮点数加减精度问题](https://foreverz133.github.io/demos/others/funny/float.html)
 * [逐个出现的菜单项](https://foreverz133.github.io/demos/others/funny/delay.html)
 * [炫酷的点赞效果](https://foreverz133.github.io/demos/others/funny/click-love.html)
