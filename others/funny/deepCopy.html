@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload = function () {if (!/test/i.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } };</script>
+<style>
+pre {
+  padding: .7em 1em;
+  background: #f7f7f7;
+  border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+<pre><code>// 深拷贝
+function deepCopy(objectToBeCloned) {
+  if (!(objectToBeCloned instanceof Object)) return objectToBeCloned;
+  var objectClone;
+  var Constructor = objectToBeCloned.constructor;
+  switch (Constructor) {
+    case RegExp:
+    case Error:
+    case Date:
+      objectClone = new Constructor(objectToBeCloned); break;
+    case Function: 
+      objectClone = eval(objectToBeCloned.toString()); break;
+    default:
+      objectClone = new Constructor();
+  }
+  for (var prop in objectToBeCloned) {
+    objectClone[prop] = deepCopy(objectToBeCloned[prop]);
+  }
+  return objectClone;
+}</code></pre>
+<p>研究过程：<a href="https://github.com/foreverZ133/others/issues/84" target="_blank">https://github.com/foreverZ133/others/issues/84</a></p>
+<p>但存在点局限，比如函数只支持箭头函数。</p>
+<pre><code>var obj = {
+  a: 1,
+  b: {
+    k: 1,
+  },
+  c: [1, 2],
+  // d: function(){console.log('x')},
+  e: () => console.log('y'),
+  f: new Date(),
+  g: /x/gi,
+  h: new Error('xx'),
+  i: null,
+  j: undefined,
+}
+var x = deepCopy(obj);
+console.log(x);</code></pre>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+function deepCopy(objectToBeCloned) {
+  if (!(objectToBeCloned instanceof Object)) return objectToBeCloned;
+  var objectClone;
+  var Constructor = objectToBeCloned.constructor;
+  switch (Constructor) {
+    case RegExp:
+    case Error:
+    case Date:
+      objectClone = new Constructor(objectToBeCloned); break;
+    case Function: 
+      objectClone = eval(objectToBeCloned.toString()); break;
+    default:
+      objectClone = new Constructor();
+  }
+  for (var prop in objectToBeCloned) {
+    objectClone[prop] = deepCopy(objectToBeCloned[prop]);
+  }
+  return objectClone;
+}
+
+var obj = {
+  a: 1,
+  b: {
+    k: 1,
+  },
+  c: [1, 2],
+  // d: function(){console.log('x')},
+  e: () => console.log('y'),
+  f: new Date(),
+  g: /x/gi,
+  h: new Error('xx'),
+  i: null,
+  j: undefined,
+}
+var x = deepCopy(obj);
+console.log(x);
+// throw x.h
+// console.log(x.f.getDate());
+// console.log(x.g.test('x'));
+
+var arr = [1,0,+0,-0,null,undefined,[0],'0',]
+</script>
+</body>
+</html>

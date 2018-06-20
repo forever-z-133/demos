@@ -89,6 +89,7 @@ pre {
 <div class="body">
   <header class="header"></header>
   <main class="main">
+    <p>效果跟不上是必然的，你懂我的意思吧？！</p>
     <div id="box" class="box">
       <i id="shape" class="shape"></i>
       <i class="liuhai"></i>
@@ -130,7 +131,6 @@ requestAnimationFrame(loop);
 function loop() {
   requestAnimationFrame(loop);
   scrollTop = eleBox.scrollTop;
-  console.log(scrollTop)
   var shapeOutside = 'polygon(0 0, 0 '+ (150 + scrollTop) +'px, 16px '+ (154 + scrollTop) +'px, 30px '+ (166 + scrollTop) +'px, 30px '+ (314 + scrollTop) +'px, 16px '+ (326 + scrollTop) +'px, 0 '+ (330 + scrollTop) +'px, 0 0)';
   eleShape.style.shapeOutside = shapeOutside;
 }

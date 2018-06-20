@@ -66,12 +66,6 @@ pre {
     font-size: .9em;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
-.list-box {
-    display: flex;
-}
-.wrap {
-    height: 1000px;
-}
 </style>
 </head>
 
@@ -407,10 +401,11 @@ function drawRect(ctx, rect) {
     draw(ctx, 'rect', rect.x, rect.y, rect.width, rect.height, rect.color);
 }
 var canvas = document.createElement('canvas');
+canvas.style.pointerEvents = 'none';
 var ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 var rect = new Rect(0, 0, 100, 50);
-rect.color = 'red';
+rect.color = 'rgba(0,0,0,0)';
 drawRect(ctx, rect);
 
 // ------------------------------------------------------------

@@ -68,9 +68,9 @@ pre {
 <div class="body">
   <header class="header"></header>
   <main class="main">
-  	<p>根据 <a href="https://github.com/DMQ/mvvm" target="_blank">别人博客</a> 所写，按 Vue.js 的核心原理（数据劫持和订阅发布）来实现一个简陋的 MVVM 框架</p>
-  	<p>能支持数据绑定，双向绑定，添加事件。暂不支持数组，列表或条件渲染。</p>
-  	<pre><code>
+    <p>根据 <a href="https://github.com/DMQ/mvvm" target="_blank">别人博客</a> 所写，按 Vue.js 的核心原理（数据劫持和订阅发布）来实现一个简陋的 MVVM 框架</p>
+    <p>能支持数据绑定，双向绑定，添加事件。暂不支持数组，列表或条件渲染。</p>
+    <pre><code>
 &lt;div id="mvvm-app">
   &lt;input type="text" v-model="word">
   &lt;p>{{word}}&lt;/p>
@@ -82,6 +82,11 @@ var vm = new MVVM({
   data: {
      word: 'Hello World!'
   },
+  computed: {
+    'myName': function() {
+      return [1];
+    },
+  },
   methods: {
     sayHi: function() {
        this.word = 'Hi, everybody!';
@@ -89,12 +94,12 @@ var vm = new MVVM({
   }
 });
 &lt;/script>
-  	</code></pre>
-  	<div id="mvvm-app">
-		    <input type="text" v-model="word">
-		    <p>{{word}}</p><p>{{myName}}</p>
-		    <button v-on:click="sayHi">change model</button>
-		</div>
+    </code></pre>
+    <div id="mvvm-app">
+        <input type="text" v-model="word">
+        <p>{{word}}</p><p>来自 computed 的：{{myName}}</p>
+        <button v-on:click="sayHi">change model</button>
+    </div>
   </main>
   <footer class="footer">
     <div class="copyright">
@@ -125,8 +130,8 @@ MVVM.prototype = {
   $watch: function(key, cb, options) {
     new Watcher(this, key, cb);
   },
-	_proxy: function(key, setter, getter) { // 数据劫持，全部改到 vm._data 里去
-		var me = this;
+  _proxy: function(key, setter, getter) { // 数据劫持，全部改到 vm._data 里去
+    var me = this;
     setter = setter || Object.defineProperty(me, key, {
       configurable: false,
       enumerable: true,
@@ -137,13 +142,13 @@ MVVM.prototype = {
         me._data[key] = newVal;
       }
     });
-	},
-  _initComputed: function() {	// computed 初始化计算
+  },
+  _initComputed: function() { // computed 初始化计算
     var me = this;
     var computed = this.$options.computed;
     if (typeof computed === 'object') {
       Object.keys(computed).forEach(function(key) {
-      	// me._proxy(key, null, typeof computed[key] === 'function' ? computed[key] : computed[key].get)
+        // me._proxy(key, null, typeof computed[key] === 'function' ? computed[key] : computed[key].get)
         Object.defineProperty(me, key, {
           get: typeof computed[key] === 'function' ? computed[key] : computed[key].get,
           set: function() {}
@@ -168,7 +173,7 @@ Observer.prototype = {
   convert: function(key, val) {
     this.defineReactive(this.data, key, val);
   },
-  defineReactive: function(data, key, val) {	// 所有加入 Dep 中
+  defineReactive: function(data, key, val) {  // 所有加入 Dep 中
     var dep = new Dep();
     var childObj = observe(val);
     Object.defineProperty(data, key, {
@@ -206,10 +211,10 @@ Dep.prototype = {
     Dep.target.addDep(this);
   },
   removeSub: function(sub) {
-	  var index = this.subs.indexOf(sub);
-	  if (index != -1) {
-	    this.subs.splice(index, 1);
-	  }
+    var index = this.subs.indexOf(sub);
+    if (index != -1) {
+      this.subs.splice(index, 1);
+    }
   },
   notify: function() {
     this.subs.forEach(function(sub) {
@@ -223,7 +228,7 @@ Dep.target = null;
 function Compile(el, vm) {
   this.$vm = vm;  // MVVM 实例
   this.$el = this.isElementNode(el) ? el : document.querySelector(el);
-  if (this.$el) {	// 转为 fragment 节点，并 init 处理各种绑定
+  if (this.$el) { // 转为 fragment 节点，并 init 处理各种绑定
     this.$fragment = this.node2Fragment(this.$el);
     this.init();
     this.$el.appendChild(this.$fragment);
@@ -239,12 +244,12 @@ Compile.prototype = {
   init: function() {
     this.compileElement(this.$fragment);
   },
-  compileElement: function(el) {	// 数据、事件的绑定
+  compileElement: function(el) {  // 数据、事件的绑定
     var childNodes = el.childNodes, me = this;
     [].slice.call(childNodes).forEach(function(node) {
       var text = node.textContent;
       var reg = /\{\{(.*)\}\}/;
-      if (me.isElementNode(node)) {	// 元素节点，看属性中有啥
+      if (me.isElementNode(node)) { // 元素节点，看属性中有啥
         me.compile(node);
       } else if (me.isTextNode(node) && reg.test(text)) { // 修改文本节点 {{}} 包裹的数据
         me.compileText(node, RegExp.$1);
@@ -263,7 +268,7 @@ Compile.prototype = {
         var dir = attrName.substring(2);
         if (me.isEventDirective(dir)) { // v-on 对应事件
           compileUtil.eventHandler(node, me.$vm, exp, dir);
-        } else {	// 其他分别对应不同功能
+        } else {  // 其他分别对应不同功能
           compileUtil[dir] && compileUtil[dir](node, me.$vm, exp);
         }
         node.removeAttribute(attrName);
@@ -292,7 +297,7 @@ var compileUtil = {
   text: function(node, vm, exp) { // 界面，MVVM 实例，属性对应的 value
     this.bind(node, vm, exp, 'text');
   },
-  html: function(node, vm, exp) {	// 现在还没有
+  html: function(node, vm, exp) { // 现在还没有
     this.bind(node, vm, exp, 'html');
   },
   model: function(node, vm, exp) {  // 双向绑定 v-model
@@ -308,10 +313,10 @@ var compileUtil = {
   class: function(node, vm, exp) {
     this.bind(node, vm, exp, 'class');
   },
-  bind: function(node, vm, exp, dir) {	// 找到几种改值方法
+  bind: function(node, vm, exp, dir) {  // 找到几种改值方法
     var updaterFn = updater[dir + 'Updater'];
     updaterFn && updaterFn(node, this._getVMVal(vm, exp));
-    new Watcher(vm, exp, function(value, oldValue) {	// 新建监听，重复的合并，Dep.subs[x].id 
+    new Watcher(vm, exp, function(value, oldValue) {  // 新建监听，重复的合并，Dep.subs[x].id 
       updaterFn && updaterFn(node, value, oldValue);
     });
   },
@@ -418,9 +423,9 @@ var vm = new MVVM({
     word: 'Hello World!'
   },
   computed: {
-  	'myName': function() {
-  		return [1];
-  	},
+    'myName': function() {
+      return [1];
+    },
   },
   methods: {
     sayHi: function() {

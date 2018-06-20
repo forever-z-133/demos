@@ -67,7 +67,7 @@ pre {
 <div class="body">
     <header class="header"></header>
     <main class="main">
-        <p>输入正整数：<input type="number" id="value" value="10"></p>
+        <p>输入正整数：<input type="range" id="value" value="0" max="300"></p>
         <p>当前速率(ms)：<input type="number" id="duration" value="500"></p>
         <!-- <p><button id="control">暂停</button></p> -->
         <p>直接改数字的</p>
@@ -100,21 +100,10 @@ $('#value').on('input', function(){
 $('#duration').on('input', function(){
     duration = this.value || 500;
 });
-// 暂定部分还有问题
-// $('#control').on('click', function(){
-//     var $this = $(this);
-//     if ($this.text() == '暂停') {
-//         $this.text('开始');
-//         stop = true;
-//     } else {
-//         $this.text('暂停');
-//         stop = false;
-//     }
-// });
 
 // 赋值，并开启动画
 function setValue(value) {
-    start = 0;
+    start = now;
     target = value;
     time = Date.now();
 }
@@ -125,8 +114,8 @@ function update() {
     // 求进度值 [0,1]
     var per = Math.min(1, (Date.now() - time) / duration);
     // 运行操作
-    now = (target - start) * per;
-    callback && callback(now);
+    now = start + (target - start) * per;
+    draw && draw(now);
     // 动画完成
     if (per == 1) {
         time = null;
@@ -136,8 +125,8 @@ function update() {
 
 // 实际操作
 var $d1 = $('.demo1'), $d2 = $('.demo2'), $d3 = $('.demo3'), $d4 = $('.demo3');
-function callback(value) {
-    var val = parseInt(value);
+function draw(value) {
+    var val = parseInt(value || now);
     // 案例一
     $d1.text(val);
     // 案例二
@@ -147,6 +136,7 @@ function callback(value) {
         $d2.text(val);
     }
     // 案例三
+    
     // 案例四
 }
 
