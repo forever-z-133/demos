@@ -23,10 +23,9 @@
 </div>
 <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
 <script>
-// var doc = document, de = doc.documentElement
-// de.requestFullScreen = de.requestFullscreen || de.webkitRequestFullScreen || de.mozRequestFullScreen || de.msRequestFullscreen || de.oRequestFullscreen;
-// doc.cancelFullScreen = doc.exitFullscreen || doc.webkitCancelFullScreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
-// doc.fullscreen = doc.fullscreen || doc.webkitIsFullScreen || doc.mozFullScreen || doc.msFullscreenElement;
+var doc = document, de = doc.documentElement;
+de.requestFullScreen = de.requestFullscreen || de.webkitRequestFullScreen || de.mozRequestFullScreen || de.msRequestFullscreen || de.oRequestFullscreen;
+doc.cancelFullScreen = doc.exitFullscreen || doc.webkitCancelFullScreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
 
 new Vue({
 	el: '#app',
@@ -34,20 +33,25 @@ new Vue({
 		open: false,
 	},
 	mounted: function() {
-		document.addEventListener("webkitfullscreenchange", function () {
-			console.log(document.webkitIsFullScreen)
-		}, false);
+		document.addEventListener("fullscreenchange", this.fullscreenchange, false);
+		document.addEventListener("webkitfullscreenchange", this.fullscreenchange, false);
+		document.addEventListener("mozfullscreenchange", this.fullscreenchange, false);
 	},
 	methods: {
 		fullscreen: function() {
 			if (this.open) {
-				document.webkitCancelFullScreen();
+				document.cancelFullScreen();
 				this.open = false;
 			} else {
-				document.documentElement.webkitRequestFullScreen();
+				document.documentElement.requestFullScreen();
 				this.open = true;
 			}
-		}
+		},
+		fullscreenchange: function() {
+			doc.fullscreen = doc.isfullscreen || doc.webkitIsFullScreen || doc.mozIsFullScreen || doc.msIsFullscreenElement || false;
+			this.open = document.fullscreen;
+			console.log(document.fullscreen);
+		},
 	}
 })
 </script>
