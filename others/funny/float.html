@@ -89,30 +89,17 @@ a {
     z-index: 0;
     transition-delay: 0s, 0s;
 }
+pre {
+    padding: .7em 1em;
+    background: #f7f7f7;
+    border-radius: 5px;
+}
 </style>
 </head>
 
 <body>
-<div class="body">
-    <header class="header"></header>
-    <main class="main">
-    </main>
-    <footer class="footer">
-        <div class="copyright">
-            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
-            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
-        </div>
-    </footer>
-</div>
-<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
-<script>
-// 禁用无效链接的点击
-$('body').on('click', '[href="#"]', function(e){e.preventDefault();return})
-// 关闭弹窗的公共方法
-$('body').on('click', '.close', function(e){$(this).closest('.modal').removeClass('in')});
-
-
-function float_number() {
+<pre><code>// 
+function float_number(type) {
     // 最长小数位长度，如 [1, 1.1, 1.11] 则得 2
     function _max_dot_len(arr) {
         return Math.max.apply(null, arr.map(function(x) {
@@ -138,14 +125,6 @@ function float_number() {
         if (arr.length < 1) return 0;
         return arr.reduce(function(a, b){ return a - b });
     }
-    function _multiply(arr) {
-        if (arr.length < 1) return 0;
-        return arr.reduce(function(a, b){ return a * b });
-    }
-    function _divide(arr) {
-        if (arr.length < 1) return 0;
-        return arr.reduce(function(a, b){ return a / b });
-    }
     // 给出结果
     function _result(type, args) {
         args = [].slice.call(args);
@@ -154,16 +133,67 @@ function float_number() {
         var result = 0;
         switch (type) {
             case 'minus': result = _minus(args2); break;
-            case 'multiply': result = _multiply(args2); break;
-            case 'divide': result = _divide(args2); break;
             case 'plus': default: result = _add(args2);
         }
         result = _to_float(result, len);
         return result;
     }
-    return _result('plus', arguments)
+    return _result(type || 'plus', [].slice.call(arguments, 1));
 }
-console.log(float_number(0.7, 0.1))
+console.log(float_number(0.7, 0.1))</code></pre>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+// 禁用无效链接的点击
+$('body').on('click', '[href="#"]', function(e){e.preventDefault();return})
+// 关闭弹窗的公共方法
+$('body').on('click', '.close', function(e){$(this).closest('.modal').removeClass('in')});
+
+
+function float_number(type) {
+    // 最长小数位长度，如 [1, 1.1, 1.11] 则得 2
+    function _max_dot_len(arr) {
+        return Math.max.apply(null, arr.map(function(x) {
+            x = x.toString();
+            if (x.indexOf('.') < 0) return 0;
+            return x.split('.')[1].length;
+        }));
+    }
+    // 为解决浮点型精度问题，小数转为整数，如 [1.2, 1.33] 转为 [120, 133]
+    function _to_init(arr, power) {
+        return arr.map(function(a){ return a * Math.pow(10, power) });
+    }
+    // 最后结果转为浮点型
+    function _to_float(num, power) {
+        return num / Math.pow(10, power);
+    }
+    // 加减乘除
+    function _add(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a + b });
+    }
+    function _minus(arr) {
+        if (arr.length < 1) return 0;
+        return arr.reduce(function(a, b){ return a - b });
+    }
+    // 给出结果
+    function _result(type, args) {
+        args = [].slice.call(args);
+        console.log(type, args)
+        var len = _max_dot_len(args);
+        var args2 = _to_init(args, len);
+        var result = 0;
+        console.log(type, args, args2, len)
+        switch (type) {
+            case 'minus': result = _minus(args2); break;
+            case 'plus': default: result = _add(args2);
+        }
+        result = _to_float(result, len);
+        return result;
+    }
+        console.log(type, arguments)
+    return _result(type || 'plus', [].slice.call(arguments, 1));
+}
+console.log(float_number('multiply', 0.7, 0.1))
 </script>
 </body>
 </html>
