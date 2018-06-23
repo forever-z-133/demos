@@ -1,6 +1,6 @@
-# 永恒君的案例库
+# 永恒君的 DEMO 库
 
-还有些其他不值一提的小实验，可移步 [这里](https://github.com/foreverZ133/demos/tree/master/others/)
+其他：[小实验](https://github.com/foreverZ133/demos/tree/master/others/) | [小案例](https://github.com/foreverZ133/small-works) | [小知识点](https://github.com/foreverZ133/others/issues)
 
 
 * [兼容性不错的底部对齐布局](https://foreverz133.github.io/demos/single/align-bottom.html)
