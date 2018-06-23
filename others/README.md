@@ -1,4 +1,5 @@
 
+* [因太多 transition 造成的卡顿](https://foreverz133.github.io/demos/others/funny/css-stuck.html)
 * [深拷贝的研究](https://foreverz133.github.io/demos/others/funny/deepCopy.html)
 * [简单的步骤导航](https://foreverz133.github.io/demos/others/funny/step-nav.html)
 * [同个元素左滑入显示和右滑出消失](https://foreverz133.github.io/demos/others/funny/hover-left-in-right-out.html)
