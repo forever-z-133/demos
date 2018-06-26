@@ -43,8 +43,16 @@ function deepCopy(objectToBeCloned) {
   }
   return objectClone;
 }</code></pre>
+<code><pre>function deepCopy(rawObj) {
+  var obj = Object.assign({}, rawObj);
+  for (var i in obj) {
+    if (obj[i] && Object.prototype.toString.call(obj[i]) === '[object Object]') {
+      obj[i] = deepCopy(obj[i])
+    }
+  }
+  return obj;
+}</pre></code>
 <p>研究过程：<a href="https://github.com/foreverZ133/others/issues/84" target="_blank">https://github.com/foreverZ133/others/issues/84</a></p>
-<p>但存在点局限，比如函数只支持箭头函数。</p>
 <pre><code>var obj = {
   a: 1,
   b: {
