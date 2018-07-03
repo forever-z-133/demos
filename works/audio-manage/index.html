@@ -71,7 +71,7 @@ pre {
     <button id="play1">播放声音 1</button>
     <button id="play2">播放声音 2</button>
     <button id="bgm">BGM 关闭</button>
-    <label><input type="checkbox" checked>开启声音结束后放 BGM</label>
+    <label><input type="checkbox" id="change" checked>开启声音结束后放 BGM</label>
   </main>
   <footer class="footer">
     <div class="copyright">
@@ -80,6 +80,7 @@ pre {
     </div>
   </footer>
 </div>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
 var source = {
@@ -87,36 +88,89 @@ var source = {
   'page': './page.mp3',
   'photo': './photo.mp3',
   'good': './good.mp3',
-  'ready': './ready.mp3',
 }
 
-function AudioManage(default) {
+function AudioManage(bgmSrc) {
   var audio = new Audio();
-  var bgm = default || '';
+  var bgm = bgmSrc || '';
   var bgmWhenEnded = !!bgm;
+  var nowSrc = bgm;
+  var Timer = null;
 
-  function play(src, replay){
-    if (!replay && audio.src == src) return;
-
-    if (replay) audio.currentTime = 0;
-
-    audio.src = src;
-  }
+  window.addEventListener('WeixinJSBridgeReady', function(){
+    bgmWhenEnded && replay('bgm');
+  });
+  audio.addEventListener('ended', ended, false);
 
   function replay(src) {
     audio.pause();
     audio.currentTime = 0;
-    play(src);
+    _play(src);
+  }
+
+  function play(src) {
+    if (nowSrc === src) return;
+    _play(src);
+  }
+
+  function _play(src){
+    nowSrc = src || '';
+    if (!nowSrc) return;
+    audio.src = nowSrc;
+    audio.play();
   }
 
   function pause() {
     audio.pause();
-    bgmWhenEnded && play('bgm');
+    // bgmWhenEnded && play('bgm');
   }
 
+  function stop() {
+    nowSrc = '';
+    audio.currentTime = 0;
+    pause();
+  }
+
+  function ended(e) {
+    stop();
+  }
+
+  function sleep(timeout) {
+    Timer = setTimeout(function(){
+      callback && callback.call(this);
+    }.bind(this), timeout);
+  }
+
+  audio.addEventListener('timeupdate', function(e){
+    console.log(nowSrc, audio.currentTime);
+  }, false);
+
   return {
+    audio: audio,
+    replay: replay,
+    play: play,
+    stop: stop,
+    pause: pause,
+    bgmWhenEnded: bgmWhenEnded,
   }
 }
+
+var $p1 = document.querySelector('#play1')
+var $p2 = document.querySelector('#play2')
+var $bgm = document.querySelector('#bgm')
+var $change = document.querySelector('#change')
+
+var manage = new AudioManage(source.bgm);
+$p1.addEventListener('click', function(){
+  manage.play(source.good);
+});
+$p2.addEventListener('click', function(){
+  manage.replay(source.photo);
+});
+$bgm.addEventListener('click', function(){
+  manage.play('bgm');
+  $bgm.innerText = manage.bgmWhenEnded ? 'BGM 关闭' : 'BGM 打开';
+});
 </script>
 </body>
 </html>
