@@ -19,6 +19,7 @@
 .element-container {
   position: absolute;
 }
+.element-size-box,
 .element-animation {
   width: 100%;
   height: 100%;
@@ -78,10 +79,17 @@
 <body>
 <div id="phone" ref="body">
   <div class="element-container elem-img">
-    <div class="element-animation">
-      <img src="">
+    <div class="element-size-box">
+      <div class="element-animation">
+        <img src="">
+      </div>
     </div>
   </div>
+  <!-- <div class="element-container elem-text">
+    <div class="element-animation">
+      sdasda
+    </div>
+  </div> -->
 </div>
 <div class="edit-size-box">
   <div class="resize dot-left-top"></div>
@@ -118,32 +126,34 @@ function Drag(dom, options) {
   this.bindEvent();
 }
 Drag.prototype.bindEvent = function() {
-  this.elem.addEventListener('mousedown', this.touchstart.bind(this), false);
-  window.addEventListener('mousemove', this.touchmove.bind(this), false);
-  window.addEventListener('mouseup', this.touchend.bind(this), false);
-  this.elem.addEventListener('touchstart', this.touchstart.bind(this), false);
-  window.addEventListener('touchmove', this.touchmove.bind(this), false);
-  window.addEventListener('touchend', this.touchend.bind(this), false);
-  window.addEventListener('blur', this.touchend.bind(this), false);
-}
-Drag.prototype.unbindEvent = function() {
-  this.elem.removeEventListener('mousedown', this.touchstart.bind(this), false);
-  this.elem.removeEventListener('touchstart', this.touchstart.bind(this), false);
+  this.elem.addEventListener('mousedown', this.touchstart.bind(this));
+  window.addEventListener('mousemove', this.touchmove.bind(this));
+  window.addEventListener('mouseup', this.touchend.bind(this));
+  this.elem.addEventListener('touchstart', this.touchstart.bind(this));
+  window.addEventListener('touchmove', this.touchmove.bind(this));
+  window.addEventListener('touchend', this.touchend.bind(this));
+  window.addEventListener('blur', this.touchend.bind(this));
 }
 Drag.prototype.touchstart = function(evt) {
   this.touched = true;
   var e = evt.touches ? evt.touches[0] : evt;
   this.now = this.now || { x: 0, y: 0 };
+  this.start = { x: e.pageX, y: e.pageY };
   this.last = { x: e.pageX, y: e.pageY };
-  this.opt.touchstart(e, this.now);
+  this.move = { x: 0, y: 0 };
+  this.opt.touchstart(e, this.now, this.move);
 }
 Drag.prototype.touchmove = function(evt) {
   if (!this.touched) return;
   var e = evt.touches ? evt.touches[0] : evt;
-  this.now.x += e.pageX - this.last.x;
-  this.now.y += e.pageY - this.last.y;
+  if (Math.abs(this.start.x - e.pageX) < 5) return;
+  if (Math.abs(this.start.y - e.pageY) < 5) return;
+  this.move.x = e.pageX - this.last.x;
+  this.move.y = e.pageY - this.last.y;
+  this.now.x += this.move.x;
+  this.now.y += this.move.y;
   this.last = { x: e.pageX, y: e.pageY };
-  this.opt.touchmove(e, this.now);
+  this.opt.touchmove(e, this.now, this.move);
 }
 Drag.prototype.touchend = function() {
   if (!this.touched) return;
@@ -160,54 +170,87 @@ Drag.prototype.touchend = function() {
 function EditSizeBox($edit, options) {
   this.$edit = $edit;
   this.onchange = onchange;
+  if (!options.elem) return new Error('elem 参数必传');
+  if (!options.data) return new Error('data 参数必传');
   if (!options.onchange) return new Error('onchange 参数必传');
   this.opt = Object.assign({
+    parent: window,
     onchange: function(){},
     onfocus: function(){},
     onblur: function(){},
   }, options || {});
+
+  this.$dom = this.opt.elem;
+  this.data = {...this.opt.data};
+
+  this.moveing = false;
+  this.active = false;
+
+  this.winW = this.opt.parent.innerWidth || this.opt.parent.offsetWidth;
+  this.winH = this.opt.parent.innerWidth || this.opt.parent.offsetHeight;
   this.bindEvent();
 }
-EditSizeBox.prototype.bindData = function($dom, data) {
-  this.$dom = $dom;
-  this.data = {...data};
+EditSizeBox.prototype.focus = function() {
+  this.active = true;
   this.opt.onfocus(this.$dom);
   this.opt.onchange(this.$dom, this.data);
   this.opt.onchange(this.$edit, this.data);
   this.$edit.style.display = 'block';
 }
-EditSizeBox.prototype.unbind = function($dom) {
-  this.$dom = null;
-  this.data = null;
+EditSizeBox.prototype.blur = function($dom) {
+  this.active = false;
+  this.opt.onblur(this.$dom);
   this.$edit.style.display = 'none';
 }
 EditSizeBox.prototype.bindEvent = function() {
-  // blur
+  // focus。点击时激活
+  this.$dom.addEventListener('click', function(){
+    if (this.moveing) return;
+    this.focus();
+  }.bind(this));
+  // blur。主要需验证 hit 方法
   window.addEventListener('click', function(e) {
     if (!this.$dom) return;
+    if (this.moveing) return;
     if (!this.hit(this.$dom, e.target)) {
-      this.unbind(this.$dom);
+      this.blur();
     }
   }.bind(this), false);
   // 拖拽改变位置
   new Drag($edit, {
     touchstart: this.setPosition.bind(this),
     touchmove: this.setPosition.bind(this),
-  })
+    touchend: this.stopMove.bind(this),
+  });
 }
-EditSizeBox.prototype.setPosition = function(e, pos) {
-  console.log(pos.x)
-  // this.data.left = pos.x;
-  this.opt.onchange(this.$dom, this.data)
+EditSizeBox.prototype.setPosition = function(e, pos, move) {
+  var oldX = parseFloat(this.data.left);
+  var newX = parseFloat(move.x) / this.winW * 100;
+  var oldY = parseFloat(this.data.top);
+  var newY = parseFloat(move.y) / this.winH * 100;
+  this.data.left = oldX + newX + '%';
+  this.data.top = oldY + newY + '%';
+  this.opt.onchange(this.$dom, this.data);
+  this.opt.onchange(this.$edit, this.data);
+  this.moveing = true;
+}
+EditSizeBox.prototype.stopMove = function() {
+  setTimeout(function(){
+    this.moveing = false;
+  }.bind(this), 0);
 }
 EditSizeBox.prototype.getData = function() {
   return this.data;
 }
 EditSizeBox.prototype.hit = function($dom, $touch) {
   var clickInDom = false;
+  if (this.moveing) return true;
   while ($touch != document.documentElement) {
-    if ($dom == $touch) {
-      clickInDom = true; break;
+    if (~$touch.className.indexOf('element-container')) {
+      if ($dom == $touch) {
+        clickInDom = true; break;
+      }
+      clickInDom = false; break;
     }
     $touch = $touch.parentNode;
   }
@@ -231,17 +274,22 @@ var $body = document.querySelector('#phone');
 var $edit = document.querySelector('.edit-size-box');
 
 var $dom = document.querySelector('.elem-img');
+var $dom2 = document.querySelector('.elem-text');
 
 var data = { left: '30%', top: '40%', width: '30%', height: '30%', rotate: '0deg' };
 setElementStyle($dom, data);
+// setElementStyle($dom2, data);
 
-var edit = new EditSizeBox($edit, {
+new EditSizeBox($edit, {
+  elem: $dom,
+  data: data,
   onchange: setElementStyle,
 });
-
-$dom.addEventListener('click', function(){
-  edit.bindData($dom, data);
-});
+// new EditSizeBox($edit, {
+//   elem: $dom2,
+//   data: data,
+//   onchange: setElementStyle,
+// });
 </script>
 </body>
 </html>
