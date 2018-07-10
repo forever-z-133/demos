@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload = function () {if (!/test/i.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } };</script>
+<style>
+video {
+  display: block;
+  width: 300px;
+  height: 200px;
+}
+</style>
+</head>
+
+<body>
+<video preload x5-video-player-type="h5" x5-video-player-fullscreen webkit-playsinline playsinline controls></video>
+<p class="tips"></p>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+var arr = ['3gp','avi','flv','mkv','mov','mp4','mpg','ogg','swf','webm','wmv'];
+var _html = arr.reduce(function(re, x){ return re + '<button>' + x + '</button>' }, '');
+
+var $video = $('video')[0];
+var $body = $('body');
+var $tips = $('.tips');
+
+$body.prepend(_html);
+$body.on('click', 'button', function(){
+  $video.src = './video-2.' + $(this).text();
+  $video.play();
+  $tips.html($video.src);
+  $($video).off().on('error', function(){
+      $tips.html('<span>不能播放</span>');
+  })
+  $($video).on('canplay', function(){
+    if (/\.swf/.test($video.src)) {
+      return $tips.html('<span>不能播放</span>');
+    }
+    $tips.html('<span>能播放</span>');
+  })
+});
+// 属性：http://www.runoob.com/jsref/dom-obj-video.html
+// 事件：http://www.runoob.com/jsref/dom-obj-event.html
+</script>
+</body>
+</html>
