@@ -19,6 +19,41 @@ video {
   width: 300px;
   height: 200px;
 }
+
+/*.video-box {
+  position: relative;
+  margin: 10px auto;
+  padding: 10px 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #F2F4FF;
+}
+.video-box:before {
+  content: '';
+  display: block;
+  padding-top: 50.67%;
+  background: url(../images/video-poster.jpg) center / 100% 100%;
+}
+.video-box > video {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: -999em;
+  width:100%;
+  height:100%;
+  object-fit: contain;
+  background: rgba(0,0,0,.8);
+}
+.video-box > p {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  border-radius: 1000px;
+  background: rgba(255,255,255,1);
+  padding: 5px 8px;
+  color: #00B4FE;
+  line-height: 1;
+}*/
 </style>
 </head>
 
@@ -43,12 +78,75 @@ $body.on('click', 'button', function(){
       $tips.html('<span>不能播放</span>');
   })
   $($video).on('canplay', function(){
+  	// swf 格式判断不出
     if (/\.swf/.test($video.src)) {
       return $tips.html('<span>不能播放</span>');
     }
-    $tips.html('<span>能播放</span>');
+    $video.pause();
+    // 显示时长
+    getVideoTime($video, function(time){
+      $tips.html('<span>能播时长：' + covertTime(time) + '</span>');
+    })
   })
 });
+
+// 获取视频时间
+function getVideoTime($video, callback) {
+  setTimeout(function(){
+    callback($video.duration);
+  }, 500);
+}
+// 将视频时间转为 00:00 或 00:00:00 格式
+function covertTime(time){
+  if (time <= 0.1) return '';
+  time = (time/3600>>0) + ':' + (time/60>>0) + ':' + (time%60>>0);
+  time = time.replace(/^0:/, '');
+  time = time.split(':').map(addZero).join(':');
+  return time;
+}
+function addZero(num) {
+  return num < 10 ? '0' + num : num;
+}
+// 播放视频
+function playVideo($video) {
+  location.hash = "videoPlay" + Math.random().toString(16).slice(2,6);
+  $video.play();
+  $video.style.zIndex = 1;
+  $video.style.left = '0';
+}
+// 停止视频
+function stopVideo($video) {
+  $video.pause();
+  $video.currentTime = 0;
+  $video.style.zIndex = -1;
+  $video.style.left = '-999em';
+}
+
+
+// 针对 .video-box 式布局的方案
+$('body').on('click', '.video-box', function () {
+  var $video = this.querySelector('video');
+  playVideo($video);
+});
+$(window).on('hashchange', function() {
+  if (!location.hash || location.hash === '#') {
+    $('video').each(function(){
+      stopVideo(this);
+    });
+  }
+});
+setTimeout(function () {
+  $('.video-box').each(function(){
+    var $this = $(this);
+    var $video = $this.find('video')[0];
+    getVideoTime($video, function(time){
+      $this.append('<p>' + time + '</p>');
+    });
+  });
+  $($video).off().on('ended', function(){
+    history.back();
+  });
+}, 50);
 // 属性：http://www.runoob.com/jsref/dom-obj-video.html
 // 事件：http://www.runoob.com/jsref/dom-obj-event.html
 </script>
