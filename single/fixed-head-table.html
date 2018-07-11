@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>表头固定的表格</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload = function () {if (!/test/i.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } };</script>
+<style>
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+.tpl {
+  display: none;
+}
+.table-scroll-box {
+  height: 400px;
+  overflow: auto;
+}
+td, th {
+  width: 5em;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+tr:first-child {
+  position: sticky;
+  top: 30px;
+}
+</style>
+</head>
+
+<body>
+<table id="table">
+  <!-- <tr role="table-fixed-head">
+    <th>a</th>
+    <th colspan="3">b</th>
+    <th>c</th>
+  </tr> -->
+  <!-- <tr role="table-fixed-head">
+    <table class="class">
+      <tr>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+        <th>d</th>
+        <th>e</th>
+      </tr>
+    </table>
+  </tr>
+ --></table>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+// var $fixed = $('[role="table-fixed-head"]');
+// console.log($fixed.prop('outerHTML'))
+
+function drawTr(data) {
+  return '<tr>' + data.reduce((re, x) => re + '<td>' + x + '</td>', '') + '</tr>';
+}
+function drawColGroup(width, length) {
+  var data = new Array(length).fill().map((x, i) => width,);
+  return '<colgroup>' + data.reduce((re, x) => re + '<col style="width:' + x + '"></col>', '') + '</colgroup>'
+}
+
+
+var $table = $('#table');
+var _html = _default_table(100, 5);
+$('<tr></tr>').appendTo($table).append('<div class="table-scroll-box"><table>' + _html + '</table></div>');
+
+function _default_table(row = 100, col = 5) {
+  var arr = new Array(row).fill().map(() => new Array(col).fill().map((x, i) => Math.random() > 0.98 ? '1231231' : '0'));
+  var _tbody = '<tbody>' + arr.reduce((re, x) => re + drawTr(x), '') + '</tbody>';
+  return drawColGroup('50px', col) + _tbody;
+}
+
+$table.on('scroll', '.table-scroll-box', function(e) {
+  console.log(e);
+});
+
+var cssSupport = function (attr, value) {
+    var element = document.body;
+    if (attr in element.style) {
+        element.style[attr] = value;
+        return element.style[attr] === value;
+    } else {
+        return false;
+    }
+}
+
+// alert(cssSupport('position','sticky'));
+</script>
+</body>
+</html>
