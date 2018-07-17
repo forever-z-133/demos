@@ -58,9 +58,10 @@ video {
 </head>
 
 <body>
-<video preload x5-video-player-type="h5" x5-video-player-fullscreen webkit-playsinline playsinline controls></video>
+<!-- <video preload x5-video-player-type="h5" x5-video-player-fullscreen webkit-playsinline playsinline controls></video> -->
+<video preload controls></video>
 <p class="tips"></p>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
 var arr = ['3gp','avi','flv','mkv','mov','mp4','mpg','ogg','swf','webm','wmv'];
 var _html = arr.reduce(function(re, x){ return re + '<button>' + x + '</button>' }, '');
@@ -72,7 +73,7 @@ var $tips = $('.tips');
 $body.prepend(_html);
 $body.on('click', 'button', function(){
   $video.src = './video-2.' + $(this).text();
-  $video.play();
+  playVideo($video);
   $tips.html($video.src);
   $($video).off().on('error', function(){
       $tips.html('<span>不能播放</span>');
@@ -82,7 +83,7 @@ $body.on('click', 'button', function(){
     if (/\.swf/.test($video.src)) {
       return $tips.html('<span>不能播放</span>');
     }
-    $video.pause();
+    stopVideo($video);
     // 显示时长
     getVideoTime($video, function(time){
       $tips.html('<span>能播时长：' + covertTime(time) + '</span>');
@@ -110,9 +111,10 @@ function addZero(num) {
 // 播放视频
 function playVideo($video) {
   location.hash = "videoPlay" + Math.random().toString(16).slice(2,6);
-  $video.play();
   $video.style.zIndex = 1;
   $video.style.left = '0';
+  $video.play();
+  setTimeout(function(){ $video.play() }, 200);
 }
 // 停止视频
 function stopVideo($video) {

@@ -14,90 +14,132 @@
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <script>window.onload = function () {if (!/test/i.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } };</script>
 <style>
-table {
-  width: 100%;
-  table-layout: fixed;
-  border-spacing: 0;
-  border-collapse: separate;
+.fixed-table-box {
+  position: relative;
+  overflow: hidden;
 }
-.tpl {
-  display: none;
+.fixed-table-box>.fixed-table_header-wraper {
+  overflow: hidden;
 }
-.table-scroll-box {
-  height: 400px;
+.fixed-table_fixed {
+  position: absolute;
+  top: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+.fixed-table_fixed-left {
+  left: 0;
+  box-shadow: 1px -1px 8px 1px #d3d4d6
+}
+.fixed-table_fixed-right {
+  right: 0;
+  box-shadow: -2px -1px 8px 1px #d3d4d6
+}
+.fixed-table_fixed .fixed-table_header-wraper,
+.fixed-table_fixed .fixed-table_body-wraper {
+  overflow-y: hidden
+}
+.fixed-table-box.row-col-fixed>.fixed-table_body-wraper {
+  overflow: auto
+}
+.fixed-table-box_fixed-right-patch {
+  background-color: #eef1f6;
+  position: absolute;
+  top: 0;
+  right: 0
+}
+</style>
+<style>
+.fixed-table-box{
+    width: 800px;
+    margin: 50px auto;
+}
+.fixed-table-box>.fixed-table_body-wraper{/*内容了表格主体内容有纵向滚动条*/
+    max-height: 260px;
+}
+
+.fixed-table_fixed>.fixed-table_body-wraper{/*为了让两侧固定列能够同步表格主体内容滚动*/
+    max-height: 240px;
+}
+
+.w-150{
+    width: 150px;
+}
+.w-120{
+    width: 120px;
+}
+.w-300{
+    width: 300px;
+}
+.w-100{
+    width: 100px;
+}
+.btns{
+    text-align: center;
+}
+.btns button{
+    padding: 10px 20px;
+}
+th, td {
+  position: relative;
+  text-align: left;
+  padding: 5px 5px;
+  border: 1px solid #dfe6ec;
+}
+th {
+  text-align: center;
+  white-space: nowrap;
+}
+.fixed-table-container {
+  position: relative;
+  overflow: hidden;
+}
+.fixed-table-wrapper {
+  max-height: 200px;
+  max-width: 500px;
   overflow: auto;
-}
-td, th {
-  width: 5em;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-}
-tr:first-child {
-  position: sticky;
-  top: 30px;
+  margin: 20px auto;
 }
 </style>
 </head>
 
 <body>
-<table id="table">
-  <!-- <tr role="table-fixed-head">
-    <th>a</th>
-    <th colspan="3">b</th>
-    <th>c</th>
-  </tr> -->
-  <!-- <tr role="table-fixed-head">
-    <table class="class">
-      <tr>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-        <th>d</th>
-        <th>e</th>
-      </tr>
+<div class="fixed-table-container">
+  <div class="fixed-table-wrapper">
+    <table cellspacing="0" cellpadding="0" border="0">
+      <tbody>
+      </tbody>
     </table>
-  </tr>
- --></table>
+  </div>
+</div>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
+var leftArr = ['姓名', '年龄', '性别', '职位'];
+var rightArr = new Array(10).fill().map(x => Math.random()*1e6>>0);
+var staticArr = ['科次','人数','科次率','实收金额'];
+var allArr = [...leftArr, ...rightArr, '合计'];
 
-// var $fixed = $('[role="table-fixed-head"]');
-// console.log($fixed.prop('outerHTML'))
+_head = allArr.reduce((re, x) => {
+  var i = re[0].length;
+  if (i == allArr.length - 1) { re[0][i] = `<th rowspan="2"><div>${x}</div></th>`; return re; }
+  re[0][i] = i < 4 ? `<th rowspan="2" class="w-100"><div>${x}</div></th>` : `<th colspan="4"><div>${x}</div></th>`;
+  re[1][i] = i < 4 ? `` : staticArr.map(x => `<th class="w-100"><div>${x}</div></th>`);
+  return re;
+}, [[], []]);
+_head = _head.reduce((re, x) => {
+  return re + `<tr>${x.reduce((re,y) => re + y, '')}</tr>`;
+}, '');
+$('tbody').append(_head)
 
-function drawTr(data) {
-  return '<tr>' + data.reduce((re, x) => re + '<td>' + x + '</td>', '') + '</tr>';
-}
-function drawColGroup(width, length) {
-  var data = new Array(length).fill().map((x, i) => width,);
-  return '<colgroup>' + data.reduce((re, x) => re + '<col style="width:' + x + '"></col>', '') + '</colgroup>'
-}
+var $fixedTableHeader = $('.fixed-table-wrapper table');
+var $cloneNode = $fixedTableHeader.clone(true);
+$cloneNode.css({ position: "fixed", top: "-1000px" });
+$('body').append($cloneNode);
+var width = $cloneNode.width();
+var width = ((allArr.length - 5) * 4 + 5);
+$fixedTableHeader.width(length*100);
 
-
-var $table = $('#table');
-var _html = _default_table(100, 5);
-$('<tr></tr>').appendTo($table).append('<div class="table-scroll-box"><table>' + _html + '</table></div>');
-
-function _default_table(row = 100, col = 5) {
-  var arr = new Array(row).fill().map(() => new Array(col).fill().map((x, i) => Math.random() > 0.98 ? '1231231' : '0'));
-  var _tbody = '<tbody>' + arr.reduce((re, x) => re + drawTr(x), '') + '</tbody>';
-  return drawColGroup('50px', col) + _tbody;
-}
-
-$table.on('scroll', '.table-scroll-box', function(e) {
-  console.log(e);
-});
-
-var cssSupport = function (attr, value) {
-    var element = document.body;
-    if (attr in element.style) {
-        element.style[attr] = value;
-        return element.style[attr] === value;
-    } else {
-        return false;
-    }
-}
-
-// alert(cssSupport('position','sticky'));
+console.log(width, $('table').width())
 </script>
 </body>
 </html>
