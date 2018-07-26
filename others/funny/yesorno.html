@@ -29,12 +29,7 @@
     -webkit-overflow-scrolling: touch;
 }
 input {
-    background: #fff;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 7px 10px;
-    box-sizing: border-box;
+    flex: 1 1 100%;
 }
 .result {
     position: relative;
@@ -64,6 +59,10 @@ input {
     color: #fff;
     text-shadow: 1px 1px 3px #000;
 }
+.input-box {
+    display: flex;
+    align-items: center;
+}
 </style>
 </head>
 
@@ -72,25 +71,26 @@ input {
     <div class="main">
         <div id="question"></div>
         <div class="result">
-            <img id="img" src="img/coder.png">
+            <img id="img" src="../../img/coder.png">
             <span id="tip">YES</span>
         </div>
+        <form class="input-box" onsubmit="return false">
+            <input type="text" placeholder="输入你的问题，我回答你 yes | no | maybe" id="input">
+            <button type="submit" style="flex-shrink: 0">发送</button>
+        </form>
     </div>
-    <form class="input-box" onsubmit="return false">
-        <input type="text" placeholder="输入你的问题，我回答你 yes | no | maybe" id="input">
-        <button type="submit" hidden></button>
-    </form>
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script>
 var $img = $('#img'), $tip = $('#tip'), $que = $('#question');
+var $input = document.querySelector('input');
 
 $('#input').on('input', function(){
-    $que.text(this.value + '?');
+    $que.text($input.value + '?');
 });
 
 $('form').on('submit', function(){
-    getAnswer(this.value + '？')
+    getAnswer($input.value + '？')
 })
 
 function getAnswer(value) {
