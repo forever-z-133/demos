@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title></title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+body { margin: 0; }
+.container {
+  position: absolute;
+  z-index: 0;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  width: 414px;
+  height: 736px;
+  margin: auto;
+  box-shadow: 0 0 5px rgba(0,0,0,.2);
+}
+.box {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: pink;
+}
+.box.active {
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px green;
+}
+.box .rotate,
+.box .scale {
+  display: none;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.box.active .rotate,
+.box.active .scale {
+  display: block;
+}
+.tpl { display: none; }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="box tpl">
+    <span class="rotate">旋转</span>
+    <span class="scale">左上缩放</span>
+    <span class="scale">右下缩放</span>
+    <button>x</button>
+  </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script>
+var $body = document.querySelector('.container');
+var winW = $body.offsetWidth;
+var winH = $body.offsetHeight;
+
+var ing = '';  // 六种：DOWN CLICK DRAG ROTATE SCALE IN
+var scalePos = '';  // 八种：L T R B LT LB RT RB
+var scaleCenter = '';
+var $doms = [].slice.call(document.querySelectorAll('.box'));
+var $dom = null;  // 正在激活态中DOM
+var start, last;  // 存储鼠标位置
+
+// 假数据，以后要和 $dom 进行相关绑定
+// 此处 px 类似于 rem 方案，
+var mainJson = [
+  { id: 1, left: 0, top: 0, rotate: 0, scaleX: 1, scaleY: 1 },
+  { id: 2, left: 10, top: 10, rotate: 0, scaleX: 1, scaleY: 1 },
+];
+var json = null;
+for (var i in mainJson) {
+  var $tpl = $('.box.tpl').clone(true).removeClass('tpl');
+  $tpl.attr('id', parseInt(i)+1);
+  $($body).append($tpl);
+  set($tpl[0], mainJson[i]);
+}
+
+window.addEventListener('mousedown', touchstart, false);
+window.addEventListener('mousemove', touchmove, false);
+window.addEventListener('mouseup', touchend, false);
+window.addEventListener('selectstart', function(e){ e.preventDefault() }, false);
+
+function touchstart(e) {
+  e = e.touches ? e.touches[0] : e;
+  var $this = e.target;
+  // 判断鼠标点了谁，进行哪种操作
+  // 需注意子级操作都需要 e.stopPropagation()
+  var node = e.target;
+  if (closest(node, 'container')) { ing = 'IN'; }
+  while (node && node != document.documentElement) {
+    if (hasClass(node, 'rotate')) { ing = 'ROTATE'; }
+    if (hasClass(node, 'scale'))  { ing = 'SCALE';  }
+    if (hasClass(node, 'box'))    { ing = 'DOWN';   }
+    if (ing && ing !== 'IN') { $dom = closest(node, 'box'); break; }
+    node = node.parentNode;
+  }
+
+  if ($dom) {
+    json = mainJson.filter(x => x.id == $dom.id);
+    json = json.length ? json[0] : null;
+  }
+
+  // 如果是缩放，相对比较复杂
+  // 需计算其缩放中心，保存其缩放方向
+  if (ing === 'SCALE') {
+    scalePos = getScalePos($this);
+    scaleCenter = '';
+  }
+
+  start = { x: e.pageX, y: e.pageY };
+  last  = { x: e.pageX, y: e.pageY };
+}
+function touchmove(e) {
+  if (!$dom || !ing) return;
+
+  e = e.touches ? e.touches[0] : e;
+  var now = { x: e.pageX, y: e.pageY };
+  var dist = Math.hypot(now.x-start.x, now.y-start.y);
+  var isActive = hasClass($dom, 'active');
+
+  // 鼠标事件判断
+  if (ing === 'ROTATE') {
+    if (!isActive) return;
+    rotate(start, now, last);
+  } else if (ing === 'SCALE') {
+    if (!isActive) return;
+    scale(start, now, last);
+  } else if (ing === 'DOWN' && dist > 2) {
+    ing = 'DRAG';
+  } else if (ing === 'DRAG') {
+    if (!isActive) return;
+    drag(start, now, last);
+  } else {}
+
+  // 更新鼠标位置
+  last = { x: e.pageX, y: e.pageY };
+}
+function touchend() {
+  if (!$dom) return;
+
+  // 在范围内，又不是其他事件，那一定是点在空白区域了
+  if (ing === 'IN') {
+    $doms.forEach(x => x.classList.remove('active'));
+    return console.log('去掉激活态');
+  }
+
+  // 触发了 DOWN 又没被其他事件覆盖，那一定是点在元素上了
+  if (ing === 'DOWN') {
+    ing = 'CLICK'; click();
+  }
+
+  ing = '';
+  scalePos = '';
+  scaleCenter = '';
+}
+
+// --------------- 四大主要交互
+function rotate(start, now, last) {
+  if (!$dom || !json) return;
+  console.log('旋转');
+  var dist = now.x - last.x;
+  var deg = dist * 0.9;
+  json.rotate += dist;
+  set($dom, json);
+}
+function drag(start, now, last) {
+  if (!$dom || !json) return;
+  console.log('拖拽');
+  json.left += (now.x - last.x) / winW * 100;
+  json.top  += (now.y - last.y) / winH * 100;
+  set($dom, json);
+}
+function scale(start, now, last, pos) {
+  if (!$dom || !json) return;
+  console.log('缩放');
+}
+function click() {
+  if (!$dom) return;
+  console.log('点击');
+  $doms.forEach(x => x.classList.remove('active'));
+  $dom.classList.add('active');
+}
+
+// --------------- 赋值
+function set($dom, json) {
+  if (!$dom || !json) return;
+  $dom.style.left = json.left + '%';
+  $dom.style.top  = json.top + '%';
+  var rotate = json.rotate ? 'rotate(' + json.rotate + 'deg) ' : '';
+  $dom.style.transform = rotate;
+}
+
+
+// --------------- 其他辅助方法
+
+// 获取点中的是哪个方向的
+function getScalePos($dom) {
+  var arr = 'l|r|t|b|lt|lb|rt|rb';
+  var pos = arr.split('|').filter(function(x){
+    return hasClass($dom, x);
+  });
+  return pos.length ? pos[0] : '';
+}
+// 判断该 DOM 是不是对应的 class
+function hasClass(node, className) {
+  return !!~node.className.split(' ').indexOf(className);
+}
+// 寻找父级最近的有相应 class 的 DOM
+function closest(node, className) {
+  if (hasClass(node, className)) return node;
+  while (node && node != document.documentElement) {
+    if (hasClass(node, className)) return node;
+    node = node.parentNode;
+  }
+  return null;
+}
+</script>
+</body>
+</html>
