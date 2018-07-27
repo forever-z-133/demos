@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>focus-within 伪类选择器</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+* { box-sizing: border-box; }
+form {
+	position: relative;
+	padding: 200px 10px 10px;
+	border: 1px solid red;
+	width: 300px;
+	margin: 50px auto;
+}
+.funny-banner {
+	position: absolute;
+	top: 10px; left: 10px; right: 10px;
+	height: 150px;
+}
+.input-account:focus-within div.funny-banner {
+	background: red;
+}
+.input-password:focus-within div.funny-banner {
+	background: green;
+}
+</style>
+</head>
+
+<body>
+<form onsubmit="return false">
+	<div class="input-box input-account">
+		<div class="funny-banner"></div>
+		<input type="text" placeholder="账号">
+	</div>
+	<div class="input-box input-password">
+		<div class="funny-banner"></div>
+		<input type="text" placeholder="密码">
+	</div>
+</form>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script>
+</script>
+</body>
+</html>

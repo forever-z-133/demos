@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>首页</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<script>window.onload = function () {if (!/test/i.test(location.search)) return; var script = document.createElement('script'); script.src="https://cdn.bootcss.com/eruda/1.2.6/eruda.min.js"; document.body.appendChild(script); script.onload = function () { eruda.init() } };</script>
+<link href="https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.min.css" rel="stylesheet">
+<style>
+.swiper-container {
+	width: 5em;
+	margin: 50px auto;
+	overflow: visible;
+	user-select: none;
+}
+.word {
+	width: 4em;
+	height: 4em;
+	display: block;
+	margin: 0 auto;
+	border-radius: 100%;
+	text-align: center;
+	line-height: 4em;
+	border: 1px solid;
+}
+.swiper-slide {
+	transform: scale(0.8);
+	transition: transform .3s;
+}
+.swiper-slide-active {
+	transform: scale(1.2);
+}
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+	<div class="swiper-wrapper">
+		<div class="swiper-slide"><span class="word">嘤</span></div>
+		<div class="swiper-slide"><span class="word">语</span></div>
+		<div class="swiper-slide"><span class="word">六</span></div>
+		<div class="swiper-slide"><span class="word">级</span></div>
+	</div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
+<script>
+new Swiper('.swiper-container');
+</script>
+</body>
+</html>

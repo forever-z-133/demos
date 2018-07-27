@@ -1,9 +1,11 @@
 
+* [:focus-within 伪类选择器](https://foreverz133.github.io/demos/others/funny/focus-within.html)
+* [基于 swiper 的中间大轮播](https://foreverz133.github.io/demos/others/funny/scale-swiper.html)
+* [添加到购物车抛物线动画](https://foreverz133.github.io/demos/others/funny/add-to-cart.html)
 * [深拷贝的研究](https://foreverz133.github.io/demos/others/funny/deepCopy.html)
 * [emoji 转图片](https://foreverz133.github.io/demos/others/funny/emoji-parse.html)
 * [页面小人春菜酱](https://foreverz133.github.io/demos/others/funny/chuncai.html)
 * [因太多 transition 造成的卡顿](https://foreverz133.github.io/demos/others/funny/css-stuck.html)
-* [深拷贝的研究](https://foreverz133.github.io/demos/others/funny/deepCopy.html)
 * [简单的步骤导航](https://foreverz133.github.io/demos/others/funny/step-nav.html)
 * [同个元素左滑入显示和右滑出消失](https://foreverz133.github.io/demos/others/funny/hover-left-in-right-out.html)
 * [JS 浮点数加减精度问题](https://foreverz133.github.io/demos/others/funny/float.html)

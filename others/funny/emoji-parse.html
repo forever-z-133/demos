@@ -20,12 +20,17 @@ textarea {
 	max-width: 100%;
 	min-height: 100px;
 }
+.emoji {
+  height: 1em;
+}
 </style>
 </head>
 
 <body>
 <div id="app">
-  <textarea @input="parse" placeholder="用输入法自带的表情试试"></textarea>
+  <p>使用搜狗什么的在移动端可以发表情。</p>
+  <p>转换基于的是 Twitter 的 <a href="https://github.com/twitter/twemoji">twemoji</a> 插件</p>
+  <textarea v-model="input" placeholder="用输入法自带的表情试试"></textarea>
   <p>原本输入：<span v-html="text"></span></p>
   <p>emoji 转换：<span v-html="emoji"></span></p>
 </div>
@@ -35,16 +40,16 @@ textarea {
 new Vue({
   el: '#app',
   data: {
-  	text: '',
-    emoji: ''
+    input: '😁😄😊😂😅😈😐😠😃'
   },
-  methods: {
-    parse: function(e) {
-      var val = e.target.value;
-      this.text = val;
-      this.emoji = twemoji.parse(val);
+  computed: {
+    text: function() {
+      return this.input;
+    },
+    emoji: function() {
+      return twemoji.parse(this.input);
     }
-  }
+  },
 })
 </script>
 </body>
