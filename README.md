@@ -3,6 +3,7 @@
 其他：[小实验](https://github.com/foreverZ133/demos/tree/master/others/) | [小案例](https://github.com/foreverZ133/small-works) | [小知识点](https://github.com/foreverZ133/others/issues)
 
 
+* [元素的选中拖拽旋转缩放](https://foreverz133.github.io/demos/single/edit-size-box2.html)
 * [仿百度图片水平方向瀑布流](https://foreverz133.github.io/demos/works/vertical-gallery/)
 * [兼容性不错的底部对齐布局](https://foreverz133.github.io/demos/single/align-bottom.html)
 * [有趣的SVG交互式推文(转)](https://foreverz133.github.io/demos/single/svg-article.html)

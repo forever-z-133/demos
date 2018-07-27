@@ -71,8 +71,8 @@ body { margin: 0; }
 .box .scale.dot.l  { left: 0;   top: 50%;  cursor: e-resize;  transform: translate(-50%, -50%); }
 
 .elem {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   background: pink;
 }
 </style>
@@ -112,11 +112,10 @@ var scaleCenter = '';
 var $dom = null;  // 正在激活态中DOM
 var start, last;  // 存储鼠标位置
 
-// 假数据，以后要和 $dom 进行相关绑定
-// 此处 px 类似于 rem 方案，
+// 假数据，xy与宽高都是百分比为单位
 var mainJson = [
-  { id: 1, left: 0, top: 0, rotate: 0, scaleX: 1, scaleY: 1 },
-  { id: 2, left: 10, top: 10, rotate: 0, scaleX: 1, scaleY: 1 },
+  { id: 1, left: 0, top: 0, width: 100, height: 5, rotate: 0, scaleX: 1, scaleY: 1 },
+  { id: 2, left: 10, top: 10, width: 50, height: 20, rotate: 0, scaleX: 1, scaleY: 1 },
 ];
 var json = null;
 
@@ -276,10 +275,10 @@ function createElements(mainJson, $doms) {
     var $tpl = $clone.clone(true);
     $tpl.attr('id', parseInt(i)+1);
     $($body).append($tpl);
+    set($tpl[0], mainJson[i]);
     var w = $tpl.width(), h = $tpl.height();
     mainJson[i].rawWidth = w;
     mainJson[i].rawHeight = h;
-    set($tpl[0], mainJson[i]);
   }
   return [].slice.call(document.querySelectorAll('.box:not(.tpl)')).concat($doms || []);
 }
@@ -290,9 +289,11 @@ function set($dom, json) {
   $dom.style.left = json.left + '%';
   $dom.style.top  = json.top + '%';
   var rotate = json.rotate ? 'rotate(' + json.rotate + 'deg) ' : '';
-  var scaleX = json.scaleX ? 'scaleX(' + json.scaleX + ') ' : '';
-  var scaleY = json.scaleY ? 'scaleY(' + json.scaleY + ') ' : '';
-  $dom.style.transform = scaleX + scaleY + rotate;
+  $dom.style.width = json.scaleX * json.width + '%';
+  $dom.style.height = json.scaleY * json.height + '%';
+  // var scaleX = json.scaleX ? 'scaleX(' + json.scaleX + ') ' : '';
+  // var scaleY = json.scaleY ? 'scaleY(' + json.scaleY + ') ' : '';
+  $dom.style.transform = rotate;
 }
 
 
