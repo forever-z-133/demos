@@ -16,17 +16,26 @@
 body { margin: 0; }
 .tpl { display: none; }
 .container {
-  position: absolute;
+  position: relative;
   z-index: 0;
-  top: 0; bottom: 0;
-  left: 0; right: 0;
   width: 414px;
   height: 736px;
   max-width: 100%;
   max-height: 100%;
-  margin: auto;
-  overflow: hidden;
+  margin: 20px auto 50px;
   box-shadow: 0 0 5px rgba(0,0,0,.2);
+  margin-bottom: 50px;
+}
+.wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.container-bottom {
+  position: absolute;
+  top: 100%;
+  height: 50px;
 }
 .box {
   position: absolute;
@@ -80,21 +89,27 @@ body { margin: 0; }
 
 <body>
 <div class="container">
-  <div class="box tpl">
-    <div class="elem">
-      <button>x</button>
+  <div class="wrap full" id="body">
+    <div class="box tpl">
+      <div class="elem">
+        <button>x</button>
+      </div>
+      <div class="tools">
+        <span class="rotate">旋转</span>
+        <span class="scale t dot">上缩放</span>
+        <span class="scale l dot">左缩放</span>
+        <span class="scale b dot">下缩放</span>
+        <span class="scale r dot">右缩放</span>
+        <span class="scale lt dot">左上缩放</span>
+        <span class="scale lb dot">左下缩放</span>
+        <span class="scale rt dot">右上缩放</span>
+        <span class="scale rb dot">右下缩放</span>
+      </div>
     </div>
-    <div class="tools">
-      <span class="rotate">旋转</span>
-      <span class="scale t dot">上缩放</span>
-      <span class="scale l dot">左缩放</span>
-      <span class="scale b dot">下缩放</span>
-      <span class="scale r dot">右缩放</span>
-      <span class="scale lt dot">左上缩放</span>
-      <span class="scale lb dot">左下缩放</span>
-      <span class="scale rt dot">右上缩放</span>
-      <span class="scale rb dot">右下缩放</span>
-    </div>
+  </div>
+  <div class="container-bottom">
+    <button id="zoom-in">放大</button>
+    <button id="zoom-out">缩小</button>
   </div>
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -114,8 +129,8 @@ var start, last;  // 存储鼠标位置
 
 // 假数据，xy与宽高都是百分比为单位
 var mainJson = [
-  { id: 1, left: 0, top: 0, width: 100, height: 5, rotate: 0, scaleX: 1, scaleY: 1 },
-  { id: 2, left: 10, top: 10, width: 50, height: 20, rotate: 0, scaleX: 1, scaleY: 1 },
+  { id: 1, left: 10, top: 5, width: 80, height: 5, rotate: 0, scaleX: 1, scaleY: 1 },
+  { id: 2, left: 10, top: 20, width: 50, height: 20, rotate: 0, scaleX: 1, scaleY: 1 },
 ];
 var json = null;
 
@@ -188,7 +203,7 @@ function touchmove(e) {
     rotate(start, now, last);
   } else if (ing === 'SCALE') {
     if (!isActive) return;
-    scale(start, now, last, scalePos);
+    scale(start, now, last, scalePos, e);
   } else if (ing === 'DOWN' && dist > 2) {
     ing = 'DRAG';
   } else if (ing === 'DRAG') {
@@ -200,8 +215,6 @@ function touchmove(e) {
   last = { x: e.pageX, y: e.pageY };
 }
 function touchend() {
-  if (!$dom) return;
-
   // 在范围内，又不是其他事件，那一定是点在空白区域了
   if (ing === 'IN') {
     $doms.forEach(x => x.classList.remove('active'));
@@ -209,8 +222,8 @@ function touchend() {
   }
 
   // 触发了 DOWN 又没被其他事件覆盖，那一定是点在元素上了
-  if (ing === 'DOWN') {
-    ing = 'CLICK'; click();
+  if (ing === 'DOWN' && $dom) {
+    ing = 'CLICK'; click(last);
   }
 
   // 数据归零
@@ -245,18 +258,33 @@ function drag(start, now, last) {
   json.top  += (now.y - last.y) / winH * 100;
   set($dom, json);
 }
-function scale(start, now, last, pos) {
+function scale(start, now, last, pos, e) {
   if (!$dom || !json) return;
   console.log('缩放', pos);
-  // 旋转中心如果是元素中心会很方便
-  var x = (now.x - last.x) / json.rawWidth;
-  var y = (now.y - last.y) / json.rawHeight;
-  if (pos.indexOf('T') > -1) y = -y;
-  if (pos.indexOf('L') > -1) x = -x;
-  if (pos === 'L' || pos === 'R') y = 0;
-  if (pos === 'T' || pos === 'B') x = 0;
-  json.scaleX += x;
-  json.scaleY += y;
+  // 计算缩放比例
+  var scaleX = (now.x - last.x) / json.rawWidth;
+  var scaleY = (now.y - last.y) / json.rawHeight;
+  if (!!~pos.indexOf('T')) scaleY = -scaleY;
+  if (!!~pos.indexOf('L')) scaleX = -scaleX;
+  if (pos === 'L' || pos === 'R') scaleY = 0;
+  if (pos === 'T' || pos === 'B') scaleX = 0;
+  // 缩放时 xy 也会跟着变化
+  var top  = (now.y - last.y) / winH * 100;
+  var left = (now.x - last.x) / winW * 100;
+  // if (json.rotate % 90 !== 0) {
+    // var dist = Math.hypot(top, left);
+    // var rotate = json.rotate * Math.PI;
+    // top  = dist * Math.sin(rotate);
+    // left = dist * Math.cos(rotate);
+  // }
+  // json.left += left;
+  // 按住 shift 等比缩放
+  // if (e.shiftKey) scaleY = scaleX;
+  // if (e.shiftKey) top = left;
+  json.scaleX += scaleX;
+  json.scaleY += scaleY;
+  if (!!~pos.indexOf('T')) json.top  += top;
+  if (!!~pos.indexOf('L')) json.left += left;
   set($dom, json);
 }
 function click() {
@@ -274,13 +302,20 @@ function createElements(mainJson, $doms) {
   for (var i in mainJson) {
     var $tpl = $clone.clone(true);
     $tpl.attr('id', parseInt(i)+1);
-    $($body).append($tpl);
+    $('#body').append($tpl);
     set($tpl[0], mainJson[i]);
     var w = $tpl.width(), h = $tpl.height();
     mainJson[i].rawWidth = w;
     mainJson[i].rawHeight = h;
   }
   return [].slice.call(document.querySelectorAll('.box:not(.tpl)')).concat($doms || []);
+}
+
+// --------------- 容器变化时
+function resize() {
+  winW = $body.offsetWidth;
+  winH = $body.offsetHeight;
+  offset = { x: $body.offsetLeft, y: $body.offsetTop };
 }
 
 // --------------- 赋值
@@ -291,11 +326,26 @@ function set($dom, json) {
   var rotate = json.rotate ? 'rotate(' + json.rotate + 'deg) ' : '';
   $dom.style.width = json.scaleX * json.width + '%';
   $dom.style.height = json.scaleY * json.height + '%';
+  // // scale 缩放方案会让 $edit 也变形，且不易处理旋转后缩放的中心点计算，故而改为宽高式缩放
   // var scaleX = json.scaleX ? 'scaleX(' + json.scaleX + ') ' : '';
   // var scaleY = json.scaleY ? 'scaleY(' + json.scaleY + ') ' : '';
+  // $dom.style.transform = scaleX + scaleY + rotate;
   $dom.style.transform = rotate;
 }
 
+// --------------- 杂七杂八
+$('#zoom-in').on('click', function(){
+  winW *= 1.1; winH *= 1.1;
+  $body.style.width  = winW + 'px';
+  $body.style.height = winH + 'px';
+});
+$('#zoom-out').on('click', function(){
+  winW *= 0.9; winH *= 0.9;
+  winW = Math.max(winW, 320);
+  winH = Math.max(winH, 548);
+  $body.style.width  = winW + 'px';
+  $body.style.height = winH + 'px';
+});
 
 // --------------- 其他辅助方法
 
