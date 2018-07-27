@@ -103,6 +103,7 @@ body { margin: 0; }
 var $body = document.querySelector('.container');
 var winW = $body.offsetWidth;
 var winH = $body.offsetHeight;
+var offset = { x: $body.offsetLeft, y: $body.offsetTop };
 var isMobile = window.innerWidth < 768;
 
 var ing = '';  // 六种：DOWN CLICK DRAG ROTATE SCALE IN
@@ -120,7 +121,7 @@ var mainJson = [
 var json = null;
 
 // 添加元素，并返回集合 $doms
-// 过程中会保存元素最初始的 rawWidth，以供缩放时计算比例
+// 过程中会保存元素最初始的 rawWidth ，以供缩放时计算比例
 var $doms = createElements(mainJson, null);
 
 window.addEventListener('mousedown', touchstart, false);
@@ -162,6 +163,7 @@ function touchstart(e) {
   // 更新鼠标点位
   start = { x: e.pageX, y: e.pageY };
   last  = { x: e.pageX, y: e.pageY };
+  // center = { x: }
   
   // 右键问题
   if (e.button == 2) {
@@ -172,6 +174,9 @@ function touchstart(e) {
 function touchmove(e) {
   isMobile && e.preventDefault(); // 处理微信下拉问题
   if (!$dom || !ing) return;
+
+  // 双指操作可加在这
+  // 哇现在变量好多，又感觉没法删减
 
   e = e.touches ? e.touches[0] : e;
   var now = { x: e.pageX, y: e.pageY };
@@ -219,9 +224,19 @@ function touchend() {
 function rotate(start, now, last) {
   if (!$dom || !json) return;
   console.log('旋转');
-  var dist = now.x - last.x;
-  var deg = dist * 0.9;
-  json.rotate += dist;
+  // // 如果只判断左右，不符合用户习惯，比如鼠标弧形式移动
+  // var dist = now.x - last.x;
+  // var deg = dist * 0.9;
+  // var left = json.left / 100 * winW + offset.x;
+  // 以下为新旋转方案，但从一象限到三象限的突然跳跃感好像无法解决
+  var left = $dom.offsetLeft + offset.x;
+  var top  = $dom.offsetTop  + offset.y;
+  var centerX = left + json.rawWidth / 2;
+  var centerY = top + json.rawHeight / 2;
+  var ang1 = getAngle(centerX, centerY, now.x, now.y);
+  var ang2 = getAngle(centerX, centerY, last.x, last.y);
+  var deg = ang1 - ang2;
+  json.rotate += deg;
   set($dom, json);
 }
 function drag(start, now, last) {
@@ -239,6 +254,8 @@ function scale(start, now, last, pos) {
   var y = (now.y - last.y) / json.rawHeight;
   if (pos.indexOf('T') > -1) y = -y;
   if (pos.indexOf('L') > -1) x = -x;
+  if (pos === 'L' || pos === 'R') y = 0;
+  if (pos === 'T' || pos === 'B') x = 0;
   json.scaleX += x;
   json.scaleY += y;
   set($dom, json);
@@ -246,6 +263,7 @@ function scale(start, now, last, pos) {
 function click() {
   if (!$dom) return;
   console.log('点击');
+  // 这里其实有两套方案，edit 嵌在 dom 内，或者，edit 是全局的
   $doms.forEach(x => x.classList.remove('active'));
   $dom.classList.add('active');
 }
@@ -300,6 +318,14 @@ function closest(node, className) {
     node = node.parentNode;
   }
   return null;
+}
+// 计算角度，两点连线与 x=0 的夹角
+function getAngle(cx, cy, x, y) {
+  var dx = x - cx, dy = y - cy;
+  var rad = Math.atan2(dx, dy);
+  var angle = rad * 180 / Math.PI;
+  angle = -angle + 180;
+  return angle;
 }
 </script>
 </body>
