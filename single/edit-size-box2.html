@@ -240,11 +240,15 @@ function rotate(start, now, last) {
   // var dist = now.x - last.x;
   // var deg = dist * 0.9;
   // var left = json.left / 100 * winW + offset.x;
-  // 以下为新旋转方案，但从一象限到三象限的突然跳跃感好像无法解决
+  // 以下为新旋转方案
   var left = $dom.offsetLeft + offset.x;
   var top  = $dom.offsetTop  + offset.y;
   var centerX = left + json.rawWidth / 2;
   var centerY = top + json.rawHeight / 2;
+  // 如果距中心太近会产生突然跳跃
+  var dist = Math.hypot(now.x-centerX, now.y-centerY);
+  if (dist < 30) return;
+  // 新旧角度即为偏移量
   var ang1 = getAngle(centerX, centerY, now.x, now.y);
   var ang2 = getAngle(centerX, centerY, last.x, last.y);
   var deg = ang1 - ang2;
