@@ -14,6 +14,7 @@
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
 body { margin: 0; }
+.tpl { display: none; }
 .container {
   position: absolute;
   z-index: 0;
@@ -21,40 +22,79 @@ body { margin: 0; }
   left: 0; right: 0;
   width: 414px;
   height: 736px;
+  max-width: 100%;
+  max-height: 100%;
   margin: auto;
+  overflow: hidden;
   box-shadow: 0 0 5px rgba(0,0,0,.2);
 }
 .box {
   position: absolute;
-  width: 100px;
-  height: 100px;
-  background: pink;
 }
+.box .tools { display: none; }
+.box.active .tools { display: block; }
 .box.active {
   z-index: 1;
+  cursor: all-scroll;
   box-shadow: inset 0 0 0 1px green;
 }
 .box .rotate,
 .box .scale {
-  display: none;
+  position: absolute;
   font-size: 10px;
   line-height: 1.5;
+  text-indent: -999em;
+  overflow: hidden;
 }
-.box.active .rotate,
-.box.active .scale {
-  display: block;
+.box .rotate {
+  bottom: 100%;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  margin-bottom: 1em;
+  background: grey;
+  transform: translate(-50%, -50%);
+  cursor: url(http://assets.rrxiu.net/www/images/mouserotate.ico), default;
 }
-.tpl { display: none; }
+.box .scale.dot {
+  width: 1em;
+  height: 1em;
+  background: grey;
+}
+.box .scale.dot.lt { left: 0;   top: 0;    cursor: se-resize; transform: translate(-50%, -50%); }
+.box .scale.dot.t  { left: 50%; top: 0;    cursor: n-resize;  transform: translate(-50%, -50%); }
+.box .scale.dot.rt { right: 0;  top: 0;    cursor: sw-resize; transform: translate(50%, -50%); }
+.box .scale.dot.r  { right: 0;  top: 50%;  cursor: e-resize;  transform: translate(50%, -50%); }
+.box .scale.dot.rb { right: 0;  bottom: 0; cursor: se-resize; transform: translate(50%, 50%); }
+.box .scale.dot.b  { left: 50%; bottom: 0; cursor: n-resize;  transform: translate(-50%, 50%); }
+.box .scale.dot.lb { left: 0;   bottom: 0; cursor: sw-resize; transform: translate(-50%, 50%); }
+.box .scale.dot.l  { left: 0;   top: 50%;  cursor: e-resize;  transform: translate(-50%, -50%); }
+
+.elem {
+  width: 100px;
+  height: 100px;
+  background: pink;
+}
 </style>
 </head>
 
 <body>
 <div class="container">
   <div class="box tpl">
-    <span class="rotate">旋转</span>
-    <span class="scale">左上缩放</span>
-    <span class="scale">右下缩放</span>
-    <button>x</button>
+    <div class="elem">
+      <button>x</button>
+    </div>
+    <div class="tools">
+      <span class="rotate">旋转</span>
+      <span class="scale t dot">上缩放</span>
+      <span class="scale l dot">左缩放</span>
+      <span class="scale b dot">下缩放</span>
+      <span class="scale r dot">右缩放</span>
+      <span class="scale lt dot">左上缩放</span>
+      <span class="scale lb dot">左下缩放</span>
+      <span class="scale rt dot">右上缩放</span>
+      <span class="scale rb dot">右下缩放</span>
+    </div>
   </div>
 </div>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -63,11 +103,11 @@ body { margin: 0; }
 var $body = document.querySelector('.container');
 var winW = $body.offsetWidth;
 var winH = $body.offsetHeight;
+var isMobile = window.innerWidth < 768;
 
 var ing = '';  // 六种：DOWN CLICK DRAG ROTATE SCALE IN
 var scalePos = '';  // 八种：L T R B LT LB RT RB
 var scaleCenter = '';
-var $doms = [].slice.call(document.querySelectorAll('.box'));
 var $dom = null;  // 正在激活态中DOM
 var start, last;  // 存储鼠标位置
 
@@ -78,16 +118,17 @@ var mainJson = [
   { id: 2, left: 10, top: 10, rotate: 0, scaleX: 1, scaleY: 1 },
 ];
 var json = null;
-for (var i in mainJson) {
-  var $tpl = $('.box.tpl').clone(true).removeClass('tpl');
-  $tpl.attr('id', parseInt(i)+1);
-  $($body).append($tpl);
-  set($tpl[0], mainJson[i]);
-}
+
+// 添加元素，并返回集合 $doms
+// 过程中会保存元素最初始的 rawWidth，以供缩放时计算比例
+var $doms = createElements(mainJson, null);
 
 window.addEventListener('mousedown', touchstart, false);
 window.addEventListener('mousemove', touchmove, false);
 window.addEventListener('mouseup', touchend, false);
+window.addEventListener('touchstart', touchstart, false);
+window.addEventListener('touchmove', touchmove, false);
+window.addEventListener('touchend', touchend, false);
 window.addEventListener('selectstart', function(e){ e.preventDefault() }, false);
 
 function touchstart(e) {
@@ -105,6 +146,7 @@ function touchstart(e) {
     node = node.parentNode;
   }
 
+  // 选出相应的 json 数据
   if ($dom) {
     json = mainJson.filter(x => x.id == $dom.id);
     json = json.length ? json[0] : null;
@@ -117,10 +159,18 @@ function touchstart(e) {
     scaleCenter = '';
   }
 
+  // 更新鼠标点位
   start = { x: e.pageX, y: e.pageY };
   last  = { x: e.pageX, y: e.pageY };
+  
+  // 右键问题
+  if (e.button == 2) {
+    // 直接绑定不冒泡的 contextmenu 应该也可以
+    // 否则，保存 DOWN 并存另一个参数，才能在 mouseup 时去触发右键事件
+  }
 }
 function touchmove(e) {
+  isMobile && e.preventDefault(); // 处理微信下拉问题
   if (!$dom || !ing) return;
 
   e = e.touches ? e.touches[0] : e;
@@ -134,7 +184,7 @@ function touchmove(e) {
     rotate(start, now, last);
   } else if (ing === 'SCALE') {
     if (!isActive) return;
-    scale(start, now, last);
+    scale(start, now, last, scalePos);
   } else if (ing === 'DOWN' && dist > 2) {
     ing = 'DRAG';
   } else if (ing === 'DRAG') {
@@ -159,6 +209,7 @@ function touchend() {
     ing = 'CLICK'; click();
   }
 
+  // 数据归零
   ing = '';
   scalePos = '';
   scaleCenter = '';
@@ -182,7 +233,15 @@ function drag(start, now, last) {
 }
 function scale(start, now, last, pos) {
   if (!$dom || !json) return;
-  console.log('缩放');
+  console.log('缩放', pos);
+  // 旋转中心如果是元素中心会很方便
+  var x = (now.x - last.x) / json.rawWidth;
+  var y = (now.y - last.y) / json.rawHeight;
+  if (pos.indexOf('T') > -1) y = -y;
+  if (pos.indexOf('L') > -1) x = -x;
+  json.scaleX += x;
+  json.scaleY += y;
+  set($dom, json);
 }
 function click() {
   if (!$dom) return;
@@ -191,13 +250,31 @@ function click() {
   $dom.classList.add('active');
 }
 
+// 添加元素进画布
+// 是重绘还是添加，以后再考虑
+function createElements(mainJson, $doms) {
+  var $clone = $('.box.tpl').clone(true).removeClass('tpl');
+  for (var i in mainJson) {
+    var $tpl = $clone.clone(true);
+    $tpl.attr('id', parseInt(i)+1);
+    $($body).append($tpl);
+    var w = $tpl.width(), h = $tpl.height();
+    mainJson[i].rawWidth = w;
+    mainJson[i].rawHeight = h;
+    set($tpl[0], mainJson[i]);
+  }
+  return [].slice.call(document.querySelectorAll('.box:not(.tpl)')).concat($doms || []);
+}
+
 // --------------- 赋值
 function set($dom, json) {
   if (!$dom || !json) return;
   $dom.style.left = json.left + '%';
   $dom.style.top  = json.top + '%';
   var rotate = json.rotate ? 'rotate(' + json.rotate + 'deg) ' : '';
-  $dom.style.transform = rotate;
+  var scaleX = json.scaleX ? 'scaleX(' + json.scaleX + ') ' : '';
+  var scaleY = json.scaleY ? 'scaleY(' + json.scaleY + ') ' : '';
+  $dom.style.transform = scaleX + scaleY + rotate;
 }
 
 
@@ -209,7 +286,7 @@ function getScalePos($dom) {
   var pos = arr.split('|').filter(function(x){
     return hasClass($dom, x);
   });
-  return pos.length ? pos[0] : '';
+  return pos.length ? pos[0].toUpperCase() : '';
 }
 // 判断该 DOM 是不是对应的 class
 function hasClass(node, className) {
