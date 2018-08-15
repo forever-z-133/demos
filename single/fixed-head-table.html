@@ -118,28 +118,37 @@ var leftArr = ['姓名', '年龄', '性别', '职位'];
 var rightArr = new Array(10).fill().map(x => Math.random()*1e6>>0);
 var staticArr = ['科次','人数','科次率','实收金额'];
 var allArr = [...leftArr, ...rightArr, '合计'];
+var length = (allArr.length - 5) * 4 + 5;
+
+var dataArr = new Array(100).fill().map(a => new Array(length).fill().map(x => Math.random()*1e6>>0));
 
 _head = allArr.reduce((re, x) => {
   var i = re[0].length;
   if (i == allArr.length - 1) { re[0][i] = `<th rowspan="2"><div>${x}</div></th>`; return re; }
-  re[0][i] = i < 4 ? `<th rowspan="2" class="w-100"><div>${x}</div></th>` : `<th colspan="4"><div>${x}</div></th>`;
-  re[1][i] = i < 4 ? `` : staticArr.map(x => `<th class="w-100"><div>${x}</div></th>`);
+  re[0][i] = i < 4 ? `<th rowspan="2"><div>${x}</div></th>` : `<th colspan="4"><div>${x}</div></th>`;
+  re[1][i] = i < 4 ? `` : staticArr.map(x => `<th><div>${x}</div></th>`);
   return re;
 }, [[], []]);
 _head = _head.reduce((re, x) => {
   return re + `<tr>${x.reduce((re,y) => re + y, '')}</tr>`;
 }, '');
-$('tbody').append(_head)
+
+_body = dataArr.reduce((re, row) => {
+  return re + '<tr>' + row.reduce((r, x) => {
+    return r + `<td>${x}</td>`;
+  }, '') + '</tr>';
+}, '');
+
+$('tbody').append(_head + _body);
 
 var $fixedTableHeader = $('.fixed-table-wrapper table');
 var $cloneNode = $fixedTableHeader.clone(true);
 $cloneNode.css({ position: "fixed", top: "-1000px" });
 $('body').append($cloneNode);
 var width = $cloneNode.width();
-var width = ((allArr.length - 5) * 4 + 5);
-$fixedTableHeader.width(length*100);
+$cloneNode.remove();
+$fixedTableHeader.width(width * 1.5);
 
-console.log(width, $('table').width())
 </script>
 </body>
 </html>
