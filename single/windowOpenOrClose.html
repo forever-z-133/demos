@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>新窗口的打开关闭</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<a href="./windowOpenOrClose.html" target="_blank">直接 a 标签打开</a>
+<button id="open1">直接 window.open 打开</button>
+<button id="open2">打开后再重定向</button>
+<button id="open3">新建 a 标签触发打开</button>
+<button id="close1">关闭窗口</button>
+<button id="close2">打开新窗口并关闭本身</button>
+<script>
+open1.addEventListener('click', function(){
+    window.open('./windowOpenOrClose.html');
+});
+open2.addEventListener('click', function(){
+    var newWindow = window.open();
+    newWindow.location.href = './windowOpenOrClose.html';
+});
+open3.addEventListener('click', function(){
+    var a = document.createElement('a');
+    a.href = './windowOpenOrClose.html';
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+});
+close1.addEventListener('click', function(){
+    window.opener = null;
+    window.open('', '_self');
+    window.close();
+});
+close2.addEventListener('click', function(){
+    window.open('./windowOpenOrClose.html');
+    window.close();
+});
+</script>
+</body>
+</html>
