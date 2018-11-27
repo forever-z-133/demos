@@ -22,17 +22,22 @@
 <button id="open3">新建 a 标签触发打开</button>
 <button id="close1">关闭窗口</button>
 <button id="close2">打开新窗口并关闭本身</button>
+<p>暂未找到办法做到非触发式的开启，可打开源码查看过往尝试。</p>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
+var url = './windowOpenOrClose.html';
+
 open1.addEventListener('click', function(){
-    window.open('./windowOpenOrClose.html');
+    window.open(url);
 });
 open2.addEventListener('click', function(){
     var newWindow = window.open();
-    newWindow.location.href = './windowOpenOrClose.html';
+    console.log(newWindow);
+    newWindow.location.href = url;
 });
 open3.addEventListener('click', function(){
     var a = document.createElement('a');
-    a.href = './windowOpenOrClose.html';
+    a.href = url;
     a.target = '_blank';
     document.body.appendChild(a);
     a.click();
@@ -44,9 +49,75 @@ close1.addEventListener('click', function(){
     window.close();
 });
 close2.addEventListener('click', function(){
-    window.open('./windowOpenOrClose.html');
+    window.open(url);
     window.close();
 });
+
+// -----------------------
+// ------ 以下为非触发式的
+// -----------------------
+
+// 拦截后 newWindow 就为 null 了
+// var newWindow = window.open('about:blank');
+// setTimeout(function(){
+//     console.log(newWindow);
+//     newWindow.location.href = url;
+// }, 1000);
+
+// setTimeout(function(){ openByIframe(url) }, 1000);
+function openByIframe(url) {
+    var iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+    iframe.doc = null;
+    iframe.doc = iframe.contentDocument ? iframe.contentDocument : ( iframe.contentWindow ? iframe.contentWindow.document : iframe.document);
+    iframe.doc.open();
+    iframe.doc.write( getFrameHtml() );
+    iframe.doc.close();
+    document.body.removeChild(iframe);
+
+    function getFrameHtml(url) {
+        var type = '<!DOCTYPE html>';
+        var head = '<head><title></title></head>';
+        var body = '<body><script>window.top.openInNewTab(' + url + ')<\/script></body>';
+        return type + head + body;
+    }
+}
+
+// window.open("about:blank")
+// setTimeout(function(){ openByForm(url) }, 1000);
+function openByForm(url) {
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = url;
+    form.target = '_blank';
+    document.body.appendChild(form);
+    var opt = document.createElement("textarea");
+    opt.name = 'test';
+    opt.value = url;
+    form.appendChild(opt);
+    form.submit();
+    // document.body.removeChild(form);
+}
+
+// setTimeout(function(){ openByAnchor(url) }, 1000);
+function openByAnchor(url) {
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// setTimeout(function(){ openByRedirect(url) }, 1000);
+function openByRedirect(url) {
+    var newWindow = window.open('', '_blank');
+    newWindow && (newWindow.location.href = url);
+}
+
+// var w = window[String.fromCharCode(111, 112, 101, 110)](url);
+
+
 </script>
 </body>
 </html>
