@@ -61,9 +61,10 @@ ul {
 }
 
 .list2 .checkbox > span:first-of-type:before {
-  /*transform: translate3d(1px,0,0);*/
-  /*box-shadow: 0 0 10px rgba(0,0,0,.2);*/
-  /*filter: grayscale(.5);*/
+  transition: background .01s;
+}
+.list3 .checkbox > span:first-of-type:before {
+  transform: translate3d(0,0,0);
   transition: background .01s;
 }
 </style>
@@ -71,7 +72,7 @@ ul {
 
 <body>
 <div class="title">
-  如果处理用了 transition 的三千个元素，会明显卡顿
+  如果处理用了 transition 的两千个元素，会明显卡顿
 </div>
 <div class="column">
   <div class="column-item">
@@ -95,6 +96,13 @@ ul {
     </label>
     <ul class="list2"></ul>
   </div>
+  <div class="column-item">
+    <label class="checkbox">
+      <input type="checkbox" class="all all-list3">
+      <span>全选（带 transition 和 translate3d）</span>
+    </label>
+    <ul class="list3"></ul>
+  </div>
 </div>
 <ul class="list2"></ul>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -104,7 +112,7 @@ var _radio = `<li><label class="checkbox">
   <span>嘤嘤嘤</span>
 </label></li>`
 
-var len = 3000;
+var len = 2000;
 var _html = '';
 
 for (var i=0; i<len; i++) {
@@ -112,18 +120,17 @@ for (var i=0; i<len; i++) {
 }
 
 var $list0 = $('.list0').append(_html);
-var $radios0 = $list0.find('input');
 $list0.find('label').removeClass('checkbox')
 
 var $list1 = $('.list1').append(_html);
-var $radios1 = $list1.find('input');
 
 var $list2 = $('.list2').append(_html);
-var $radios2 = $list2.find('input');
+
+var $list3 = $('.list3').append(_html);
 
 $('.all').on('change', function(){
   var index = $(this).index('.all');
-  var $radios = index == 0 ? $radios0 : index == 1 ? $radios1 : $radios2;
+  var $radios = $('.list' + index).find('input');
   if (this.checked) {
     $radios.prop('checked', true);
   } else {
