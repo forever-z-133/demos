@@ -82,6 +82,25 @@ function throttle(fn, delta, context) {
   };
 }
 
+// 节流2
+function throttle2(fn, delta, context) {
+  var timeoutID;
+  var lastDate = +new Date(); // 如果第一次就用触发可改为 0
+  return function() {
+    var args = arguments;
+    var nowDate = +new Date();
+    if (nowDate - lastDate >= delta) {
+      lastDate = nowDate;
+      fn.apply(context, args);
+    }
+    // 在操作停止后也会最终再触发一次
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(function() {
+       fn.apply(context, args);
+    }, delta);
+  };
+}
+
 function D() {
   document.body.innerHTML += '触发结束后才隔1秒后运行<br>';
 }
