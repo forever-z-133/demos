@@ -1,4 +1,5 @@
 
+* [玩玩 require.js](https://foreverz133.github.io/demos/works/requirejs/)
 * [研究浏览器新开和关闭窗口问题](https://foreverz133.github.io/demos/single/windowOpenOrClose.html)
 * [CSS 换行问题的研究](https://foreverz133.github.io/demos/others/funny/css-wrap.html)
 * [Flexbox 深入研究](https://foreverz133.github.io/demos/others/funny/study-flexbox.html)
