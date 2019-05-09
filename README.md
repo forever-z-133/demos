@@ -3,6 +3,7 @@
 其他：[小实验](https://github.com/foreverZ133/demos/tree/master/others/) | [小案例](https://github.com/foreverZ133/small-works) | [小知识点](https://github.com/foreverZ133/others/issues)
 
 
+* [FLIP.js 封装做动画贼爽](https://foreverz133.github.io/demos/single/flip.html)
 * [表格固定元素滑动效果](https://foreverz133.github.io/demos/single/fixed-head-table.html)
 * [元素的选中拖拽旋转缩放](https://foreverz133.github.io/demos/single/edit-size-box2.html)
 * [仿百度图片水平方向瀑布流](https://foreverz133.github.io/demos/works/vertical-gallery/)
