@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>firebase</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<div id="app" style="display: none;" :style="{display: 'block'}">
+	<input type="file" id="uploader" multiple >
+	<div class="ratio"><img :src="imgSrc" alt></div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.4/vue.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+<script>
+
+firebase.initializeApp({
+  apiKey: "AIzaSyDF9crSCYPR6gQ_WSR0mtRE79nN2ribBoM",
+  authDomain: "letmefly98.firebaseapp.com",
+  databaseURL: "https://letmefly98.firebaseio.com",
+  projectId: "letmefly98",
+  storageBucket: "",
+  messagingSenderId: "596256556755",
+  appId: "1:596256556755:web:d6e57c074246b86e"
+});
+
+var main = new Vue({
+	el: '#app',
+	data: {
+		imgSrc: '',
+	},
+});
+
+var database = firebase.database();
+</script>
+<script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+<script>
+new VConsole();
+</script>
+</body>
+</html>

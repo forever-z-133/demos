@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="wap-font-scale" content="no">
+<title>iframe</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+.ratio { position: relative; }
+.ratio::before { content: ""; display: block; padding-top: 100%; }
+.ratio > img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+</style>
+</head>
+
+<body>
+<div id="app" style="display: none;" :style="{display: 'block'}">
+	<input type="file" id="uploader" >
+  <div class="imgs-box" style="overflow: hidden;">
+    <template v-for="item in list">
+      <div class="ratio" style="float: left; margin: 5px; width: 100px; box-shadow: 0 0 10px"><img :src="item.url" alt></div>
+    </template>
+  </div>
+	<p v-if="!list.length"><i>暂无素材</i></p>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.4/vue.min.js"></script>
+<script src="../libs/bmob.min.js"></script>
+<script>
+Bmob.initialize("10bac9596ba1f2d5", "mememe");
+
+var main = new Vue({
+	el: '#app',
+	data: {
+		list: [],
+	},
+});
+
+var query = Bmob.Query("File");
+
+getData();
+function getData() {
+  query.find().then(res => {
+    main.list = res || [];
+  }).catch();
+}
+
+const uploader = document.getElementById('uploader');
+uploader.onchange = function() {
+  var files = this.files, fileQuery;
+  for(var i in files) {
+  	if (!files.hasOwnProperty(i)) continue;
+  	var file = files[i];
+    fileQuery = Bmob.File(file.name, file);
+  }
+  fileQuery.save().then(res => {
+  	if (main.list.length) {
+      query.set('id', main.list[0].objectId);
+      query.set('thumbnail', res[0]);
+      query.save().then(() => {
+        alert('修改成功');
+      });
+    } else {
+      query.set('thumbnail', res[0]);
+      query.save().then(() => {
+        alert('上传成功');
+      });
+    }
+  })
+}
+</script>
+<script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+<script>
+new VConsole();
+</script>
+</body>
+</html>
