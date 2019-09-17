@@ -3,6 +3,7 @@
 其他：[小实验](https://github.com/foreverZ133/demos/tree/master/others/) | [小案例](https://github.com/foreverZ133/small-works) | [小知识点](https://github.com/foreverZ133/others/issues)
 
 
+* [纯 CSS 的跑马灯效果](https://foreverz133.github.io/demos/single/marquee.html)
 * [免费线上数据库 Bmob](https://foreverz133.github.io/demos/single/bmob.html)
 * [FLIP.js 封装做动画贼爽](https://foreverz133.github.io/demos/single/flip.html)
 * [表格固定元素滑动效果](https://foreverz133.github.io/demos/single/fixed-head-table.html)
