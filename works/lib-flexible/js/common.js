@@ -2,7 +2,7 @@
  * written by ForeverZ
  * at 2017.3.29  
  * contact me with E-Mail(617754841@qq.com) or 
- * contact me with GitHub(https://github.com/foreverZ133)
+ * contact me with GitHub(https://github.com/forever-z-133)
  *******************/
 
 // alertify 参数设置

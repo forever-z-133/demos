@@ -11,7 +11,7 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="wap-font-scale" content="no">
 <title>首页</title>
-<meta name="keywords" content="张永恒, foreverZ, 案例库" />
+<meta name="keywords" content="张永恒, 案例库" />
 <meta name="description" content="" />
 <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
 <style>
@@ -80,42 +80,26 @@ pre {
 </head>
 
 <body>
-<!-- <div class="body">
-    <header class="header"></header>
-    <main class="main"> -->
-        <div class="wrap">
-            <img class="scene" data-modifier="30" src="https://s.electerious.com/parallaxscene/p0.png">
-            <img class="scene" data-modifier="18" src="https://s.electerious.com/parallaxscene/p1.png">
-            <img class="scene" data-modifier="12" src="https://s.electerious.com/parallaxscene/p2.png">
-            <img class="scene" data-modifier="8" src="https://s.electerious.com/parallaxscene/p3.png">
-            <img class="scene" data-modifier="6" src="https://s.electerious.com/parallaxscene/p4.png">
-            <img class="scene" data-modifier="0" src="https://s.electerious.com/parallaxscene/p6.png">
-        </div>
-    </main>
-<!--     <footer class="footer">
-        <div class="copyright">
-            本案例由张永恒实现，联系我可通过 <a href="https://github.com/foreverZ133" target="_blank">github</a><br>
-            或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a>
-        </div>
-    </footer>
-</div> -->
+<div class="wrap">
+    <img class="scene" data-modifier="30" src="https://s.electerious.com/parallaxscene/p0.png">
+    <img class="scene" data-modifier="18" src="https://s.electerious.com/parallaxscene/p1.png">
+    <img class="scene" data-modifier="12" src="https://s.electerious.com/parallaxscene/p2.png">
+    <img class="scene" data-modifier="8" src="https://s.electerious.com/parallaxscene/p3.png">
+    <img class="scene" data-modifier="6" src="https://s.electerious.com/parallaxscene/p4.png">
+    <img class="scene" data-modifier="0" src="https://s.electerious.com/parallaxscene/p6.png">
+</div>
 <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://s.electerious.com/basicScroll/dist/basicScroll.min.js"></script>
 <script>
 document.querySelectorAll('.scene').forEach((elem) => {
-    
     const modifier = elem.getAttribute('data-modifier')
-    
     basicScroll.create({
         elem: elem,
         from: 0,
         to: 519,
         direct: true,
         props: {
-            '--translateY': {
-                from: '0',
-                to: `${ 10 * modifier }px`
-            }
+            '--translateY': { from: '0', to: `${ 10 * modifier }px` }
         }
     }).start()
         
