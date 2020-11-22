@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <style>
+    #cas {
+      display: block;
+      border: 1px solid;
+      margin: auto;
+    }
+  </style>
+</head>
+<body style="background-color:#000">
+<div>
+  <canvas id='cas' width="1000" height="500"></canvas>
+</div>
+<script>
+  var canvas = document.getElementById("cas"),
+      ctx = canvas.getContext("2d"),
+      vpx = canvas.width / 40,
+      vpy = canvas.height / 40,
+      Radius = 200,
+      balls = [],
+      angleX = Math.PI / 10000,
+      angleY = Math.PI / 10000;
+
+  window.addEventListener("mousemove", function(event) {
+    console.log('xxx');
+    var x = 1000
+    var y = 2000
+    angleY = -x * 0.00001;
+    angleX = -y * 0.00001;
+    // rotateX();
+    // rotateY();
+  });
+
+  var Animation = function() {
+    this.init();
+  };
+  Animation.prototype = {
+    isrunning: false,
+    init: function() {
+      balls = [];
+      var num = 20;
+      var tx ='';
+      var ty = '';
+      for (var i = 0; i <= num; i++) {
+        var k = -1 + (2 * (i + 1) - 1) / num;
+        var a = Math.acos(k);
+        var b = a * Math.sqrt(num * Math.PI);
+        var x = Radius * Math.sin(a) * Math.cos(b);
+        var y = Radius * Math.sin(a) * Math.sin(b);
+        var z = Radius * Math.cos(a);
+        var b = new ball(x, y, z, 1.5);
+        balls.push(b);
+        b.paint();
+      }
+    },
+    start: function() {
+      this.isrunning = true;
+      animate();
+    },
+    stop: function() {
+      this.isrunning = false;
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    rotateX();
+    rotateY();
+
+    for (var i = 0; i < balls.length; i++) {
+      balls[i].paint();
+      const { x = 0, y = 0 } = balls[i] || {};
+      const { x: x2 = 0, y: y2 = 0 } = balls[i + 1] || {};
+      ctx.save();
+      ctx.moveTo(x + 500, y + 250);
+      ctx.lineTo(x2 + 500, y2 + 250);
+      ctx.strokeStyle = 'red';
+      ctx.stroke();
+      ctx.restore();
+      // console.log(balls)
+    }
+    if (animation.isrunning) {
+      if ("requestAnimationFrame" in window) {
+        requestAnimationFrame(animate);
+      }
+      else if ("webkitRequestAnimationFrame" in window) {
+        webkitRequestAnimationFrame(animate);
+      }
+      else if ("msRequestAnimationFrame" in window) {
+        msRequestAnimationFrame(animate);
+      }
+      else if ("mozRequestAnimationFrame" in window) {
+        mozRequestAnimationFrame(animate);
+      }
+    }
+  }
+
+  function rotateX() {
+    var cos = Math.cos(angleX);
+    var sin = Math.sin(angleX);
+    for (var i = 0; i < balls.length; i++) {
+      var y1 = balls[i].y * cos - balls[i].z * sin;
+      var z1 = balls[i].z * cos + balls[i].y * sin;
+      balls[i].y = y1;
+      balls[i].z = z1;
+    }
+  }
+
+  function rotateY() {
+    var cos = Math.cos(angleY);
+    var sin = Math.sin(angleY);
+    for (var i = 0; i < balls.length; i++) {
+      var x1 = balls[i].x * cos - balls[i].z * sin;
+      var z1 = balls[i].z * cos + balls[i].x * sin;
+      balls[i].x = x1;
+      balls[i].z = z1;
+    }
+  }
+
+  var ball = function(x, y, z, r) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.r = r;
+    this.width = 2 * r;
+  }
+
+  let x = 0;
+  ball.prototype = {
+    paint: function() {
+      var fl = 450 //焦距
+      // ctx.save();
+      let { x, y } = this;
+      x = x + 500;
+      y = y + 250;
+      var scale = fl / (fl - this.z);
+      var alpha = (this.z + Radius) / (2 * Radius);
+      ctx.beginPath();
+      ctx.arc(x, y, this.r * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = "rgba(25,194,197," + (alpha + 0.5) + ")";
+      ctx.closePath();
+      ctx.fill();
+      // ctx.restore();
+    }
+  }
+  var animation = new Animation();
+  animation.start();
+
+
+</script>
+</body>
+</html>
