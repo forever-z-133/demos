@@ -153,23 +153,21 @@
 
     const onWindowResize = () => {
       const resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      if (resizeHeight !== originalHeight) {
-				console.log('resize');
-      }
-      onKeyBoardExpand();
+      const isPortrait = !(window.orientation === 90 || window.orientation === -90);
+			if (!isPortrait) return;
+      if (resizeHeight < originalHeight) {
+      	onKeyBoardExpand(true);
+      } else {
+      	onKeyBoardExpand(true);
+			}
     };
-    const onWindowFocus = () => {
-      onKeyBoardExpand();
+    const onWindowFocus = e => {
+			const isExpand = e.type === 'focusin';
+      onKeyBoardExpand(isExpand);
     };
 
-    let onKeyBoardExpand = () => {
-      if (!document.activeElement) return;
-      const dom = document.activeElement;
-      const isInput = dom.tagName === 'INPUT' || dom.tagName === 'TEXTAREA';
-      console.log(dom.contentEditable, dom.tagName);
-      const isContentEdit = !(dom.contentEditable === 'false' || dom.contentEditable === 'inherit');
-      const isPortrait = !(window.orientation === 90 || window.orientation === -90);
-      console.log(`${isInput}+${isContentEdit}+${isPortrait}`);
+    let onKeyBoardExpand = isExpand => {
+			console.log(isExpand);
     };
 
     onKeyBoardExpand = throttle(onKeyBoardExpand, 200);
