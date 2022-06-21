@@ -3,6 +3,7 @@
 其他：[小实验](https://github.com/forever-z-133/demos/tree/master/others/) | [小案例](https://github.com/forever-z-133/small-works) | [小知识点](https://github.com/forever-z-133/others/issues)
 
 
+* [onbeforeunload 的返回问题](https://forever-z-133.github.io/demos/others/funny/onbeforeunload.html)
 * [简单换肤](https://forever-z-133.github.io/demos/works/themes/index.html)
 * [表格转 Excel](https://forever-z-133.github.io/demos/works/html2canvas/index.html)
 * [纯 CSS 的跑马灯效果](https://forever-z-133.github.io/demos/single/marquee.html)
