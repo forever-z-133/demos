@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>点击不触发 onbeforeunload</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+</style>
+</head>
+
+<body>
+<p>页面有 onbeforeunload，离开本页会有弹窗提示，但正常跳转也会提示。故而此类正常跳转需进行处理</p>
+<a href="https://forever-z.cn/">跳转会有提示</a>
+<span>/</span>
+<a href="#" id="jump">跳转无提示</a>
+<script>
+let canJumpFlag = false;
+window.onbeforeunload = e => {
+  if (canJumpFlag) return;
+  e.returnValue = '';
+}
+document.querySelector('#jump').onclick = () => {
+  canJumpFlag = true;
+  location.href = ('https://forever-z.cn/');
+};
+</script>
+</body>
+</html>
