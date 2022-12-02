@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>运行自定义脚本</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+body {
+    max-width: 768px;
+    margin: 0 auto 50px;
+}
+</style>
+</head>
+
+<body>
+  <p>获取数据</p>
+<pre><code>const getDataFunc = $data => command => eval(command);
+const customCommand = '$data.a'; // 用户写的
+const getData = getDataFunc({a:1});
+const res = getData(customCommand);
+console.log(res); // 1</code></pre>
+<p>获取函数</p>
+<pre><code>const getFunc = command => Function(`"use strict";return(function($data) {return ${command}})`)();
+const customCommand = '$data.a === 1'; // 用户写的
+const judge = getFunc(customCommand);
+console.log(judge({a:1})); // true</code></pre>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script>
+  function run() {
+    // 带变量脚本
+    {
+      const getDataFunc = $data => command => eval(command);
+      const customCommand = '$data.a'; // 用户写的
+      const getData = getDataFunc({a:1});
+      const res = getData(customCommand);
+      console.log(res); // 1
+    }
+    // 函数脚本
+    {
+      const getFunc = command => Function(`"use strict";return(function($data) {return ${command}})`)();
+      const customCommand = '$data.a === 1'; // 用户写的
+      const judge = getFunc(customCommand);
+      console.log(judge({a:1})); // true
+    }
+    // 普通脚本
+    {
+      const res1 = eval('1+1');
+      console.log(res1);
+    }
+    // 带变量脚本2
+    {
+      const res3 = eval('var a = 2; a+1');
+      console.log(res3);
+    }
+    // 返回变量
+    {
+      const var1 = eval('var x = "x";');
+      console.log(x);
+    }
+    {
+      const getFunc = command => Function(`"use strict";return(function($data) {return ${command}})`)();
+      const reduce = getFunc('$data.some(e => e > 5)');
+      console.log(reduce([1,2,3,4]))
+    }
+  }
+  run();
+</script>
+</body>
+</html>
