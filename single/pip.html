@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>Document Picture-in-Picture API 示例</title>
+<!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
+<style>
+#pipContent {
+  width: 600px;
+  height: 300px;
+  background: pink;
+  font-size: 20px;
+}
+@media (display-mode: picture-in-picture) {
+  html, body { height: 100%; }
+  body { margin: 0; overflow: hidden; }
+  #pipContent {
+    width: 100%;
+    height: 100%;
+    background: lightgreen;
+  }
+}
+</style>
+</head>
+<body>
+  <div id="container">
+    <div id="pipContent">这是一个将要放入画中画的 div 元素！</div>
+    <button id="clickBtn">切换画中画</button>
+  </div>
+
+<script>
+  // 检查是否支持 PiP 功能
+  if ('documentPictureInPicture' in window) {
+    console.log("🚀 浏览器支持 PiP 功能！");
+  } else {
+    alert("⚠️ 当前浏览器不支持 PiP 功能，更新浏览器或者换台电脑吧！");
+  }
+
+  // 请求 PiP 窗口
+  document.getElementById("clickBtn").addEventListener("click", async function () {
+    const pipContent = document.getElementById("pipContent");
+
+    // 请求创建一个 PiP 窗口
+    const pipWindow = await window.documentPictureInPicture.requestWindow({
+      width: 200,  // 设置窗口的宽度
+      height: 300  // 设置窗口的高度
+    });
+
+    // 将原始元素克隆并添加到 PiP 窗口中
+    pipWindow.document.body.appendChild(pipContent.cloneNode(true));
+
+    // 设置 PiP 样式同步
+    [...document.styleSheets].forEach((styleSheet) => {
+      try {
+        const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
+        const style = document.createElement('style');
+        style.textContent = cssRules;
+        pipWindow.document.head.appendChild(style);
+      } catch (e) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = styleSheet.type;
+        link.media = styleSheet.media;
+        link.href = styleSheet.href ?? '';
+        pipWindow.document.head.appendChild(link);
+      }
+    });
+
+    pipWindow.addEventListener("enter", (event) => {
+      console.log("已进入 PIP 窗口");
+    });
+    pipWindow.addEventListener("pagehide", (event) => {
+      console.log("已退出 PIP 窗口");
+    });
+    pipWindow.addEventListener('focus', () => {
+      console.log("PiP 窗口进入了焦点状态");
+    });
+    pipWindow.addEventListener('blur', () => {
+      console.log("PiP 窗口失去了焦点");
+    });
+  });
+
+  // 关闭 PiP 窗口
+  // pipWindow.close();  // 可以手动调用关闭窗口
+</script>
+</body>
+</html>
