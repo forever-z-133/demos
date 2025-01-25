@@ -42,7 +42,7 @@ body {
     font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, 
         "Droid Sans","wenquanyi micro hei","Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
 }
-*, *:before， *:after {
+*, *:before, *:after {
     box-sizing: border-box;
 }
 body, .body {
@@ -97,7 +97,9 @@ pre {
     display: inline-block;
     vertical-align: middle;
     color: inherit;
-    text-decoration: none;  
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 .btn, .btn:focus {
     outline: none;
