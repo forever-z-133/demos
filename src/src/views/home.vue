@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import CommonList from '@/components/common-list/index.vue'
+import { AppHomePageName } from '@/constants/global'
+import { groupBy } from 'lodash-es'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// 除首页外的其他页面
+const routes = computed(() => router.options.routes.filter(e => e.name !== AppHomePageName))
+
+// 分组后的展示
+const routesGroupArray = computed(() => {
+  // 注：meta.group 配置来自于 @/router/types 的 RouteMeta
+  const groups = groupBy(routes.value, 'meta.group')
+  return [
+    { title: '效果', routes: groups.effect },
+    { title: '其他', routes: groups.undefined },
+  ].filter(e => e.routes?.length)
+})
+</script>
+
+<template>
+  <div class="page-home">
+    <CommonList class="route-group-list" :data="routesGroupArray">
+      <template #default="{ row: group }">
+        <div class="group-item">
+          <div class="group-title">
+            {{ group.title }}
+          </div>
+          <div class="group-content">
+            <CommonList class="route-group-list" :data="group.routes">
+              <template #default="{ row }">
+                <div class="route-item">
+                  <div class="route-title">
+                    <router-link :to="row.path">
+                      <span>{{ row.meta?.title || row.name }}</span>
+                    </router-link>
+                  </div>
+                </div>
+              </template>
+            </CommonList>
+          </div>
+        </div>
+      </template>
+    </CommonList>
+  </div>
+</template>
+
+<style lang="less">
+.page-home {
+  .route-group-list {
+    .group-title {
+      font-size: 1rem;
+    }
+  }
+}
+</style>
