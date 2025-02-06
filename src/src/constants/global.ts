@@ -6,3 +6,6 @@ export const AppHomePage = '/'
 
 // 首页路由标记
 export const AppHomePageName = 'home'
+
+// 公共组件标识
+export const GlobalComponentPrefix = 'z-'

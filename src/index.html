@@ -15,73 +15,10 @@
     <meta name="keywords" content="张永恒, 案例库" />
     <meta name="description" content="" />
     <!--[if lt IE 9]><script>alert('您的浏览器版本过低，请更新本版本浏览器，或更换为诸如谷歌浏览器的现代浏览器')</script><![endif]-->
-    <style>
-      *, *:before, *:after {
-        box-sizing: border-box;
-      }
-      body, .body {
-        overflow: hidden;
-      }
-      .body {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        max-width: 768px;
-        margin: auto;
-      }
-      @media (min-width: 992px) {
-        /* 宽屏上 */
-        html {
-          font-size: 30px;
-        }
-        .body {
-          width: 750px;
-          height: 1334px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-          -webkit-transform: scale(.5);
-                  transform: scale(.5);
-        }
-      }
-      #app {
-        height: 100%;
-        flex-grow: 1;
-        overflow-x: hidden;
-        overflow-y: auto;
-        transform: translate3d(0,0,0);
-        -webkit-overflow-scrolling: touch;
-      }
-      .header, .footer {
-        position: relative;
-        z-index: 1;
-        flex-shrink: 0;
-      }
-      pre {
-        padding: .5rem 1rem;
-        background: #fff;
-        overflow: auto;
-      }
-      .copyright {
-        background: #fff;
-        padding: .3rem .8rem;
-        font-size: .9em;
-        box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-      }
-    </style>
   </head>
 
   <body>
-    <div class="body">
-      <header class="header"></header>
-      <div id="app"></div>
-      <footer class="footer">
-          <div class="copyright">
-              <span>本案例由张永恒实现，联系我可通过</span>
-              <a href="https://github.com/forever-z-133" target="_blank">github</a><br>
-              <span>或者 E-mail: <a href="mailto:617754841@qq.com">617754841@qq.com</a></span>
-          </div>
-      </footer>
-    </div>
+    <div id="app"></div>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

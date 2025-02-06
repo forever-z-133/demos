@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import img from './image.png'
+import img from '@/assets/image.png'
 
 defineOptions({
   title: '抖音故障艺术效果',
@@ -9,6 +9,9 @@ defineOptions({
 
 <template>
   <div class="fault-shake-effect">
+    <p class="block">
+      使用 CSS 的 <code>mix-blend-mode</code> 和 <code>background-blend-mode</code> 实现故障艺术效果
+    </p>
     <div class="fault-text" data-text="故障艺术效果">
       故障艺术效果
     </div>
@@ -22,12 +25,12 @@ defineOptions({
 
 <style lang="less">
 .fault-shake-effect {
-  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 20px;
+  text-align: center;
 }
 
 .fault-text {

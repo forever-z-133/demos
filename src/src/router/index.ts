@@ -1,17 +1,20 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { AppHomePage, AppHomePageName } from '@/constants/global'
 import { createRouter, createWebHistory } from 'vue-router'
 import { bindSetHTMlTitleAfterRouter } from './hooks/set-html-title'
-import AllRoutes from './modules/index'
+import CasesRoutes from './modules/cases'
+import StaticRoutes from './modules/static'
 
 // 所有路由配置
 const routes: RouteRecordRaw[] = [
   {
-    path: AppHomePage,
-    name: AppHomePageName,
-    component: () => import('../views/home.vue'),
+    path: '/',
+    name: 'entry',
+    component: () => import('@/components/layouts/index.vue'),
+    children: [
+      ...StaticRoutes,
+      ...CasesRoutes,
+    ],
   },
-  ...AllRoutes,
 ]
 
 // 创建路由

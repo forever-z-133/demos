@@ -48,35 +48,27 @@ function handleMouseMove(e: MouseEvent | TouchEvent) {
 
 <template>
   <div class="hover-light-border">
-    <CommonList :length="12" />
+    <CommonList :length="12" :column-props="{ column: 3, gap: 10 }">
+      <template #default="{ row }">
+        <div class="inner">
+          <div class="content">
+            {{ row.id }}
+          </div>
+        </div>
+      </template>
+    </CommonList>
   </div>
 </template>
 
 <style lang="less">
+@import '@/styles/mixins.less';
+
 .hover-light-border {
-  .list {
-    overflow-x: hidden;
-  }
-  .wrapper {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .item {
-    width: 33.33%;
-    padding: 5px;
-    border-radius: 10px;
-  }
+  user-select: none;
   .inner {
     position: relative;
-    height: 250px;
-    padding: 8px;
     background-color: #ccc;
     overflow: hidden;
-  }
-  @media (max-width: 992px) {
-    .inner {
-      height: 15vh;
-    }
   }
   .inner::before {
     content: "";
@@ -88,8 +80,9 @@ function handleMouseMove(e: MouseEvent | TouchEvent) {
   .content {
     position: relative;
     z-index: 0;
-    height: 100%;
+    margin: 8px;
     background-color: #fff;
+    .ratio(1 / 1);
   }
 }
 </style>
