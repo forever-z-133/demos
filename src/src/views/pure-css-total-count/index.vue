@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineOptions({
   title: '纯 CSS 实现 checkbox 勾选总数统计',
-  group: 'others',
+  group: 'effect',
 })
 
 const code = `.wrapper {
