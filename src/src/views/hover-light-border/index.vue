@@ -48,6 +48,9 @@ function handleMouseMove(e: MouseEvent | TouchEvent) {
 
 <template>
   <div class="hover-light-border">
+    <p class="block">
+      鼠标滑动或手势拖动时，边框随交互有光斑效果。仿自 window10 的日历界面。
+    </p>
     <CommonList :length="12" :column-props="{ column: 3, gap: 10 }">
       <template #default="{ row }">
         <div class="inner">
@@ -65,6 +68,8 @@ function handleMouseMove(e: MouseEvent | TouchEvent) {
 
 .hover-light-border {
   user-select: none;
+  .items-gap(bottom);
+
   .inner {
     position: relative;
     background-color: #ccc;
@@ -80,7 +85,7 @@ function handleMouseMove(e: MouseEvent | TouchEvent) {
   .content {
     position: relative;
     z-index: 0;
-    margin: 8px;
+    margin: .px(8)[];
     background-color: #fff;
     .ratio(1 / 1);
   }

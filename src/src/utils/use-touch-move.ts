@@ -41,6 +41,7 @@ function useTouchMove(domRef: Ref, props?: Props) {
   })
 
   function handleStart(e: MouseEvent | TouchEvent) {
+    if (e instanceof MouseEvent && e.button !== 0) return
     down = true
     const pos = getTouchPosition(e)
     onStart(pos[0])

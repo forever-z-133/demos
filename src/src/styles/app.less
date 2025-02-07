@@ -9,9 +9,13 @@ body {
   margin: 0;
 }
 
-html, body, #app {
-  height: 100%;
-  overflow: hidden;
+html {
+  &.is-full {
+    &, body, #app {
+      height: 100%;
+      overflow: hidden;
+    }
+  }
 }
 
 /* 全局公共样式 */

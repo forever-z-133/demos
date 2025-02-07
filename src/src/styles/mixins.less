@@ -33,6 +33,12 @@
   }
 }
 
+.items-gap(@direction: right, @gap: .px(12)[]) {
+  & > :not(:last-child) {
+    margin-@{direction}: @gap;
+  }
+}
+
 .ratio(@ratio) {
   aspect-ratio: @ratio;
   // position: relative;

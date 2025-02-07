@@ -1,4 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
+
+onMounted(() => {
+  document.documentElement.classList.add('is-full');
+})
+onUnmounted(() => {
+  document.documentElement.classList.remove('is-full');
+})
+</script>
 
 <template>
   <div class="body normal-layout">

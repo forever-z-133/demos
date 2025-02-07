@@ -12,25 +12,36 @@ defineOptions({
     <p class="block">
       使用 CSS 的 <code>mix-blend-mode</code> 和 <code>background-blend-mode</code> 实现故障艺术效果
     </p>
-    <div class="fault-text" data-text="故障艺术效果">
-      故障艺术效果
+    <div class="case">
+      <span class="fault-text" data-text="故障艺术效果">
+        故障艺术效果
+      </span>
     </div>
-    <div class="fault-text special" data-text="加强版">
-      加强版
-      <div class="tmp" />
+    <div class="case">
+      <span class="fault-text special" data-text="加强版">
+        加强版
+        <span class="tmp" />
+      </span>
     </div>
-    <div class="fault-image" :style="`background-image: url(${img});`" />
+    <div class="case">
+      <div class="fault-image" :style="`background-image: url(${img});`" />
+    </div>
   </div>
 </template>
 
 <style lang="less">
+@import '@/styles/mixins.less';
+
 .fault-shake-effect {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
+  .items-gap(bottom);
   text-align: center;
+
+  .case {
+    .fault-image {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }
 
 .fault-text {
@@ -38,7 +49,6 @@ defineOptions({
   &::before {
     content: attr(data-text);
     position: absolute;
-    left: 0;
     overflow: hidden;
     color: #24f6f0;
     animation: shake .5s infinite reverse;
@@ -74,8 +84,8 @@ defineOptions({
 
 .fault-image {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: .px(150)[];
+  height: .px(150)[];
   background: #24f6f0 url('https://picsum.photos/150/150') center / contain no-repeat;
 
   &::before {

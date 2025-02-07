@@ -123,17 +123,15 @@ function getTransparentPercent() {
 @import "@/styles/mixins.less";
 
 .gua-gua-le {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  .items-gap(bottom);
   text-align: center;
   user-select: none;
 
   .game-box {
     position: relative;
-    margin: 0 auto;
-    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    width: .px(320)[];
     .ratio(1 / 1);
 
     img, canvas {
