@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { CommonList } from '@/components';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { CommonList } from '@/components'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 defineOptions({
   title: 'globalCompositeOperation 知识整理',
@@ -55,7 +55,7 @@ const list = [
   },
 ]
 
-let column = ref(1)
+const column = ref(1)
 
 onMounted(() => {
   updateGrid()
@@ -67,7 +67,7 @@ onUnmounted(() => {
 })
 
 function updateGrid() {
-  const width  = window.innerWidth
+  const width = window.innerWidth
   if (width < 768) column.value = 1
   else if (width < 992) column.value = 2
   else if (width < 1200) column.value = 3
@@ -93,9 +93,9 @@ function initial() {
     ctx.globalCompositeOperation = globalCompositeOperation
 
     ctx.fillStyle = 'rgba(255, 0, 0, 1)'
-    ctx.beginPath();
-    ctx.arc(clipWidth, canvasHeight / 2, 40, 0, 2*Math.PI);
-    ctx.fill();
+    ctx.beginPath()
+    ctx.arc(clipWidth, canvasHeight / 2, 40, 0, 2 * Math.PI)
+    ctx.fill()
   })
 }
 </script>
@@ -111,8 +111,12 @@ function initial() {
     <CommonList :data="list" :column="column" :gap="[16, 40]">
       <template #default="{ row }">
         <section class="item">
-          <div class="title">{{ row.id }}</div>
-          <div class="desc">{{ row.desc }}</div>
+          <div class="title">
+            {{ row.id }}
+          </div>
+          <div class="desc">
+            {{ row.desc }}
+          </div>
           <canvas :data-key="row.id" />
         </section>
       </template>

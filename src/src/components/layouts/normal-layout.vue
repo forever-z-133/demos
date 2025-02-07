@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue'
 
 onMounted(() => {
-  document.documentElement.classList.add('is-full');
+  document.documentElement.classList.add('is-full')
 })
 onUnmounted(() => {
-  document.documentElement.classList.remove('is-full');
+  document.documentElement.classList.remove('is-full')
 })
 </script>
 
