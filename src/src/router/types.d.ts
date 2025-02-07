@@ -1,7 +1,7 @@
 // 路由内的数据
 export interface RouteMeta {
   title?: string
-  group?: 'effect' | 'libs'
+  group?: 'effect' | 'libs' | 'others'
   layout?: 'normal' | 'pure'
   createTime?: string
 }

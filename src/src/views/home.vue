@@ -9,8 +9,10 @@ const routesGroupArray = computed(() => {
   // 注：meta.group 配置来自于 @/router/types 的 RouteMeta
   const groups = groupBy(routes, 'meta.group')
   return [
+    { title: '功能', routes: groups.libs },
     { title: '效果', routes: groups.effect },
-    { title: '其他', routes: groups.undefined },
+    { title: '其他', routes: groups.others },
+    { title: '未分类', routes: groups.undefined },
   ].filter(e => e.routes?.length)
 })
 </script>
@@ -28,7 +30,7 @@ const routesGroupArray = computed(() => {
               <template #default="{ row }">
                 <div class="route-item">
                   <div class="route-title">
-                    <router-link :to="row.path">
+                    <router-link :to="row.path" target="_blank">
                       <span>{{ row.meta?.title || row.name }}</span>
                     </router-link>
                   </div>
@@ -47,6 +49,10 @@ const routesGroupArray = computed(() => {
 
 .page-home {
   .route-group-list {
+    .group-item {
+      margin-bottom: .px(10)[];
+    }
+
     .group-title {
       font-size: .px(18)[];
     }
