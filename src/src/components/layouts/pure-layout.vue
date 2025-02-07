@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="body">
+  <div class="body pure-layout">
     <slot />
   </div>
 </template>
@@ -10,6 +10,7 @@
 @import "@/styles/mixins.less";
 
 .body {
+  font-size: .px(16)[];
   .page-padding();
 }
 </style>

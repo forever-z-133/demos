@@ -1,8 +1,7 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="body">
+  <div class="body normal-layout">
     <header class="header" />
     <div class="page-container">
       <slot />
@@ -26,6 +25,7 @@
   flex-direction: column;
   max-width: 768px;
   margin: auto;
+  font-size: .px(16)[];
 }
 @media (min-width: 992px) {
   /* 宽屏上 */

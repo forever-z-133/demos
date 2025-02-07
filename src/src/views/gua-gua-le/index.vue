@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import img from '@/assets/image.png'
-import { onMounted, ref, useTemplateRef } from 'vue'
 import useTouchMove from '@/utils/use-touch-move'
+import { onMounted, ref, useTemplateRef } from 'vue'
 
 defineOptions({
   title: '刮刮乐玩法',
