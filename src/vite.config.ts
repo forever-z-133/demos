@@ -3,12 +3,14 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import VitePluginMine from './scripts/vite-plugin-mine'
 
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
     vueDevTools(),
+    VitePluginMine(),
   ],
   resolve: {
     alias: {
