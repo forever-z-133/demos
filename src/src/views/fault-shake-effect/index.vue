@@ -50,6 +50,7 @@ defineOptions({
     content: attr(data-text);
     position: absolute;
     overflow: hidden;
+    width: 100%;
     color: #24f6f0;
     animation: shake .5s infinite reverse;
   }

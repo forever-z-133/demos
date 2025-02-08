@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CommonList } from '@/components'
+import { getTouchPosition } from '@/utils'
 import { onMounted, onUnmounted } from 'vue'
 
 defineOptions({
@@ -19,15 +20,7 @@ onUnmounted(() => {
 })
 
 function handleMouseMove(e: MouseEvent | TouchEvent) {
-  let clientX: number
-  let clientY: number
-  if (e instanceof TouchEvent) {
-    clientX = e.touches[0].clientX
-    clientY = e.touches[0].clientY
-  } else {
-    clientX = e.clientX
-    clientY = e.clientY
-  }
+  const { x: clientX, y: clientY } = getTouchPosition(e)[0]
 
   for (const item of items) {
     const rect = item.getBoundingClientRect()
