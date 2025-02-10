@@ -30,6 +30,15 @@ export default defineConfig({
           }
           return 'dist/assets/[name].[hash].[ext]'
         },
+        manualChunks(id) {
+          if (id.includes('node_modules/vue') || id.includes('node_modules/pinia')) return 'vue'
+          if (id.includes('node_modules/lodash')) return 'lodash'
+          if (id.includes('node_modules/highlight.js')) return 'highlight'
+          // if (id.includes('src/views')) {
+          //   const match = /\/views\/([^\]]+)\//.exec(id)
+          //   if (match) return match[1]
+          // }
+        },
       },
     },
   },
