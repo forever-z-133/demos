@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
+
 defineOptions({
   title: '多层级的数字 list-style 效果',
   group: 'effect',
@@ -18,9 +20,6 @@ li::before {
     <p class="block">
       使用 CSS 的 <code>counter()</code> 特性，实现多层级的数字 <code>list-style</code> 效果。
     </p>
-    <div class="block">
-      <pre><code>{{ code }}</code></pre>
-    </div>
     <div class="case">
       <ul>
         <li>
@@ -46,6 +45,9 @@ li::before {
           </ul>
         </li>
       </ul>
+    </div>
+    <div class="block">
+      <CodeView :code="code" lang="less" />
     </div>
     <p class="block">
       备注：若使用了 <code>display: flex</code> 和 <code>order</code> 来改变 <code>li</code> 顺序，但不会影响计数顺序。

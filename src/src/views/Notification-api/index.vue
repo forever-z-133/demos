@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
 import { ref } from 'vue'
 
 defineOptions({
@@ -47,15 +48,15 @@ const code = `function sendNotification() {
     <p class="block">
       浏览器的 Notification API。但好像不生效了。
     </p>
-    <div class="block">
-      <pre><code>{{ code }}</code></pre>
-    </div>
     <p class="block">
       浏览器通知权限状态：{{ permission }}
     </p>
     <button class="btn" @click="handleStart">
       发起通知
     </button>
+    <div class="block">
+      <CodeView :code="code" lang="js" />
+    </div>
   </div>
 </template>
 

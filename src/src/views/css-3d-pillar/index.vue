@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
+
 defineOptions({
   title: 'CSS 实现 3D 桶状效果',
   group: 'effect',
@@ -26,8 +28,7 @@ const code = `.pillar-container {
 }
 @keyframes rotate {
   to { transform: rotateY(360deg); }
-}
-`
+}`
 </script>
 
 <template>
@@ -35,9 +36,6 @@ const code = `.pillar-container {
     <p class="block">
       使用 CSS 的 <code>preserve-3d</code> 和 <code>transform</code> 实现 3D 桶状效果
     </p>
-    <div class="block">
-      <pre><code>{{ code }}</code></pre>
-    </div>
     <div class="case">
       <div class="pillar-container">
         <div class="pillar-list">
@@ -48,6 +46,9 @@ const code = `.pillar-container {
           </template>
         </div>
       </div>
+    </div>
+    <div class="block">
+      <CodeView :code="code" lang="less" />
     </div>
   </div>
 </template>

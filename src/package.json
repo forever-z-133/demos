@@ -12,6 +12,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
     "pinia": "^2.3.1",
     "vue": "^3.5.13",

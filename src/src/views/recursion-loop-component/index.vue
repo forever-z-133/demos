@@ -23,8 +23,6 @@ const tree = [
     ] }] },
   ] },
 ]
-
-const code = ``
 </script>
 
 <template>
@@ -32,9 +30,6 @@ const code = ``
     <p class="block">
       案例描述
     </p>
-    <div class="block">
-      <pre><code>{{ code }}</code></pre>
-    </div>
     <div class="case">
       <RecursionFlatLoop :data="[1, 2, 3]" />
     </div>

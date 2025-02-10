@@ -9,11 +9,13 @@
 <style lang="less" scoped>
 @import "@/styles/mixins.less";
 
-.body {
-  max-width: 1440px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: .px(16)[];
-  .page-padding();
+.pure-layout {
+  &.body {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: .px(16)[];
+    .page-padding();
+  }
 }
 </style>

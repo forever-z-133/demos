@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
+
 defineOptions({
   title: '蜂巢(正六边形)样式',
   group: 'effect',
@@ -78,7 +80,7 @@ function handleClick() {
       </div>
     </div>
     <div class="block">
-      <pre><code>{{ code }}</code></pre>
+      <CodeView :code="code" lang="less" />
     </div>
     <p class="block">
       备注：<code>shape-outside: polygon()</code> 对本身无效，其他元素在 <code>float</code> 时才会按此形状环绕。

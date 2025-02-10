@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
+
 defineOptions({
   title: '纯 CSS 实现 checkbox 勾选总数统计',
   group: 'effect',
@@ -21,9 +23,6 @@ const code = `.wrapper {
     <p class="block">
       利用 CSS 的 <code>counter()</code> 特性实现 <code>checkbox</code> 的勾选总数统计。
     </p>
-    <div class="block">
-      <pre><code>{{ code }}</code></pre>
-    </div>
     <div class="checkbox-list">
       <template v-for="i in 4" :key="i">
         <label class="item">
@@ -34,6 +33,9 @@ const code = `.wrapper {
     </div>
     <div class="output">
       已勾选数量：
+    </div>
+    <div class="block">
+      <CodeView :code="code" lang="less" />
     </div>
   </div>
 </template>

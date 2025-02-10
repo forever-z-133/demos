@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
 import { addZero } from '@/utils'
 import InfiniteMarquee from './InfiniteMarquee.vue'
 
@@ -65,7 +66,7 @@ const code = `<template>
       </InfiniteMarquee>
     </div>
     <div class="block">
-      <pre><code>{{ code }}</code></pre>
+      <CodeView :code="code" />
     </div>
   </div>
 </template>

@@ -24,46 +24,50 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "@/styles/mixins.less";
 
-.body {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  max-width: 768px;
-  margin: auto;
-  font-size: .px(16)[];
-}
-@media (min-width: 992px) {
-  /* 宽屏上 */
-  .body {
-    width: 750px;
-    height: 1334px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    -webkit-transform: scale(.5);
-            transform: scale(.5);
+.normal-layout {
+  &.body {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    max-width: 768px;
+    margin: auto;
+    font-size: .px(16)[];
+
+    @media (min-width: 992px) {
+      width: 750px;
+      height: 1334px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+      -webkit-transform: scale(.5);
+              transform: scale(.5);
+    }
   }
-}
-.header, .footer {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-  .page-padding();
-}
-.header:empty, .footer:empty {
-  display: none;
-}
-.page-container {
-  height: 100%;
-  flex-grow: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  transform: translate3d(0,0,0);
-  -webkit-overflow-scrolling: touch;
-  .page-padding();
+
+  & > .header,
+  & > .footer {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    .page-padding();
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  & > .page-container {
+    height: 100%;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translate3d(0,0,0);
+    -webkit-overflow-scrolling: touch;
+    .page-padding();
+  }
 }
 </style>

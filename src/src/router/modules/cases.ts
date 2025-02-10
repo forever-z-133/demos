@@ -7,8 +7,8 @@ import { pick } from 'lodash-es'
 const MetaKeys = ['title', 'group', 'layout', 'createTime']
 
 // 读取页面组件的配置和异步组件
-const modules = import.meta.glob(['@/views/*/*.vue'], { eager: true, import: 'default' })
-const modulesSync = import.meta.glob(['@/views/*/*.vue'], { import: 'default' })
+const modules = import.meta.glob(['@/views/*/index.vue'], { eager: true, import: 'default' })
+const modulesSync = import.meta.glob(['@/views/*/index.vue'], { import: 'default' })
 
 // 所有案例拼凑路由配置
 const routes = [] as RouteRecordRaw[]
