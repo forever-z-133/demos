@@ -1,0 +1,1 @@
+*,*:before,*:after{box-sizing:border-box}body{margin:0}html.is-full,html.is-full body,html.is-full #app{height:100%;overflow:hidden}h1.block,h2.block,h3.block,h4.block,h5.block,h6.block,p.block{margin:0}.btn{background:#f7f7f7;font:inherit;border:1px solid #e3e3e3;padding:.4rem 1.2rem;border-radius:.4rem}

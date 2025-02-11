@@ -42,5 +42,7 @@ async function updateRouterConfig(uri?: string) {
   // 美化代码，避免 eslint 报错
   const result = await eslint.lintFiles(targetRouterConfigFile)
   await ESLint.outputFixes(result)
+
+  return metaMap
 }
 export default updateRouterConfig

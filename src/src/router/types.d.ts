@@ -1,7 +1,7 @@
 // 路由内的数据
 export interface RouteMeta {
   title?: string
-  group?: 'effect' | 'libs' | 'others'
+  group?: 'effect' | 'libs' | 'others' | 'undefined'
   layout?: 'normal' | 'pure'
   createTime?: string
 }
@@ -16,3 +16,6 @@ export interface RouteItem {
   meta: RouteMeta
   children?: RouteItem[]
 }
+
+// 路由组
+export type RouteGroupKeys = Required<RouteMeta>['group']

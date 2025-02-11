@@ -1,0 +1,1 @@
+function s(e,t=2){let n=`${e}`.length;for(;n++<t;)e=`0${e}`;return`${e}`}function i(e){if(e instanceof MouseEvent){const{clientX:t,clientY:n}=e;return[{x:t,y:n}]}else{const t=Array.from(e.touches),n=[];return t.reduce((o,{clientX:c,clientY:r})=>[...o,{x:c,y:r}],n)}}export{s as a,i as g};

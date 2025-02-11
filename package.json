@@ -1,0 +1,12 @@
+{
+  "name": "forever-z-demos",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": ["src"],
+  "scripts": {
+    "dev": "cd src && npm run dev",
+    "build": "cd src && npm run build",
+    "lint": "cd src && npm run lint"
+  }
+}
