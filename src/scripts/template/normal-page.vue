@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineOptions({
   title: 'new 页面标题',
-  group: 'effect',
 })
 
 const code = ``
