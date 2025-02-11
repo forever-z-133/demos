@@ -2,23 +2,19 @@
 import type { RouteGroupKeys } from '@/router/types'
 import type { RouteRecordRaw } from 'vue-router'
 import CommonList from '@/components/common-list/index.vue'
-import { RouteGroupTitles } from '@/constants/global'
 import routes from '@/router/modules/cases'
 import { groupBy } from 'lodash-es'
 import { computed } from 'vue'
 
 // 分组后的展示
 const routesGroupArray = computed(() => {
-  const groups = groupBy(routes, 'meta.group')
-  const result = [] as { title: string, routes: RouteRecordRaw[] }[]
-  Object.keys(groups).forEach((key) => {
-    const group = key as RouteGroupKeys
-    const routes = groups[group]
-    const groupTitle = RouteGroupTitles[group]
-    if (!routes?.length) return
-    result.push({ title: groupTitle, routes })
-  })
-  return result
+  const groups = groupBy(routes, 'meta.group') as Record<RouteGroupKeys, RouteRecordRaw[]>
+  return [
+    { title: '功能', routes: groups.libs },
+    { title: '效果', routes: groups.effect },
+    { title: '其他', routes: groups.others },
+    { title: '未分类', routes: groups.undefined },
+  ].filter(e => e.routes?.length)
 })
 </script>
 

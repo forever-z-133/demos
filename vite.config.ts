@@ -6,7 +6,6 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import VitePluginMine from './scripts/vite-plugin-mine'
 
 export default defineConfig({
-  base: './',
   plugins: [
     vue(),
     vueJsx(),
@@ -19,17 +18,16 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../',
     rollupOptions: {
       output: {
-        entryFileNames: 'dist/js/[name].[hash].js',
-        chunkFileNames: 'dist/js/[name].[hash].js',
+        entryFileNames: 'js/[name].[hash].js',
+        chunkFileNames: 'js/[name].[hash].js',
         assetFileNames: (assetInfo) => {
           const { name } = assetInfo
           if (name && name.endsWith('.css')) {
-            return 'dist/css/[name].[hash].[ext]'
+            return 'css/[name].[hash].[ext]'
           }
-          return 'dist/assets/[name].[hash].[ext]'
+          return 'assets/[name].[hash].[ext]'
         },
         manualChunks(id) {
           if (id.includes('node_modules/vue') || id.includes('node_modules/pinia')) return 'vue'

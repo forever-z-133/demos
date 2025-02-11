@@ -29,4 +29,3 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-!/dist
