@@ -6,6 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import VitePluginMine from './scripts/vite-plugin-mine'
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
     vueJsx(),
