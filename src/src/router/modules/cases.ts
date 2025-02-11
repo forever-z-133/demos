@@ -1,6 +1,6 @@
 import type { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import MetaMap from '../meta-map/index'
+import MetaMap from '../meta-map/index' // 注意此文件由 vite-plugin-mine 自动生成
 
 const modulesSync = import.meta.glob(['@/views/*/index.vue'], { import: 'default' })
 
