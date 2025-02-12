@@ -1,1 +1,0 @@
-import{i as d}from"./vue.gVHh-qxJ.js";function l(i,u){const{wrapperRef:e,contextProps:r,width:c,height:s,onReady:a=()=>{}}=u||{};let t,n;return d(()=>{if(!i.value)return;t=i.value;const o=t.getContext("2d",r);if(o){if(n=o,e&&e.value){const h=e.value.getBoundingClientRect();t.width=h.width,t.height=h.height}else t.width=c||300,t.height=s||200;a(t,n)}}),{}}export{l as u};

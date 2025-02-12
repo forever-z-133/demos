@@ -1,1 +1,0 @@
-import{g as n}from"./vue.gVHh-qxJ.js";const o=1,u=[0,0],a=Symbol("column-inject"),c={column:n(o),gap:n(u)};function m(t){return typeof t=="number"?`${t}px`:t}export{a as C,c as D,u as a,o as b,m as u};

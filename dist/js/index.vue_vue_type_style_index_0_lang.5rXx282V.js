@@ -1,2 +1,0 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./highlight.rmF5D-84.js","../css/highlight.BBYOBnBl.css"])))=>i.map(i=>d[i]);
-import{a as s}from"./index.DmD07DX5.js";import{H as a,j as t,t as r,x as i,c as g,l as n}from"./highlight.rmF5D-84.js";s(()=>import("./highlight.rmF5D-84.js").then(e=>e.s),__vite__mapDeps([0,1]),import.meta.url);function c(){a.registerLanguage("javascript",t),a.registerLanguage("typescript",r),a.registerLanguage("xml",i),a.registerLanguage("css",g),a.registerLanguage("less",n)}function u(){return a}export{u as g,c as i};

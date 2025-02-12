@@ -1,2 +1,0 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["dist/js/highlight.rmF5D-84.js","dist/css/highlight.BBYOBnBl.css"])))=>i.map(i=>d[i]);
-import{a as e}from"./index.BHcdEe5v.js";import{H as s,j as t,t as r,x as i,c as g,l as n}from"./highlight.rmF5D-84.js";e(()=>import("./highlight.rmF5D-84.js").then(a=>a.s),__vite__mapDeps([0,1]));function p(){s.registerLanguage("javascript",t),s.registerLanguage("typescript",r),s.registerLanguage("xml",i),s.registerLanguage("css",g),s.registerLanguage("less",n)}function u(){return s}export{u as g,p as i};
