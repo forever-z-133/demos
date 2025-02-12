@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { bindSetHTMlTitleAfterRouter } from './hooks/set-html-title'
 import CasesRoutes from './modules/cases'
 import StaticRoutes from './modules/static'
@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
 
 // 创建路由
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })
 
