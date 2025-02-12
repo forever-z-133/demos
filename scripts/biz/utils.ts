@@ -1,4 +1,4 @@
-import type { RouteMeta } from '@/router/types'
+import type { RouteMeta } from '../../src/router/types'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'

@@ -1,14 +1,10 @@
-import type { RouteMeta } from '@/router/types'
 import type { Plugin, ResolvedConfig } from 'vite'
-import path from 'node:path'
 import { ref } from 'vue'
 import buildReadmeFile from './biz/build-readme-file'
 import setRouteDefaultCode from './biz/set-route-default-code'
 import updateRouterConfig from './biz/update-router-config'
-import { rootDir } from './biz/utils'
 
 const viteOptions = ref<ResolvedConfig>()
-const metaMap = ref<Record<string, RouteMeta>>()
 
 /**
  * 本项目用到的 Vite 插件
@@ -23,7 +19,7 @@ export default async function VitePluginMine() {
     enforce: 'pre',
     async configResolved(options) {
       viteOptions.value = options
-      metaMap.value = await updateRouterConfig()
+      await updateRouterConfig()
     },
     configureServer(server) {
       server.watcher.on('add', (uri) => {
@@ -35,10 +31,7 @@ export default async function VitePluginMine() {
       })
     },
     async closeBundle() {
-      if (!metaMap.value || !viteOptions.value) return
-      const viteConfigDir = path.join(rootDir)
-      const outDir = path.join(viteConfigDir, viteOptions.value.build.outDir)
-      buildReadmeFile(metaMap.value, outDir)
+      buildReadmeFile(true)
     },
   }
 }

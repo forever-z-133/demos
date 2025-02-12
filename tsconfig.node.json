@@ -5,10 +5,9 @@
 
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": ["node"]
+    "types": ["node"],
+    "allowJs": true,
+    "outDir": "./dist"
   },
   "include": [
     "vite.config.*",
@@ -17,6 +16,7 @@
     "nightwatch.conf.*",
     "playwright.config.*",
     "eslint.config.*",
-    "scripts/**/*"
+    "scripts/*",
+    "scripts/biz/**/*"
   ]
 }
