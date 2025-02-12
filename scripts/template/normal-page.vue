@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CodeView } from '@/components'
+
 defineOptions({
   title: 'new 页面标题',
 })
@@ -12,7 +14,7 @@ const code = ``
       案例描述
     </p>
     <div class="block">
-      <pre><code>{{ code }}</code></pre>
+      <CodeView :code="code" />
     </div>
     <div class="case" />
   </div>

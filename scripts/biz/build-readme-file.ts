@@ -5,8 +5,8 @@ import { RouteGroupTitles } from '../../src/constants/global'
 import updateRouterConfig from './update-router-config'
 import { rootDir } from './utils'
 
-const BasePath = 'https://forever-z-133.github.io/demos/#/'
-// const BasePath = 'https://forever-z.cn/'
+// const BasePath = 'https://forever-z-133.github.io/demos/#/'
+const BasePath = 'https://forever-z.cn/#/'
 
 // README.md 文件所在位置
 const targetReadmeFileDir = path.join(rootDir, '')

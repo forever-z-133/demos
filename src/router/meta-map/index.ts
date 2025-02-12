@@ -44,12 +44,17 @@ export default <{ [key: string]: RouteMeta }>{
     title: '跟随鼠标的网格边框效果',
     group: 'effect',
   },
+  'lib-download': {
+    title: '下载方面的知识整理',
+    group: 'others',
+    layout: 'pure',
+  },
   'pure-css-infinite-marquee': {
     title: '纯 CSS 实现无限滚动',
     group: 'effect',
   },
   'pure-css-number-list-style': {
-    title: '多层级的数字 list-style 效果',
+    title: '纯 CSS 实现数字 list-style 效果',
     group: 'effect',
   },
   'pure-css-total-count': {

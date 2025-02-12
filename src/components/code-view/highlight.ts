@@ -1,14 +1,18 @@
 import hljs from 'highlight.js/lib/core'
 
+import lang_bash from 'highlight.js/lib/languages/bash'
 import lang_css from 'highlight.js/lib/languages/css'
 import lang_javascript from 'highlight.js/lib/languages/javascript'
 import lang_less from 'highlight.js/lib/languages/less'
+import lang_shell from 'highlight.js/lib/languages/shell'
 import lang_typescript from 'highlight.js/lib/languages/typescript'
 import lang_xml from 'highlight.js/lib/languages/xml'
 
 import('highlight.js/styles/stackoverflow-light.css')
 
 export function initial() {
+  hljs.registerLanguage('bash', lang_bash)
+  hljs.registerLanguage('shell', lang_shell)
   hljs.registerLanguage('javascript', lang_javascript)
   hljs.registerLanguage('typescript', lang_typescript)
   hljs.registerLanguage('xml', lang_xml)

@@ -2,7 +2,7 @@
 import { CodeView } from '@/components'
 
 defineOptions({
-  title: '多层级的数字 list-style 效果',
+  title: '纯 CSS 实现数字 list-style 效果',
   group: 'effect',
 })
 

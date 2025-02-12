@@ -1,0 +1,6 @@
+{
+  "name": "lib-download",
+  "dependencies": {
+    "downloadjs": "^1.4.7"
+  }
+}

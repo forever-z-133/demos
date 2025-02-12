@@ -2,7 +2,7 @@
   "name": "forever-z-demos",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
+  "workspaces": ["src/views/*"],
   "scripts": {
     "prepare": "husky",
     "dev": "vite",
