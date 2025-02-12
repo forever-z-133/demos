@@ -1,0 +1,34 @@
+@import "./mixins.less";
+
+/* 样式初始化 */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+html {
+  &.is-full {
+    &, body, #app {
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+/* 全局公共样式 */
+h1, h2, h3, h4, h5, h6, p {
+  &.block {
+    margin: 0 0;
+  }
+}
+.btn {
+  background: #f7f7f7;
+  font: inherit;
+  border: 1px solid #e3e3e3;
+  padding: .px(4)[] .px(12)[];
+  border-radius: .px(4)[];
+  cursor: pointer;
+}

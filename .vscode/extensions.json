@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint",
+    "steoates.autoimport",
+    "usernamehw.errorlens",
+    "xabikos.javascriptsni",
+    "johnsoncodehk.vscode-tsconfig-helper"
+  ]
+}

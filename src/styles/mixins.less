@@ -1,0 +1,57 @@
+.px(@px) {
+  @return: @px * 0.1rem;
+}
+
+.page-padding() {
+  padding: .px(12)[] .px(16)[];
+}
+
+.text-overflow() {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.multi-text-overflow(@line) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: @line;
+  -webkit-box-orient: vertical;
+}
+
+.flex-row(@grow) {
+  display: flex;
+  align-items: center;
+  & > @{grow} {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  & > :not(@{grow}) {
+    flex-shrink: 0;
+  }
+}
+
+.items-gap(@direction: right, @gap: .px(12)[]) {
+  & > :not(:last-child) {
+    margin-@{direction}: @gap;
+  }
+}
+
+.ratio(@ratio) {
+  aspect-ratio: @ratio;
+  // position: relative;
+  // &::before {
+  //   content: "";
+  //   display: block;
+  //   padding-top: calc(@ratio * 100%);
+  // }
+  // & > * {
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  // }
+}
