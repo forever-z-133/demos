@@ -70,4 +70,9 @@ export default <{ [key: string]: RouteMeta }>{
     title: '递归组件实战演示',
     group: 'libs',
   },
+  'run-custom-code': {
+    title: '运行自定义脚本',
+    group: 'libs',
+    layout: 'pure',
+  },
 }

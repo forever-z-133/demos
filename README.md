@@ -17,3 +17,4 @@
 * [[效果] 纯 CSS 实现数字 list-style 效果](https://forever-z.cn/#/pure-css-number-list-style)
 * [[效果] 纯 CSS 实现 checkbox 勾选总数统计](https://forever-z.cn/#/pure-css-total-count)
 * [[功能] 递归组件实战演示](https://forever-z.cn/#/recursion-loop-component)
+* [[功能] 运行自定义脚本](https://forever-z.cn/#/run-custom-code)
