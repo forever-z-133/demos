@@ -8,8 +8,8 @@ import PureLayout from './pure-layout.vue'
 const route = useRoute()
 const globalStore = useGlobalStore()
 
+globalStore.updateLayout(route.meta)
 onMounted(() => {
-  globalStore.updateLayout(route.meta)
   globalStore.setRootFontSize()
   window.addEventListener('resize', handleWindowResize)
 })
