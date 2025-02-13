@@ -49,6 +49,11 @@ export default <{ [key: string]: RouteMeta }>{
     group: 'others',
     layout: 'pure',
   },
+  'lib-hotkey': {
+    title: '快捷键方面的知识整理',
+    group: 'others',
+    layout: 'pure',
+  },
   'pure-css-infinite-marquee': {
     title: '纯 CSS 实现无限滚动',
     group: 'effect',
