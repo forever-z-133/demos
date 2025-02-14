@@ -32,6 +32,10 @@ export default <{ [key: string]: RouteMeta }>{
     title: '抖音故障艺术效果',
     group: 'effect',
   },
+  'flip-animation': {
+    title: 'Flip Animation 实战',
+    group: 'effect',
+  },
   'game-snake-eat-food': {
     title: '贪吃蛇小游戏',
     group: 'others',
