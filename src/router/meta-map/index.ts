@@ -24,6 +24,10 @@ export default <{ [key: string]: RouteMeta }>{
     title: '蜂巢(正六边形)样式',
     group: 'effect',
   },
+  'css-relative-color': {
+    title: 'CSS 的相对颜色语法',
+    group: 'others',
+  },
   'css-text-fill-color': {
     title: 'CSS 的 text-fill-color 属性',
     group: 'others',

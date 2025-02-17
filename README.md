@@ -6,6 +6,7 @@
 * [[其他] globalCompositeOperation 知识整理](https://test.forever-z.cn/#/canvas-globalCompositeOperation)
 * [[效果] CSS 实现 3D 桶状效果](https://test.forever-z.cn/#/css-3d-pillar)
 * [[效果] 蜂巢(正六边形)样式](https://test.forever-z.cn/#/css-hive)
+* [[其他] CSS 的相对颜色语法](https://test.forever-z.cn/#/css-relative-color)
 * [[其他] CSS 的 text-fill-color 属性](https://test.forever-z.cn/#/css-text-fill-color)
 * [[效果] 抖音故障艺术效果](https://test.forever-z.cn/#/fault-shake-effect)
 * [[效果] Flip Animation 实战](https://test.forever-z.cn/#/flip-animation)
