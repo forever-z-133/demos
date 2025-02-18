@@ -62,6 +62,11 @@ export default <{ [key: string]: RouteMeta }>{
     group: 'others',
     layout: 'pure',
   },
+  'picture-in-picture': {
+    title: '浏览器原生画中画功能 PIP',
+    group: 'others',
+    layout: 'pure',
+  },
   'pure-css-infinite-marquee': {
     title: '纯 CSS 实现无限滚动',
     group: 'effect',

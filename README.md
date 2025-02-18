@@ -15,6 +15,7 @@
 * [[效果] 跟随鼠标的网格边框效果](https://test.forever-z.cn/#/hover-light-border)
 * [[其他] 下载方面的知识整理](https://test.forever-z.cn/#/lib-download)
 * [[其他] 快捷键方面的知识整理](https://test.forever-z.cn/#/lib-hotkey)
+* [[其他] 浏览器原生画中画功能 PIP](https://test.forever-z.cn/#/picture-in-picture)
 * [[效果] 纯 CSS 实现无限滚动](https://test.forever-z.cn/#/pure-css-infinite-marquee)
 * [[效果] 纯 CSS 实现数字 list-style 效果](https://test.forever-z.cn/#/pure-css-number-list-style)
 * [[效果] 纯 CSS 实现 checkbox 勾选总数统计](https://test.forever-z.cn/#/pure-css-total-count)
