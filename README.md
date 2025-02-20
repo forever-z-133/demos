@@ -10,6 +10,7 @@
 * [[其他] CSS 的 text-fill-color 属性](https://test.forever-z.cn/#/css-text-fill-color)
 * [[效果] 抖音故障艺术效果](https://test.forever-z.cn/#/fault-shake-effect)
 * [[效果] Flip Animation 实战](https://test.forever-z.cn/#/flip-animation)
+* [[效果] 到处乱撞的广告](https://test.forever-z.cn/#/fly-everywhere-ad)
 * [[其他] 贪吃蛇小游戏](https://test.forever-z.cn/#/game-snake-eat-food)
 * [[功能] 刮刮乐玩法](https://test.forever-z.cn/#/gua-gua-le)
 * [[效果] 跟随鼠标的网格边框效果](https://test.forever-z.cn/#/hover-light-border)

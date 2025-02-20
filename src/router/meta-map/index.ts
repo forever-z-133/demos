@@ -40,6 +40,11 @@ export default <{ [key: string]: RouteMeta }>{
     title: 'Flip Animation 实战',
     group: 'effect',
   },
+  'fly-everywhere-ad': {
+    title: '到处乱撞的广告',
+    group: 'effect',
+    layout: 'pure',
+  },
   'game-snake-eat-food': {
     title: '贪吃蛇小游戏',
     group: 'others',
