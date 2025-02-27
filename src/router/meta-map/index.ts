@@ -93,4 +93,9 @@ export default <{ [key: string]: RouteMeta }>{
     group: 'libs',
     layout: 'pure',
   },
+  'tencent-map-example': {
+    title: '腾讯地图API演示',
+    group: 'libs',
+    layout: 'pure',
+  },
 }

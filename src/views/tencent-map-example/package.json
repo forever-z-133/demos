@@ -1,0 +1,6 @@
+{
+  "name": "lib-tencent-map-example",
+  "dependencies": {
+    "tmap-gl-types": "^0.1.8"
+  }
+}
