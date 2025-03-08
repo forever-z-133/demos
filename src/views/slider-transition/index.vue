@@ -12,6 +12,7 @@ defineOptions({
 const visible1 = ref(false)
 const visible2 = ref(false)
 const visible3 = ref(false)
+const visible4 = ref(false)
 
 const code = `\<script setup lang="ts"\>
 function handleBeforeEnter(_el: Element) {
@@ -81,7 +82,22 @@ const code2 = `<template>
     </div>
     <div class="case">
       <p class="block">
-        方法三、计算高度用 FLIP 动画原理实现。
+        方法三、使用 CSS grid 布局实现。缺点可能不兼容。
+      </p>
+      <div class="">
+        <button class="btn" @click="() => visible4 = !visible4">
+          {{ visible4 ? '收起' : '展开' }}
+        </button>
+        <div class="list4" :class="{ visible: visible4 }">
+          <div class="content">
+            <TmpList class="list4" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <p class="block">
+        方法四、计算高度用 FLIP 动画原理实现。缺点得封装个 Transition 组件。
       </p>
       <div class="">
         <button class="btn" @click="() => visible3 = !visible3">
@@ -107,7 +123,7 @@ const code2 = `<template>
 .slider-transition {
   .items-gap(bottom);
 
-  .case {
+  .case:not(:last-child) {
     padding-bottom: .px(12)[];
     border-bottom: 1px solid #ddd;
   }
@@ -130,6 +146,18 @@ const code2 = `<template>
       position: relative;
       left: unset;
       transform: scaleY(1);
+    }
+  }
+
+  .list4 {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .5s;
+    & > .content {
+      overflow: hidden;
+    }
+    &.visible {
+      grid-template-rows: 1fr;
     }
   }
 }
