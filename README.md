@@ -22,4 +22,5 @@
 * [[效果] 纯 CSS 实现 checkbox 勾选总数统计](https://test.forever-z.cn/#/pure-css-total-count)
 * [[功能] 递归组件实战演示](https://test.forever-z.cn/#/recursion-loop-component)
 * [[功能] 运行自定义脚本](https://test.forever-z.cn/#/run-custom-code)
+* [[效果] slider 动画效果](https://test.forever-z.cn/#/slider-transition)
 * [[功能] 腾讯地图API演示](https://test.forever-z.cn/#/tencent-map-example)

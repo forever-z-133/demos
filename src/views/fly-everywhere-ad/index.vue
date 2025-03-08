@@ -22,7 +22,7 @@ const data = {
 
 onMounted(() => {
   initial()
-  timer = setInterval(() => {
+  timer = window.setInterval(() => {
     update()
     render()
   }, 1000 / 60)

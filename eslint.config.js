@@ -5,6 +5,7 @@ export default antfu(
     typescript: true,
     javascript: true,
     vue: true,
+    ignores: ['public/**/*'],
   },
   {
     rules: {

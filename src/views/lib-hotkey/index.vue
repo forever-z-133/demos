@@ -32,7 +32,7 @@ function handleTrigger(e: KeyboardEvent) {
   e.preventDefault()
   trigger.value = true
   clearTimeout(timer)
-  timer = setTimeout(() => {
+  timer = window.setTimeout(() => {
     trigger.value = false
   }, 300)
 }

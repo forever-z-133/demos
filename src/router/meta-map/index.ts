@@ -93,6 +93,10 @@ export default <{ [key: string]: RouteMeta }>{
     group: 'libs',
     layout: 'pure',
   },
+  'slider-transition': {
+    title: 'slider 动画效果',
+    group: 'effect',
+  },
   'tencent-map-example': {
     title: '腾讯地图API演示',
     group: 'libs',

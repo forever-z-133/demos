@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type TMap from 'tmap-gl-types'
 import type { MAP_TYPE } from './libs/use-map-type-plugin'
-import { ref, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch } from 'vue'
 import MapComponent from './libs/map-component.vue'
+import useLogParse from './libs/use-log-parse'
 import useMapTypePlugin, { MAP_TYPE_OPTIONS } from './libs/use-map-type-plugin'
 
 defineOptions({
@@ -28,12 +29,27 @@ const { initial: initMapTypePlugin, changeType: changeMapType } = useMapTypePlug
 })
 watch(mapType, () => changeMapType(mapIns, mapType.value))
 
+const table = shallowRef([] as any[])
+const { load, parse } = useLogParse()
+
+onMounted(async () => {
+  const publicPath = window.location.pathname
+  const txt = await load(`${publicPath}tmp/export-9358b80c-5a28-416e-9a7e-f4893e8a7cd9.json`)
+  const rows = parse(txt)
+  table.value = rows
+  console.log(rows)
+})
+
 // 地图加载完成，初始化各种拓展
 function handleMapLoaded(map: TMap.Map) {
   mapIns = map
 
   // 初始化地图类型
   initMapTypePlugin(mapIns)
+}
+
+function handleClickTableRow(row: any) {
+  console.log(row)
 }
 </script>
 
@@ -55,6 +71,31 @@ function handleMapLoaded(map: TMap.Map) {
               </option>
             </template>
           </select>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="title">
+          <span>日志</span>
+        </div>
+        <div class="content">
+          <table>
+            <tbody>
+              <tr>
+                <th>请求发起时间</th>
+                <th>操作</th>
+              </tr>
+              <template v-for="(row, i) in table" :key="i">
+                <tr>
+                  <td>{{ row.request.startTime }}</td>
+                  <td>
+                    <button @click="handleClickTableRow(row)">
+                      查看
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

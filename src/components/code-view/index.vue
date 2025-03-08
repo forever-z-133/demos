@@ -45,6 +45,7 @@ function updateHighlightCode() {
   font-size: .8em;
   line-height: 1.375;
   background-color: #f8f8f8;
+  overflow: auto;
   .items-gap(bottom, .px(8)[]);
 
   .hljs {

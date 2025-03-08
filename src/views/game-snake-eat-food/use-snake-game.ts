@@ -135,7 +135,7 @@ function useSnakeGame(props?: Props) {
 
     draw()
     clearTimeout(timer)
-    timer = setTimeout(gameLoop, 100) // 每100毫秒更新一次（可调整速度）
+    timer = window.setTimeout(gameLoop, 100) // 每100毫秒更新一次（可调整速度）
   }
 
   return {
