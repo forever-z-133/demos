@@ -17,7 +17,7 @@ export const useGlobalStore = defineStore('global', () => {
   function setRootFontSize() {
     const rootDom = document.documentElement
     if (layoutScale.value === 1) {
-      rootDom.style.fontSize = '10px'
+      rootDom.style.fontSize = layoutType.value === 'blank' ? '16px' : '10px'
     } else {
       rootDom.style.fontSize = '20px'
     }

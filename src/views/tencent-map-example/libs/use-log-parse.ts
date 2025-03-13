@@ -1,39 +1,53 @@
+import type { GuideCloudReq, GuideCloudRsp } from './guide-cloud-request.model'
+import type { LogContent, LogLine, LogLineParsed, LogRequest, LogTableRow } from './log.model'
 import { groupBy } from 'lodash-es'
+import { shallowRef } from 'vue'
 
+/**
+ * 解析日志中的请求日志
+ */
 function useLogParse() {
-  async function load(url: string) {
-    const res = await fetch(url)
-    const txt = await res.text()
-    return txt
-  }
+  const lines = shallowRef<string[]>([]) // 请求相关原始日志行
+  const table = shallowRef<LogTableRow[]>([]) // 日志展示表格
 
   function parse(txt: string) {
-    const lines = txt.split(/[\r\n]/).filter(e => !!e)
-    const requestLines = lines.filter(e => isReq(e))
-    const requests: any[] = []
-    requestLines.forEach((str) => {
-      const item = parseJson(str)
+    // 初步解析日志行
+    const requestStringLines = txt.split(/[\r\n]/).filter(e => !!e && isReq(e))
+    const requestLines: LogLineParsed[] = []
+    requestStringLines.forEach((str, index) => {
+      const item = parseJson(str) as LogLine
       if (!item.__CONTENT__) return
-      item.__CONTENT__ = parseContent(item.__CONTENT__)
-      item.raw = str
-      requests.push(item)
+      const content = parseContent(item.__CONTENT__)
+      const reqBody = parseReqBody(content.reqBody)
+      const line = { ...item, id: index, __CONTENT__: { ...content, reqBody } }
+      requestLines.push(line)
     })
-    const group = groupBy(requests, '__CONTENT__.reqBody.reqUUID')
-    const rows: any[] = []
+    lines.value = requestStringLines
+
+    // 将日志按请求分组
+    const group = groupBy(requestLines, '__CONTENT__.reqBody.reqUUID')
+    const rows: LogTableRow[] = []
     Object.keys(group).forEach((reqUUID) => {
       const logs = group[reqUUID]
       const tmp = groupBy(logs, '__CONTENT__.reqBody.structName')
-      const request = normalize(tmp.GuideCloudReq)
-      const response = normalize(tmp.GuideCloudRsp)
-      const row = { request, response, raw: logs }
+      const requestData = mergeData(tmp.GuideCloudReq) as GuideCloudReq
+      const responseData = mergeData(tmp.GuideCloudRsp) as GuideCloudRsp
+      const content = tmp.GuideCloudReq[0].__CONTENT__
+      const req = content.reqBody
+      const startTime = content.time
+      const reqName = req.reqName
+      const row = { startTime, reqName, reqUUID, request: requestData, response: responseData, raw: logs }
       rows.push(row)
     })
-    return rows
+    table.value = rows
+
+    return { lines: requestStringLines, table: rows }
   }
 
   return {
-    load,
     parse,
+    lines,
+    table,
   }
 }
 export default useLogParse
@@ -50,24 +64,26 @@ function parseJson(jsonStr: string) {
 }
 
 // __CONTENT__ 字段格式： [时间] [threadId] [日志类型] [代码位置] [请求体]
-function parseContent(__CONTENT__: string) {
+function parseContent(__CONTENT__: string): LogContent {
   const tmp = __CONTENT__.slice(1).split(/\]\s+\[|\]\s+/)
   const time = tmp[0]
   const threadId = tmp[1]
   const logType = tmp[2]
   const codePos = tmp[3]
-  const reqBody = parseReqBody(tmp[4])
+  const reqBody = tmp[4]
   return { time, threadId, logType, codePos, reqBody }
 }
 
 // 请求体格式：日志UUID#日志分片ID/日志分片总数#请求名#请求UUID#结构体名称#数据
-function parseReqBody(txt: string) {
+function parseReqBody(txt: string): LogRequest {
   const tmp = txt.split('#')
   const uuid = tmp[0]
-  const [chunkId, chunkLength] = tmp[1].split('/')
+  const [_chunkId, _chunkLength] = tmp[1].split('/')
+  const chunkId = Number(_chunkId)
+  const chunkLength = Number(_chunkLength)
   const reqName = tmp[2]
   const reqUUID = tmp[3]
-  const structName = tmp[4]
+  const structName = tmp[4] as LogRequest['structName']
   const data = tmp[5]
 
   return { uuid, chunkId, chunkLength, reqName, reqUUID, structName, data }
@@ -78,15 +94,8 @@ function isReq(str: string) {
   return ['GuideCloudReq', 'GuideCloudRsp'].some(k => str.includes(k))
 }
 
-// 规范化请求/响应的数据
-function normalize(logs: any[]) {
-  const data = mergeData(logs)
-  const startTime = logs[0].__CONTENT__.time
-  return { startTime, data }
-}
-
 // 合并多条日志的请求体
-function mergeData(logs: any[]) {
+function mergeData(logs: LogLineParsed[]) {
   const sorted = logs.length > 1 ? logs.sort((a, b) => +a.__CONTENT__.reqBody.chunkId - +b.__CONTENT__.reqBody.chunkId) : logs
   const dataStr = sorted.reduce((re, e) => re + e.__CONTENT__.reqBody.data, '')
   const data = parseJson(dataStr)

@@ -2,7 +2,7 @@
 export interface RouteMeta {
   title?: string
   group?: 'effect' | 'libs' | 'others' | 'undefined'
-  layout?: 'normal' | 'pure'
+  layout?: 'normal' | 'pure' | 'blank'
   createTime?: string
 }
 

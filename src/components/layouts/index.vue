@@ -2,6 +2,7 @@
 import { useGlobalStore } from '@/constants/global.store'
 import { onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import BlankLayout from './blank-layout.vue'
 import NormalLayout from './normal-layout.vue'
 import PureLayout from './pure-layout.vue'
 
@@ -28,6 +29,11 @@ function handleWindowResize() {
     <NormalLayout>
       <RouterView />
     </NormalLayout>
+  </template>
+  <template v-else-if="globalStore.layoutType === 'blank'">
+    <BlankLayout>
+      <RouterView />
+    </BlankLayout>
   </template>
   <template v-else>
     <PureLayout>

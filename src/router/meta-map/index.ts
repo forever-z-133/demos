@@ -100,6 +100,6 @@ export default <{ [key: string]: RouteMeta }>{
   'tencent-map-example': {
     title: '腾讯地图API演示',
     group: 'libs',
-    layout: 'pure',
+    layout: 'blank',
   },
 }

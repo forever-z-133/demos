@@ -1,15 +1,5 @@
 import type TMap from 'tmap-gl-types'
-
-// 支持的地图类型
-export const MAP_TYPE_OPTIONS = [
-  { value: 'tencent-map', label: '腾讯地图' },
-  { value: 'tencent-satellite', label: '腾讯卫星' },
-  { value: 'gaode-map', label: '高德地图' },
-  { value: 'gaode-satellite', label: '高德卫星' },
-] as const satisfies { value: string, label: string }[]
-
-// 地图类型
-export type MAP_TYPE = ArrayElement<typeof MAP_TYPE_OPTIONS>['value']
+import type { MAP_TYPE } from './constants'
 
 interface Props {
   defaultType: MAP_TYPE
@@ -39,8 +29,11 @@ function useMapTypePlugin(props?: Props) {
     } else {
       MapTypeLayerMap['gaode-map'].setVisible(false)
       MapTypeLayerMap['gaode-satellite'].setVisible(false)
-      const type = mapType === 'tencent-satellite' ? 'satellite' : 'vector'
-      map.setBaseMap({ type })
+      if (mapType === 'tencent-satellite') {
+        map.setBaseMap({ type: 'satellite' })
+      } else {
+        map.setBaseMap({ type: 'vector' })
+      }
     }
   }
 

@@ -18,6 +18,7 @@
     "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
     "pinia": "^2.3.1",
+    "tdesign-vue-next": "^1.11.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
@@ -38,6 +39,8 @@
     "npm-run-all2": "^7.0.2",
     "tsx": "^4.19.2",
     "typescript": "~5.7.3",
+    "unplugin-auto-import": "^19.1.1",
+    "unplugin-vue-components": "^28.4.1",
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vue-tsc": "^2.2.0"
