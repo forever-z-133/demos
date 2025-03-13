@@ -1,3 +1,4 @@
+import type TMap from 'tmap-gl-types'
 import type { OPTION } from './constants'
 import type { Point } from './guide-cloud-request.model'
 import { CoordinateTransform } from './coordinate-transform'
@@ -42,6 +43,15 @@ export function int2tx(p: Point): Point {
 
 export function tx2int(p: Point): Point {
   return { lat: p.lat * txBase, lng: p.lng * txBase }
+}
+
+export function point2str(p: Point): string {
+  return `${p.lng},${p.lat}`
+}
+
+export function point2ll(p: Point): TMap.LatLng {
+  const TMap = window.TMap
+  return new TMap.LatLng(p.lat, p.lng)
 }
 
 // 地图坐标点转换

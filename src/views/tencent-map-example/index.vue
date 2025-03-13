@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import type TMap from 'tmap-gl-types'
-import type { MAP_TYPE } from './libs/constants'
-import type { Point } from './libs/guide-cloud-request.model'
 import type { LogTableRow } from './libs/log.model'
 import download from 'downloadjs'
 import { throttle } from 'lodash-es'
-import { onMounted, ref, watch } from 'vue'
-import { MAP_TYPE_OPTIONS, MATCH_REQ_TYPE_OPTIONS, YAW_TYPE_OPTIONS } from './libs/constants'
+import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, watch } from 'vue'
+import { MAP_TYPE_OPTIONS } from './libs/constants'
 import LogTable from './libs/log-table.vue'
 import MapComponent from './libs/map-component.vue'
 import RequestPathsPreview from './libs/request-paths-preview.vue'
 import ResponsePathsPreview from './libs/response-paths-preview.vue'
 import useLogParse from './libs/use-log-parse'
+import useLogStore from './libs/use-log-store'
 import useTracePlugin from './libs/use-map-trace-plugin'
 import useMapTypePlugin from './libs/use-map-type-plugin'
-import { getOptionLabel, getPointData } from './libs/utils'
 
 defineOptions({
   title: '腾讯地图API演示',
@@ -22,29 +21,15 @@ defineOptions({
   layout: 'blank',
 })
 
-// 交互项数据
-interface FormData {
-  mapType: MAP_TYPE
-  level: number
-  requestPoints: string[]
-  responsePoints: string
-  responseLinkInfo: string[]
-}
-const DefaultFormData = {
-  mapType: 'tencent-map',
-  level: 12,
-  requestPoints: [],
-  responsePoints: '',
-  responseLinkInfo: [],
-} as FormData
-const formData = ref(DefaultFormData)
+const { updateDetail } = useLogStore()
+const { request, response, state } = storeToRefs(useLogStore())
 
 // 地图初始化参数
 let mapIns: TMap.Map
 const mapDefaultOptions: TMap.MapOptions = {
   pitchable: false,
   rotatable: false,
-  zoom: DefaultFormData.level,
+  zoom: state.value.level,
   minZoom: 5,
   maxZoom: 21,
   baseMap: {
@@ -55,13 +40,12 @@ const mapDefaultOptions: TMap.MapOptions = {
 
 // 拓展地图类型功能
 const { initial: initMapTypePlugin, changeType: changeMapType } = useMapTypePlugin({
-  defaultType: formData.value.mapType,
+  defaultType: state.value.mapType,
 })
-watch(() => formData.value.mapType, val => changeMapType(mapIns, val))
-const { initial: initTracePlugin, drawRequest, drawResponse } = useTracePlugin({})
+watch(() => state.value.mapType, val => changeMapType(mapIns, val))
+const { initial: initTracePlugin, draw } = useTracePlugin({})
 
 const { parse, lines, table } = useLogParse()
-const detail = ref({} as LogTableRow)
 
 onMounted(async () => {
   const publicPath = window.location.pathname
@@ -76,7 +60,7 @@ function handleMapLoaded(map: TMap.Map) {
   mapIns = map
 
   map.on('zoom', () => {
-    formData.value.level = getMapLevel(map)
+    state.value.level = getMapLevel(map)
   })
 
   // 初始化地图类型
@@ -88,37 +72,10 @@ function handleMapLoaded(map: TMap.Map) {
 // 点击查看
 function handleDetail(row: LogTableRow) {
   console.log(row)
-  detail.value = row
-
-  let allPoints: Point[] = []
-
-  const { path } = row.request.mmReq
-  const requestPoints = Array.from({ length: path.length }, (_, index) => path[index].coors.map(e => getPointData(e).gcj))
-  requestPoints.forEach((points) => {
-    allPoints = allPoints.concat(points)
-    drawRequest(points, 'request')
+  updateDetail(row)
+  nextTick(() => {
+    draw()
   })
-  formData.value.requestPoints = requestPoints.map(e => e.map(e => `${e.lat},${e.lng}`).join(';'))
-
-  const { result } = row.response.mmRsp
-  const responsePoints = Array.from({ length: result.length }, (_, index) => result[index].bindPoints.map(e => getPointData(e.point).gcj))
-  responsePoints.forEach((points) => {
-    allPoints = allPoints.concat(points)
-    drawResponse(points)
-  })
-  formData.value.responsePoints = responsePoints[0].map(e => `${e.lat},${e.lng}`).join(';')
-
-  fitBounds(allPoints)
-}
-
-function fitBounds(points: any[]) {
-  const TMap = window.TMap
-  const bounds = new TMap.LatLngBounds()
-  points.forEach((p) => {
-    bounds.extend(new TMap.LatLng(p.lat, p.lng))
-  })
-
-  mapIns.fitBounds(bounds, { padding: 50 })
 }
 
 // 点击下载
@@ -138,7 +95,7 @@ function getMapLevel(map: TMap.Map) {
   return mapLevel
 }
 const handleZoomChange = throttle(() => {
-  const val = formData.value.level
+  const val = state.value.level
   mapIns.setZoom(val)
 }, 500)
 </script>
@@ -168,17 +125,17 @@ const handleZoomChange = throttle(() => {
           <span>请求体</span>
         </div>
         <div class="content">
-          <div>请求发起时间：{{ detail.startTime || '--' }}</div>
-          <div>请求名：{{ detail.reqName || '--' }}</div>
-          <div>请求UUID：{{ detail.reqUUID || '--' }}</div>
-          <div>渠道号：{{ detail.request?.channel || '--' }}</div>
-          <div>设备ID：{{ detail.request?.deviceId || '--' }}</div>
-          <div>异源/同源：{{ getOptionLabel(MATCH_REQ_TYPE_OPTIONS, detail.request?.matchReqType) }}</div>
-          <div>偏航类型：{{ getOptionLabel(YAW_TYPE_OPTIONS, detail.request?.yawType) }}</div>
-          <div>请求类型：{{ detail.request?.mmReq?.type || '--' }}</div>
+          <div>请求发起时间：{{ request.startTime }}</div>
+          <div>请求名：{{ request.reqName }}</div>
+          <div>请求UUID：{{ request.reqUUID }}</div>
+          <div>渠道号：{{ request.channel }}</div>
+          <div>设备ID：{{ request.deviceId }}</div>
+          <div>异源/同源：{{ request.matchReqType }}</div>
+          <div>偏航类型：{{ request.yawType }}</div>
+          <div>请求类型：{{ request.type }}</div>
           <div>
             请求路径：
-            <RequestPathsPreview :detail="detail" />
+            <RequestPathsPreview :paths="request.paths" />
           </div>
         </div>
       </div>
@@ -187,13 +144,11 @@ const handleZoomChange = throttle(() => {
           <span>响应体</span>
         </div>
         <div class="content">
-          <div v-if="detail.response">
-            {{ detail.response.guideCode === 0 ? '诱导成功' : '诱导失败' }}，
-            {{ detail.response.mmCode === 0 ? '异源匹配成功' : '异源匹配失败' }}
-          </div>
+          <div>诱导状态：{{ response.guideCode }}</div>
+          <div>异源匹配状态：{{ response.mmCode }}</div>
           <div>
             返回路径：
-            <ResponsePathsPreview :detail="detail" />
+            <ResponsePathsPreview :paths="response.paths" />
           </div>
         </div>
       </div>
@@ -207,7 +162,7 @@ const handleZoomChange = throttle(() => {
           <span>地图类型</span>
         </div>
         <div class="content">
-          <select v-model="formData.mapType">
+          <select v-model="state.mapType">
             <template v-for="op in MAP_TYPE_OPTIONS" :key="op.value">
               <option :value="op.value">
                 {{ op.label }}
@@ -219,9 +174,9 @@ const handleZoomChange = throttle(() => {
           <span>地图层级</span>
         </div>
         <div class="content flex-row">
-          <span>{{ formData.level }}级</span>
+          <span>{{ state.level }}级</span>
           <input
-            v-model="formData.level"
+            v-model="state.level"
             class="grow"
             type="range"
             :min="mapDefaultOptions.minZoom"

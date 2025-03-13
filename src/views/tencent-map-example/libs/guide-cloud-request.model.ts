@@ -33,7 +33,7 @@ export interface GuideCloudReq {
       }[]
       pathId: string // 输入的 path id
     }[]
-    type: 0 | 1 // 0-SD/1-HDAir
+    type: 'SD' | 'HDAir' // 0-SD/1-HDAir
   }
   mmTaskId: string // 任务请求 id
   protocolVersion: string // protocol version
@@ -77,8 +77,8 @@ export interface GuideCloudRsp {
           dir: number // 方向：0 顺方向， 1 逆方向
           laneNumber: number // 按照通行方向给出当前link的车道数,不否包含应急车道
           length: number // raw link 长度, 单位厘米
-          points: Point[] // raw link 的形点串
-          rawLinkId: number // raw link id
+          points: [Point, Point] // raw link 的形点串
+          rawLinkId: string // raw link id
           tpid: { // raw link id 对应的 tpid
             status: 'EXISTED' | 'NOT_EXIST' | 'BAD_ID' // 0-已存在 1-不存在 2-数据异常
             tile_id: number

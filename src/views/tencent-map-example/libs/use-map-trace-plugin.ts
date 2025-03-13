@@ -1,7 +1,8 @@
 import type TMap from 'tmap-gl-types'
-import type { Point } from './guide-cloud-request.model'
-
-type TraceType = 'request' | 'request_tmp' | 'response'
+import { storeToRefs } from 'pinia'
+import { watch } from 'vue'
+import useLogStore from './use-log-store'
+import { int2tx, point2ll } from './utils'
 
 /**
  * 地图路线绘制工具
@@ -10,8 +11,12 @@ interface Props {}
 function useMapTracePlugin(_props?: Props) {
   let mapIns: TMap.Map
   let tracePointLayer: TMap.MultiMarker
-  let traceLayer: TMap.MultiPolyline
+  let traceLineLayer: TMap.MultiPolyline
   let traceDotLayer: TMap.MultiCircle
+
+  const { request, response, state, redrawFlag } = storeToRefs(useLogStore())
+
+  watch(redrawFlag, () => draw())
 
   function initial(_map: TMap.Map) {
     mapIns = _map
@@ -37,21 +42,13 @@ function useMapTracePlugin(_props?: Props) {
       },
     })
 
-    traceLayer = new TMap.MultiPolyline({
+    traceLineLayer = new TMap.MultiPolyline({
       id: 'traceLayer',
       map: mapIns,
       geometries: [],
       styles: {
         request: new TMap.PolylineStyle({
           color: '#3777FF',
-          width: 5,
-          borderWidth: 1,
-          borderColor: '#FFF',
-          lineCap: 'round',
-          showArrow: true,
-        }),
-        request_tmp: new TMap.PolylineStyle({
-          color: '#b7ceff',
           width: 5,
           borderWidth: 1,
           borderColor: '#FFF',
@@ -66,6 +63,13 @@ function useMapTracePlugin(_props?: Props) {
           lineCap: 'round',
           showArrow: true,
         }),
+        response_hover: new TMap.PolylineStyle({
+          color: '#b7ceff',
+          width: 5,
+          borderWidth: 1,
+          borderColor: '#FFF',
+          lineCap: 'round',
+        }),
       },
     })
 
@@ -75,49 +79,66 @@ function useMapTracePlugin(_props?: Props) {
       geometries: [],
       styles: {},
     })
-  }
 
-  function draw(id: string, traceType: TraceType, points: Point[]) {
-    const TMap = window.TMap
-    // 画线条
-    traceLayer.remove([id])
-    traceLayer.add([{
-      id,
-      styleId: traceType,
-      paths: points.map(p => new TMap.LatLng(p.lat, p.lng)),
-    }])
-    // 画点
-    traceDotLayer.remove([id])
-    traceDotLayer.add(points.map(p => ({ center: new TMap.LatLng(p.lat, p.lng), radius: 6 })))
-    // 画起点和终点
-    const arr = [points[0], points[points.length - 1]]
-    arr.forEach((p, i) => {
-      const position = new TMap.LatLng(p.lat, p.lng)
-      tracePointLayer.add({ position, styleId: i === 0 ? 'start' : 'end' })
+    traceLineLayer.on('hover', (e) => {
+      if (e.geometry) {
+        const { paths } = e.geometry
+        traceLineLayer.remove(['response_hover'])
+        if (state.value.responsePathsType === 'link') {
+          traceLineLayer.add([{ id: 'response_hover', styleId: 'response_hover', paths }])
+        }
+      } else {
+        traceLineLayer.remove(['response_hover'])
+      }
     })
   }
 
-  function drawRequest(points: Point[], styleId: TraceType = 'request') {
-    const id = `request_trace_${styleId}`
-    draw(id, styleId, points)
+  function draw() {
+    tracePointLayer.updateGeometries([])
+    traceLineLayer.updateGeometries([])
+    traceDotLayer.updateGeometries([])
+
+    updateRequestPaths()
+    updateResponsePaths()
   }
 
-  function drawResponse(points: Point[], styleId: TraceType = 'response') {
-    const id = `response_trace_${styleId}`
-    draw(id, styleId, points)
+  function updateRequestPaths() {
+    const { points: tmp = [] } = request.value.paths[state.value.requestPathsIndex] || {}
+    const points = tmp.map(p => point2ll(int2tx(p.point)))
+
+    traceLineLayer.add([{ styleId: 'request', paths: points }])
   }
 
-  function drawGuide(points: Point[], styleId: TraceType = 'response') {
-    const id = `guide_${styleId}`
-    draw(id, styleId, points)
+  function updateResponsePaths() {
+    const { points: tmp = [] } = response.value.paths[state.value.requestPathsIndex] || {}
+    if (state.value.responsePathsType === 'point') {
+      const points = tmp.map(p => point2ll(int2tx(p.point)))
+      traceLineLayer.add([{ styleId: 'response', paths: points }])
+    } else {
+      const { linkGroup = [] } = response.value.paths[state.value.requestPathsIndex] || {}
+      linkGroup.forEach(({ links = [] }) => {
+        const geometries = links.map(({ link = [] }) => {
+          return { styleId: 'repsonse', paths: link.map(p => point2ll(int2tx(p))) }
+        })
+        console.log(geometries)
+        traceLineLayer.add(geometries)
+      })
+    }
   }
+
+  // function fitBounds(points: any[]) {
+  //   const TMap = window.TMap
+  //   const bounds = new TMap.LatLngBounds()
+  //   points.forEach((p) => {
+  //     bounds.extend(new TMap.LatLng(p.lat, p.lng))
+  //   })
+
+  //   mapIns.fitBounds(bounds, { padding: 50 })
+  // }
 
   return {
     initial,
     draw,
-    drawRequest,
-    drawResponse,
-    drawGuide,
   }
 }
 export default useMapTracePlugin

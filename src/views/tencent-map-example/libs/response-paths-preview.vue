@@ -1,35 +1,46 @@
 <script setup lang="ts">
-import type { LogTableRow } from './log.model'
-import { computed } from 'vue'
+import type { ResponseData } from './use-log-store'
+import { storeToRefs } from 'pinia'
+import useLogStore from './use-log-store'
+import { int2tx, point2str } from './utils'
 
 interface Props {
-  detail: LogTableRow
+  paths: ResponseData['paths']
 }
 const props = withDefaults(defineProps<Props>(), {})
 
-const shown = computed(() => {
-  const { result = [] } = props.detail?.response?.mmRsp || {}
-  return result.map(({ pathId, bindPoints, linkGroups }) => {
-    const paths = bindPoints.map(({ point: p }) => `${p.lat},${p.lng}`).join(';')
-    const links = linkGroups.map(({ linkinfo }) => JSON.stringify(linkinfo))
-    return { pathId, paths, links }
-  })
-})
+const { redraw } = useLogStore()
+const { state } = storeToRefs(useLogStore())
 </script>
 
 <template>
   <div class="response-paths-preview">
-    <template v-for="item in shown" :key="item.pathId">
-      <div class="item">
-        <div>PathId：{{ item.pathId }}</div>
-        <div>路线坐标：<input :value="item.paths" /></div>
-        <div>
-          路线linkinfo：
-          <template v-for="l in item.links" :key="l.rawLinkId">
-            <input :value="l" />
+    <t-radio-group v-model="state.requestPathsIndex" @change="() => redraw()">
+      <template v-for="(item, index) in props.paths" :key="item.pathId">
+        <t-radio :value="index">
+          pathId：{{ item.pathId }}
+        </t-radio>
+      </template>
+    </t-radio-group>
+    <div class="content">
+      <template v-for="(item, index) in props.paths" :key="item.pathId">
+        <t-radio-group v-model="state.responsePathsType" @change="() => redraw()">
+          <t-radio value="point">
+            按坐标点
+          </t-radio>
+          <t-radio value="link">
+            按link线
+          </t-radio>
+        </t-radio-group>
+        <div v-if="state.requestPathsIndex === index" class="item">
+          <template v-if="state.responsePathsType === 'point'">
+            <div>路线坐标：<input :value="item.points.map(e => point2str(int2tx(e.point))).join(';')" /></div>
+          </template>
+          <template v-else>
+            <div>linkGroups：<input /></div>
           </template>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
 </template>
