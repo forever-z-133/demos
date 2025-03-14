@@ -4,7 +4,7 @@ import type { LogTableRow } from './libs/log.model'
 import download from 'downloadjs'
 import { throttle } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import { nextTick, onMounted, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { MAP_TYPE_OPTIONS } from './libs/constants'
 import LogTable from './libs/log-table.vue'
 import MapComponent from './libs/map-component.vue'
@@ -14,6 +14,7 @@ import useLogParse from './libs/use-log-parse'
 import useLogStore from './libs/use-log-store'
 import useTracePlugin from './libs/use-map-trace-plugin'
 import useMapTypePlugin from './libs/use-map-type-plugin'
+import { str2point } from './libs/utils'
 
 defineOptions({
   title: '腾讯地图API演示',
@@ -21,6 +22,7 @@ defineOptions({
   layout: 'blank',
 })
 
+const uploading = ref(true)
 const { updateDetail } = useLogStore()
 const { request, response, state } = storeToRefs(useLogStore())
 
@@ -43,16 +45,18 @@ const { initial: initMapTypePlugin, changeType: changeMapType } = useMapTypePlug
   defaultType: state.value.mapType,
 })
 watch(() => state.value.mapType, val => changeMapType(mapIns, val))
-const { initial: initTracePlugin, draw } = useTracePlugin({})
+const { initial: initTracePlugin, draw, mark } = useTracePlugin({})
 
 const { parse, lines, table } = useLogParse()
 
 onMounted(async () => {
+  uploading.value = true
   const publicPath = window.location.pathname
   const url = `${publicPath}tmp/export-b3a78311-b6d6-4bc0-8142-84585cc9bf5e.json`
   const res = await fetch(url)
   const txt = await res.text()
   parse(txt)
+  uploading.value = false
 })
 
 // 地图加载完成，初始化各种拓展
@@ -98,6 +102,12 @@ const handleZoomChange = throttle(() => {
   const val = state.value.level
   mapIns.setZoom(val)
 }, 500)
+
+function handlePointInputChange() {
+  const p = str2point(state.value.pointInput)
+  console.log(p)
+  mark(p)
+}
 </script>
 
 <template>
@@ -108,6 +118,9 @@ const handleZoomChange = throttle(() => {
           <span>日志</span>
         </div>
         <div class="content">
+          <div v-if="uploading">
+            日志较大，正在加载中...
+          </div>
           <LogTable :data="table">
             <template #default="{ row }">
               <button @click="handleDetail(row)">
@@ -133,9 +146,9 @@ const handleZoomChange = throttle(() => {
           <div>异源/同源：{{ request.matchReqType }}</div>
           <div>偏航类型：{{ request.yawType }}</div>
           <div>请求类型：{{ request.type }}</div>
-          <div>
+          <div style="display: block;">
             请求路径：
-            <RequestPathsPreview :paths="request.paths" />
+            <RequestPathsPreview :paths="request.paths" style="padding-left:10px" />
           </div>
         </div>
       </div>
@@ -146,9 +159,9 @@ const handleZoomChange = throttle(() => {
         <div class="content">
           <div>诱导状态：{{ response.guideCode }}</div>
           <div>异源匹配状态：{{ response.mmCode }}</div>
-          <div>
+          <div style="display: block;">
             返回路径：
-            <ResponsePathsPreview :paths="response.paths" />
+            <ResponsePathsPreview :paths="response.paths" style="padding-left:10px" />
           </div>
         </div>
       </div>
@@ -184,6 +197,19 @@ const handleZoomChange = throttle(() => {
             @input="handleZoomChange"
           />
         </div>
+        <div class="title">
+          <span>选中坐标点</span>
+        </div>
+        <div class="content">
+          <div>point：<input v-model="state.pointInput" @blur="handlePointInputChange" /></div>
+        </div>
+        <div class="title">
+          <span>选中link</span>
+        </div>
+        <div class="content">
+          <div>linkId：<input v-model="state.linkIdInput" /></div>
+          <div>linkinfo：<input v-model="state.linkInfoInput" /></div>
+        </div>
       </div>
     </div>
   </div>
@@ -193,6 +219,7 @@ const handleZoomChange = throttle(() => {
 @import "@/styles/mixins.less";
 
 .tencent-map-api {
+  max-height: 100vh;
   padding: .px(10)[];
   .flex-row(~'.map-container');
   align-items: stretch;
@@ -211,10 +238,12 @@ const handleZoomChange = throttle(() => {
 
   .info {
     width: .px(240)[];
+    max-height: 100%;
+    overflow: auto;
   }
 
   .controls {
-    width: .px(100)[];
+    width: .px(140)[];
   }
 
   .request-info > .content > div {

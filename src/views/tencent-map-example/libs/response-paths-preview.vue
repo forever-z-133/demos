@@ -2,7 +2,7 @@
 import type { ResponseData } from './use-log-store'
 import { storeToRefs } from 'pinia'
 import useLogStore from './use-log-store'
-import { int2tx, point2str } from './utils'
+import { int2tx, point2arr, point2str } from './utils'
 
 interface Props {
   paths: ResponseData['paths']
@@ -37,7 +37,7 @@ const { state } = storeToRefs(useLogStore())
             <div>路线坐标：<input :value="item.points.map(e => point2str(int2tx(e.point))).join(';')" /></div>
           </template>
           <template v-else>
-            <div>linkGroups：<input /></div>
+            <div>linkGroups：<input :value="item.linkGroup.map((e) => JSON.stringify(e.links.map(({ linkId, link }) => ({ linkId, link: link.map(p => point2arr(int2tx(p))) }))))" /></div>
           </template>
         </div>
       </template>

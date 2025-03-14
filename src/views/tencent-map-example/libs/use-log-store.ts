@@ -16,12 +16,24 @@ export interface State {
   requestPathsIndex: number
   // 绘制响应路径类型
   responsePathsType: 'point' | 'link'
+  // 选中的 link
+  selectedLink?: RawRspLink
+  // 选中的 point
+  selectedPoint?: { point: Point }
+  pointInput: string
+  linkIdInput: string
+  linkInfoInput: string
 }
 const DefaultState = {
   mapType: 'tencent-map',
   level: 12,
   requestPathsIndex: 0,
   responsePathsType: 'point',
+  selectedLink: undefined,
+  selectedPoint: undefined,
+  pointInput: '',
+  linkIdInput: '',
+  linkInfoInput: '',
 } as State
 
 type RawReqPoint = {} & { pathId: string }

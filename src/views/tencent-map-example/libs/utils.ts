@@ -49,9 +49,26 @@ export function point2str(p: Point): string {
   return `${p.lng},${p.lat}`
 }
 
+export function str2point(str: string): Point {
+  const [lng, lat] = str.split(',').map(Number)
+  return { lng, lat }
+}
+
+export function point2arr(p: Point): [number, number] {
+  return [p.lng, p.lat]
+}
+
+export function arr2point(arr: [number, number]): Point {
+  return { lng: arr[0], lat: arr[1] }
+}
+
 export function point2ll(p: Point): TMap.LatLng {
   const TMap = window.TMap
   return new TMap.LatLng(p.lat, p.lng)
+}
+
+export function ll2point(p: TMap.LatLng): Point {
+  return { lng: p.lng, lat: p.lat }
 }
 
 // 地图坐标点转换
