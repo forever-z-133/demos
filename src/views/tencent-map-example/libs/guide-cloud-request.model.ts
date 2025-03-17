@@ -81,12 +81,12 @@ export interface GuideCloudRsp {
           rawLinkId: string // raw link id
           tpid: { // raw link id 对应的 tpid
             status: 'EXISTED' | 'NOT_EXIST' | 'BAD_ID' // 0-已存在 1-不存在 2-数据异常
-            tile_id: number
+            tileId: number
             id: number
           }
           lane_group: { // raw link id 对应的lane group
             lanegroupid: {
-              tile_id: number
+              tileId: number
               id: number
             }[]
           }
@@ -124,7 +124,7 @@ export interface GuideCloudRsp {
         rgIntersectionResult: { // 导航转向信息
           accessoryInfo: number // 辅助动作
           enterPos: RoutePos // 进入机动点路口位置
-          interRawLinkIds: number[] // 模型对应link串
+          interRawLinkIds: string[] // 模型对应link串
           interType: number // 机动点类型,转向模型
           leavePos: RoutePos // 离开机动点路口位置
           rawLinkId: number // raw link id
@@ -157,7 +157,7 @@ export interface GuideCloudRsp {
         route_points: Point[] // 抽稀后的道路导航路线形状点
       }[]
     }[]
-  }[]
+  }
   serverCutPath: boolean // 是否服务截断 path
   serverMappingGuide: boolean // 是否服务映射guide
   serverParseGuide: boolean // 是否服务解析guide
@@ -169,10 +169,10 @@ export interface Point {
 }
 
 export interface RoutePos {
+  coorStart: number // 点在路线点串的起始索引
+  linkOffset: number // 所在link的起点的offset，单位米
   pos: Point // 坐标点
-  coor_start: number // 点在路线点串的起始索引
-  offset_length: number // 点相对 coor_start 对应形状点的偏离距离，单位米
-  link_offset: number // 所在link的起点的offset，单位米
+  offsetLength: number // 点相对 coor_start 对应形状点的偏离距离，单位米
 }
 
 interface BoundaryInterval {

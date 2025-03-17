@@ -10,6 +10,7 @@ import LogTable from './libs/log-table.vue'
 import MapComponent from './libs/map-component.vue'
 import RequestPathsPreview from './libs/request-paths-preview.vue'
 import ResponsePathsPreview from './libs/response-paths-preview.vue'
+import ResponseResultPreview from './libs/response-result-preview.vue'
 import useLogParse from './libs/use-log-parse'
 import useLogStore from './libs/use-log-store'
 import useTracePlugin from './libs/use-map-trace-plugin'
@@ -24,7 +25,7 @@ defineOptions({
 
 const uploading = ref(true)
 const { updateDetail } = useLogStore()
-const { request, response, state } = storeToRefs(useLogStore())
+const { detail, request, response, state } = storeToRefs(useLogStore())
 
 // 地图初始化参数
 let mapIns: TMap.Map
@@ -57,11 +58,14 @@ onMounted(async () => {
   const txt = await res.text()
   parse(txt)
   uploading.value = false
+  updateDetail(detail.value)
 })
 
 // 地图加载完成，初始化各种拓展
 function handleMapLoaded(map: TMap.Map) {
   mapIns = map
+
+  nextTick(() => draw())
 
   map.on('zoom', () => {
     state.value.level = getMapLevel(map)
@@ -75,11 +79,8 @@ function handleMapLoaded(map: TMap.Map) {
 
 // 点击查看
 function handleDetail(row: LogTableRow) {
-  console.log(row)
   updateDetail(row)
-  nextTick(() => {
-    draw()
-  })
+  nextTick(() => draw())
 }
 
 // 点击下载
@@ -108,6 +109,8 @@ function handlePointInputChange() {
   console.log(p)
   mark(p)
 }
+
+function handleLinkInputChange() {}
 </script>
 
 <template>
@@ -163,6 +166,10 @@ function handlePointInputChange() {
             返回路径：
             <ResponsePathsPreview :paths="response.paths" style="padding-left:10px" />
           </div>
+          <div style="display: block;">
+            诱导信息：
+            <ResponseResultPreview :route-guide="response.routeGuide" style="padding-left:10px" />
+          </div>
         </div>
       </div>
     </div>
@@ -208,7 +215,7 @@ function handlePointInputChange() {
         </div>
         <div class="content">
           <div>linkId：<input v-model="state.linkIdInput" /></div>
-          <div>linkinfo：<input v-model="state.linkInfoInput" /></div>
+          <div>linkinfo：<input v-model="state.linkInfoInput" @blur="handleLinkInputChange" /></div>
         </div>
       </div>
     </div>
