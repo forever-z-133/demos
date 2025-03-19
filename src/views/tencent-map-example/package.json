@@ -2,6 +2,7 @@
   "name": "lib-tencent-map-example",
   "dependencies": {
     "downloadjs": "^1.4.7",
+    "jszip": "^3.10.1",
     "tmap-gl-types": "^0.1.8"
   }
 }

@@ -73,8 +73,8 @@ export interface ResponseData {
     lights: { point: Point, raw: LogTableRow['response']['routeGuideRes']['result'][0]['routes'][0]['rgRedLightResult'][0] }[]
     tips: { point: Point, tsection: number, raw: LogTableRow['response']['routeGuideRes']['result'][0]['routes'][0]['rgTipsResult'][0] }[]
     direction: { enter: Point, leave?: Point, linkIds: string[], links: [Point, Point][], accessoryInfo: number, raw: LogTableRow['response']['routeGuideRes']['result'][0]['routes'][0]['rgIntersectionResult'][0] }[]
-    lanes: any[]
-    control: any[]
+    lanes: { raw: LogTableRow['response']['routeGuideRes']['result'][0]['routes'][0]['rgLaneInfoResult'][0] }[]
+    control: { raw: LogTableRow['response']['routeGuideRes']['result'][0]['routes'][0]['rgCondGuideAreaResult'][0] }[]
   }[]
   // links: { pathId: string, links: [Point, Point][], str: string[] }[]
 }
@@ -136,8 +136,10 @@ const useLogStore = defineStore('log', () => {
           })
           return { enter: enterPos.pos, leave: leavePos?.pos, linkIds, links, accessoryInfo, raw: item }
         })
+        const lanes = r.rgLaneInfoResult.map(item => ({ raw: item }))
+        const control = r.rgCondGuideAreaResult.map(item => ({ raw: item }))
 
-        routeGuide.push({ routeId, lights, tips, direction, lanes: [], control: [] })
+        routeGuide.push({ routeId, lights, tips, direction, lanes, control })
       })
     })
     return <ResponseData>{

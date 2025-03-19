@@ -2,6 +2,7 @@
 import type TMap from 'tmap-gl-types'
 import type { LogTableRow } from './libs/log.model'
 import download from 'downloadjs'
+import JSZip from 'jszip'
 import { throttle } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { nextTick, onMounted, ref, watch } from 'vue'
@@ -23,9 +24,9 @@ defineOptions({
   layout: 'blank',
 })
 
-const uploading = ref(true)
+const uploading = ref('idle')
 const { updateDetail } = useLogStore()
-const { detail, request, response, state } = storeToRefs(useLogStore())
+const { request, response, state } = storeToRefs(useLogStore())
 
 // 地图初始化参数
 let mapIns: TMap.Map
@@ -51,14 +52,14 @@ const { initial: initTracePlugin, draw, mark } = useTracePlugin({})
 const { parse, lines, table } = useLogParse()
 
 onMounted(async () => {
-  uploading.value = true
-  const publicPath = window.location.pathname
-  const url = `${publicPath}tmp/export-b3a78311-b6d6-4bc0-8142-84585cc9bf5e.json`
-  const res = await fetch(url)
-  const txt = await res.text()
-  parse(txt)
-  uploading.value = false
-  updateDetail(detail.value)
+  // uploading.value = true
+  // const publicPath = window.location.pathname
+  // const url = `${publicPath}tmp/export-b3a78311-b6d6-4bc0-8142-84585cc9bf5e.json`
+  // const res = await fetch(url)
+  // const txt = await res.text()
+  // parse(txt)
+  // uploading.value = false
+  // updateDetail(detail.value)
 })
 
 // 地图加载完成，初始化各种拓展
@@ -75,6 +76,25 @@ function handleMapLoaded(map: TMap.Map) {
   initMapTypePlugin(mapIns)
   // 初始化线条绘制工具
   initTracePlugin(mapIns)
+}
+
+async function handleFileChange(e: Event) {
+  uploading.value = 'loading'
+  const { files } = e.target as HTMLInputElement
+  if (!files || !files.length) return
+  // const { files } = (e.target || {}) as { files: File[] }
+  let txt = ''
+  for (const file of files) {
+    const zip = await JSZip.loadAsync(file)
+    for (const name in zip.files) {
+      if (name.includes('__MACOSX')) continue
+      const tmpJson = zip.files[name]
+      const content = await tmpJson.async('text')
+      txt += `${content}\n`
+    }
+  }
+  parse(txt)
+  uploading.value = ''
 }
 
 // 点击查看
@@ -119,10 +139,11 @@ function handleLinkInputChange() {}
       <div class="log-table-wrapper">
         <div class="title">
           <span>日志</span>
+          <input type="file" @change="handleFileChange" />
         </div>
         <div class="content">
           <div v-if="uploading">
-            日志较大，正在加载中...
+            {{ uploading === 'idle' ? '等待上传' : uploading === 'loading' ? '上传中' : '' }}
           </div>
           <LogTable :data="table">
             <template #default="{ row }">

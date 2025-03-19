@@ -29,8 +29,10 @@ watch(() => props.routeGuide, (val) => {
     <div class="content">
       <template v-for="(item) in props.routeGuide" :key="item.routeId">
         <div v-if="item.routeId === currentRouteId" class="item">
-          <div>红绿灯信息：<input :value="item.lights.map(({ point: p }) => point2str(int2tx(p))).join(';')" /></div>
+          <div>红绿灯信息：<input :value="item.lights.map(({ point: p }) => point2str(int2tx(p))).join(',')" /></div>
           <div>导航转向信息：<input :value="JSON.stringify(item.direction.map(e => e.raw))" /></div>
+          <div>引导面：<input :value="JSON.stringify(item.control.map(e => e.raw))" /></div>
+          <div>车道信息：<input :value="JSON.stringify(item.lanes.map(e => e.raw))" /></div>
           <div>Tips：<input :value="JSON.stringify(item.tips.map(e => e.raw))" /></div>
         </div>
       </template>

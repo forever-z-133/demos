@@ -36,7 +36,7 @@ const { state } = storeToRefs(useLogStore())
           <template v-if="state.responsePathsType === 'point'">
             <div>起点：<input :value="point2str(int2tx(item.points[0].point))" /></div>
             <div>终点：<input :value="point2str(int2tx(item.points[item.points.length - 1].point))" /></div>
-            <div>路线坐标：<input :value="item.points.map(e => point2str(int2tx(e.point))).join(';')" /></div>
+            <div>路线坐标：<input :value="item.points.map(e => point2str(int2tx(e.point))).join(',')" /></div>
           </template>
           <template v-else>
             <template v-for="(e, i) in item.linkGroup" :key="i">
